@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кабинет лидера — GlobalWay AdPlatform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
+.topbar{background:#141428;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:18px;color:var(--gold)}
+.topbar h1 span{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+.wrap{max-width:800px;margin:0 auto;padding:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden}
+.card-hdr{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;color:var(--gold);font-size:14px;display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:18px}
+.btn{padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s}
+.btn:hover{opacity:.85}
+.btn-gold{background:var(--gold);color:#000}
+.btn-green{background:var(--green);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:#ccc}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;margin-top:12px}
+label:first-child{margin-top:0}
+.inp{width:100%;padding:10px 12px;background:#1e1e3a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px}
+.inp:focus{outline:none;border-color:var(--gold)}
+textarea.inp{min-height:60px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.color-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.color-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s}
+.color-dot:hover,.color-dot.active{border-color:#fff;transform:scale(1.15)}
+.camp-item{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid #1e1e35}
+.camp-item:last-child{border-bottom:none}
+.camp-icon{font-size:28px}
+.camp-info{flex:1}
+.camp-name{font-size:15px;font-weight:700;color:#fff}
+.camp-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.camp-link{font-size:11px;color:var(--blue);word-break:break-all}
+.camp-stats{text-align:right;font-size:12px;color:var(--green)}
+.tip{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;border-left:3px solid var(--gold)}
+.empty{text-align:center;padding:40px;color:var(--muted)}
+.empty div{font-size:40px;margin-bottom:10px}
+.access-denied{text-align:center;padding:60px 20px}
+.access-denied h2{color:var(--red);margin-bottom:10px}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <h1>🎯 Кабинет лидера<span>Создание и управление кампаниями</span></h1>
+    <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
+</div>
+
+<div class="wrap">
+
+<div id="loading-screen" class="loading">Подключение кошелька...</div>
+<div id="access-denied" class="access-denied" style="display:none">
+    <h2>🔗 Подключите кошелёк</h2>
+    <p style="color:var(--muted)">Нужна регистрация в GlobalWay</p>
+    <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px">Подключить кошелёк</button>
+</div>
+
+<div id="main" style="display:none">
+
+    <!-- СОЗДАТЬ КАМПАНИЮ -->
+    <div class="card">
+        <div class="card-hdr">
+            ➕ Создать кампанию
+            <span style="font-size:11px;color:var(--muted);font-weight:400">Заполните форму — лендинг создастся автоматически</span>
+        </div>
+        <div class="card-body">
+            <div class="tip">💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.</div>
+
+            <label>Название кампании *</label>
+            <input class="inp" id="f-name" placeholder="Например: ЭкоБАДы Натура">
+
+            <label>Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span></label>
+            <input class="inp" id="f-slug" placeholder="eco-bady" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+            <div style="font-size:11px;color:var(--blue);margin-top:4px">Ваш лендинг: gwad.ink/c/<span id="slug-preview">...</span></div>
+
+            <label>Описание / текст на лендинге</label>
+            <textarea class="inp" id="f-desc" placeholder="Расскажите о продукте и возможностях..."></textarea>
+
+            <div class="row">
+                <div>
+                    <label>Ссылка на видео (YouTube / Vimeo)</label>
+                    <input class="inp" id="f-video" placeholder="https://youtube.com/watch?v=...">
+                    <div class="tip" style="margin-top:6px">📹 Видео появится на лендинге. Оставьте пустым если не нужно.</div>
+                </div>
+                <div>
+                    <label>URL главной картинки</label>
+                    <input class="inp" id="f-image" placeholder="https://... (JPG/PNG)">
+                    <div class="tip" style="margin-top:6px">🖼️ Показывается если нет видео. Рекомендуем 1200x630.</div>
+                </div>
+            </div>
+
+            <label>URL логотипа (квадратный)</label>
+            <input class="inp" id="f-logo" placeholder="https://... (PNG, 200x200)">
+
+            <label>Цвет темы</label>
+            <div class="color-row" id="color-row">
+                <div class="color-dot active" data-c="#FFD700" style="background:#FFD700" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#10b981" style="background:#10b981" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#3b82f6" style="background:#3b82f6" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#a855f7" style="background:#a855f7" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#ef4444" style="background:#ef4444" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#f59e0b" style="background:#f59e0b" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#ec4899" style="background:#ec4899" onclick="pickColor(this)"></div>
+                <div class="color-dot" data-c="#06b6d4" style="background:#06b6d4" onclick="pickColor(this)"></div>
+            </div>
+
+            <label>Фичи / преимущества (каждая строка = карточка, формат: emoji|текст)</label>
+            <textarea class="inp" id="f-features" placeholder="💊|Натуральные ингредиенты&#10;🌿|Без ГМО и химии&#10;💰|Доход от $500/мес&#10;👥|Готовая команда"></textarea>
+
+            <label>Текст кнопки CTA</label>
+            <input class="inp" id="f-cta" value="Начать зарабатывать">
+
+            <div class="row" style="margin-top:12px">
+                <div>
+                    <label>Telegram для связи</label>
+                    <input class="inp" id="f-tg" placeholder="@username">
+                </div>
+                <div>
+                    <label>WhatsApp для связи</label>
+                    <input class="inp" id="f-wa" placeholder="+380...">
+                </div>
+            </div>
+
+            <div style="margin-top:16px;padding:14px;background:rgba(255,215,0,0.05);border-radius:10px;border:1px solid rgba(255,215,0,0.2)">
+                <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px">💰 Кошельки для смарт-контракта</div>
+                <div class="tip" style="margin-bottom:10px">Эти адреса будут записаны в контракт. 80% рекламного бюджета → Budget Wallet. 9% менеджеру → Manager Wallet.</div>
+                <label>Budget Wallet (куда 80% бюджет) *</label>
+                <input class="inp" id="f-budget-wallet" placeholder="0x...">
+                <label>Manager Wallet (куда 9% менеджеру) *</label>
+                <input class="inp" id="f-manager-wallet" placeholder="0x...">
+            </div>
+
+            <button class="btn btn-gold" onclick="createCampaign()" style="width:100%;margin-top:16px;padding:14px;font-size:15px">🚀 Создать кампанию</button>
+        </div>
+    </div>
+
+    <!-- МОИ КАМПАНИИ -->
+    <div class="card">
+        <div class="card-hdr">📋 Мои кампании <button class="btn btn-ghost" onclick="loadMyCampaigns()" style="padding:5px 12px;font-size:11px">🔄</button></div>
+        <div id="my-campaigns">
+            <div class="empty"><div>📢</div>У вас ещё нет кампаний</div>
+        </div>
+    </div>
+
+    <!-- ВАРИАНТЫ ДОМЕНА -->
+    <div class="card">
+        <div class="card-hdr">🌐 Варианты размещения лендинга</div>
+        <div class="card-body">
+            <div style="display:grid;gap:12px">
+                <div style="padding:14px;background:rgba(16,185,129,0.05);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
+                    <div style="font-weight:600;color:var(--green)">Вариант А: Путь (бесплатно, сразу)</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">gwad.ink/c/ваш-slug — создаётся автоматически при создании кампании</div>
+                </div>
+                <div style="padding:14px;background:rgba(59,130,246,0.05);border-radius:10px;border:1px solid rgba(59,130,246,0.2)">
+                    <div style="font-weight:600;color:var(--blue)">Вариант Б: Поддомен (бесплатно)</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">ваш-slug.gwad.ink — обратитесь к администратору для подключения</div>
+                </div>
+                <div style="padding:14px;background:rgba(168,85,247,0.05);border-radius:10px;border:1px solid rgba(168,85,247,0.2)">
+                    <div style="font-weight:600;color:#a855f7">Вариант В: Свой домен (максимум доверия)</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">eco-bady.com — купите домен и обратитесь к администратору для привязки</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script>
+var API = 'https://cgift.club/api/ad-platform';
+var walletAddress = '';
+var selectedColor = '#FFD700';
+
+document.getElementById('f-slug').addEventListener('input', function() {
+    document.getElementById('slug-preview').textContent = this.value || '...';
+});
+
+function pickColor(el) {
+    document.querySelectorAll('.color-dot').forEach(function(d) { d.classList.remove('active'); });
+    el.classList.add('active');
+    selectedColor = el.dataset.c;
+}
+
+// INIT
+(async function() {
+    await new Promise(function(r) { setTimeout(r, 500); });
+    var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
+    if (!provider) {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('access-denied').style.display = 'block';
+        return;
+    }
+    try {
+        var accounts = await provider.request({ method: 'eth_accounts' });
+        if (!accounts || !accounts.length) accounts = await provider.request({ method: 'eth_requestAccounts' });
+        walletAddress = accounts[0].toLowerCase();
+        document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+        document.getElementById('f-budget-wallet').value = walletAddress;
+        document.getElementById('f-manager-wallet').value = walletAddress;
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('main').style.display = 'block';
+        loadMyCampaigns();
+    } catch(e) {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('access-denied').style.display = 'block';
+    }
+})();
+
+async function doConnect() {
+    var p = window.ethereum || (window.safepal && window.safepal.ethereum);
+    if (!p) { alert('Установите MetaMask или откройте в SafePal'); return; }
+    await p.request({ method: 'eth_requestAccounts' });
+    location.reload();
+}
+
+async function apiFetch(action, body) {
+    var opts = { headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': walletAddress } };
+    if (body) {
+        opts.method = 'POST';
+        opts.body = JSON.stringify(Object.assign({ action: action }, body));
+        var r = await fetch(API, opts);
+        return await r.json();
+    }
+    var r = await fetch(API + '?action=' + action, opts);
+    return await r.json();
+}
+
+async function createCampaign() {
+    var name = document.getElementById('f-name').value.trim();
+    var slug = document.getElementById('f-slug').value.trim();
+    if (!name || !slug) { alert('Заполните название и slug'); return; }
+
+    var bw = document.getElementById('f-budget-wallet').value.trim();
+    var mw = document.getElementById('f-manager-wallet').value.trim();
+    if (!bw || !mw) { alert('Укажите кошельки для контракта'); return; }
+
+    var data = {
+        name: name,
+        slug: slug,
+        description: document.getElementById('f-desc').value,
+        logo_url: document.getElementById('f-logo').value,
+        primary_color: selectedColor,
+        video_url: document.getElementById('f-video').value,
+        hero_image_url: document.getElementById('f-image').value,
+        features: document.getElementById('f-features').value,
+        cta_text: document.getElementById('f-cta').value || 'Начать зарабатывать',
+        contact_telegram: document.getElementById('f-tg').value,
+        contact_whatsapp: document.getElementById('f-wa').value,
+        budget_wallet: bw,
+        manager_wallet: mw,
+        leader_gw_id: walletAddress,
+        target_project: 'custom',
+        channels: []
+    };
+
+    var r = await apiFetch('save_campaign', data);
+    if (r.ok) {
+        alert('✅ Кампания создана!\n\nВаш лендинг: gwad.ink/c/' + slug + '\nРотация: gwad.ink/go/' + slug);
+        loadMyCampaigns();
+        // Очистить форму
+        ['f-name','f-slug','f-desc','f-video','f-image','f-logo','f-features','f-tg','f-wa'].forEach(function(id) {
+            document.getElementById(id).value = '';
+        });
+    } else {
+        alert('❌ ' + (r.error || 'Ошибка'));
+    }
+}
+
+async function loadMyCampaigns() {
+    var data = await apiFetch('campaigns');
+    var el = document.getElementById('my-campaigns');
+    if (!data.ok || !data.campaigns || data.campaigns.length === 0) {
+        el.innerHTML = '<div class="empty"><div>📢</div>У вас ещё нет кампаний</div>';
+        return;
+    }
+    var icons = {diamond_club:'💎',metr:'🏠',cardgift:'🎁',custom:'🎯'};
+    el.innerHTML = data.campaigns.map(function(c) {
+        return '<div class="camp-item">' +
+            '<div class="camp-icon">' + (icons[c.target_project] || '📢') + '</div>' +
+            '<div class="camp-info">' +
+            '<div class="camp-name">' + (c.name || '') + '</div>' +
+            '<div class="camp-meta">slug: ' + c.slug + ' · ' + ((c.channels||[]).join(', ')||'—') + '</div>' +
+            '<div class="camp-link">gwad.ink/c/' + c.slug + '</div>' +
+            '</div>' +
+            '<div class="camp-stats">' + (c.total_clicks||0) + ' кл. / ' + (c.total_registrations||0) + ' рег.</div>' +
+            '</div>';
+    }).join('');
+}
+</script>
+</body>
+</html>
