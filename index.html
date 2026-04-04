@@ -1,1 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalWay AdPlatform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 20%,rgba(255,215,0,0.06) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(255,215,0,0.06) 0%,transparent 50%);pointer-events:none;z-index:-1}
+.wrap{max-width:520px;margin:0 auto;padding:0 20px}
+.gold-bar{height:4px;background:linear-gradient(90deg,#FFD700,#FFA000,#FFD700)}
 
+/* Hero */
+.hero{padding:50px 0 40px;text-align:center}
+.hero-sub{font-size:13px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-size:42px;font-weight:800;color:#FFD700;line-height:1.1}
+.hero-subtitle{font-size:22px;color:#fff;margin-top:6px;font-weight:300}
+.hero-desc{font-size:15px;color:#aaa;margin-top:16px;line-height:1.7}
+.hero-line{width:80px;height:2px;background:#FFD700;margin:24px auto}
+.hero-motto{font-size:14px;color:#FFD700;font-style:italic}
+
+/* Section */
+.section{padding:30px 0}
+.section-title{font-size:20px;font-weight:700;color:#FFD700;text-align:center;margin-bottom:20px}
+
+/* Problem cards */
+.prob-grid{display:flex;gap:12px;margin-bottom:14px}
+.prob-card{flex:1;text-align:center;padding:20px 12px;background:#141428;border-radius:14px;border:1px solid #2a2a4a}
+.prob-num{font-size:30px;font-weight:800;color:#ef4444}
+.prob-label{font-size:11px;color:#888;margin-top:6px;line-height:1.4}
+.prob-solution{text-align:center;padding:14px;background:rgba(16,185,129,0.08);border-radius:12px;border:1px solid rgba(16,185,129,0.2)}
+.prob-solution b{color:#10b981;font-size:14px}
+.prob-solution span{display:block;font-size:12px;color:#888;margin-top:3px}
+
+/* Features grid */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.feat-card{background:#141428;border-radius:14px;padding:18px;border:1px solid #2a2a4a;transition:border-color .3s}
+.feat-card:hover{border-color:rgba(255,215,0,0.3)}
+.feat-icon{font-size:28px;margin-bottom:8px}
+.feat-name{font-size:13px;font-weight:700;color:#fff}
+.feat-desc{font-size:11px;color:#888;margin-top:4px;line-height:1.5}
+
+/* Steps */
+.steps{position:relative;padding-left:36px}
+.steps::before{content:'';position:absolute;left:14px;top:14px;bottom:14px;width:2px;background:#2a2a4a}
+.step{position:relative;margin-bottom:22px}
+.step:last-child{margin-bottom:0}
+.step-num{position:absolute;left:-30px;top:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
+.step-title{font-size:14px;font-weight:700;color:#fff}
+.step-desc{font-size:12px;color:#888;margin-top:2px;line-height:1.5}
+
+/* Keep card */
+.keep-card{background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,165,0,0.03));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:24px;text-align:center}
+.keep-title{font-size:16px;font-weight:700;color:#FFD700;margin-bottom:8px}
+.keep-desc{font-size:13px;color:#ccc;line-height:1.7}
+.keep-accent{font-size:12px;color:#FFD700;margin-top:10px;font-style:italic}
+
+/* Distribution bar */
+.dist-card{background:#141428;border-radius:16px;padding:24px;text-align:center;border:1px solid #2a2a4a}
+.dist-bar{display:flex;height:28px;border-radius:8px;overflow:hidden;margin:14px 0}
+.dist-bar-budget{flex:4;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
+.dist-bar-mkt{flex:1;background:#FFD700;display:flex;align-items:center;justify-content:center;font-size:10px;color:#000;font-weight:700}
+.dist-levels{text-align:left;font-size:11px;color:#888;line-height:2}
+.dist-levels b{color:#FFD700}
+
+/* CTA */
+.cta-section{padding:30px 0 20px}
+.cta-btn{display:block;width:100%;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:14px;padding:18px;text-align:center;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,215,0,0.3)}
+.cta-btn-text{font-size:18px;font-weight:800;color:#000;display:block}
+.cta-btn-sub{font-size:12px;color:rgba(0,0,0,0.6);display:block;margin-top:4px}
+.cta-note{text-align:center;margin-top:14px;font-size:12px;color:#666}
+
+/* Checklist */
+.check-list{list-style:none}
+.check-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:13px;color:#ccc;line-height:1.5}
+.check-list li::before{content:'';display:block;width:18px;height:18px;min-width:18px;margin-top:1px;border-radius:50%;background:#10b981;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'/%3E%3C/svg%3E");background-size:12px;background-position:center;background-repeat:no-repeat}
+
+/* Footer */
+.footer{padding:24px 0;text-align:center;border-top:1px solid #1a1a35;margin-top:20px}
+.footer-brand{font-size:12px;color:#555}
+.footer-link{font-size:11px;color:#444;margin-top:4px}
+
+/* Animate */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate{animation:fadeUp .6s ease-out both}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}
+</style>
+</head>
+<body>
+
+<div class="gold-bar"></div>
+
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero animate">
+    <div class="hero-sub">GlobalWay</div>
+    <div class="hero-title">AdPlatform</div>
+    <div class="hero-subtitle">Рекламная площадка</div>
+    <div class="hero-desc">Готовый бизнес-инструмент<br>для сетевого бизнеса нового поколения</div>
+    <div class="hero-line"></div>
+    <div class="hero-motto">Одна кнопка. Вся воронка работает за тебя.</div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section animate d1">
+    <div class="section-title">Знакомая ситуация?</div>
+    <div class="prob-grid">
+        <div class="prob-card">
+            <div class="prob-num">$5 000</div>
+            <div class="prob-label">нужно продать товара, чтобы заработать $1 000</div>
+        </div>
+        <div class="prob-card">
+            <div class="prob-num">$150+</div>
+            <div class="prob-label">стоимость рекламы<br>в одной соц. сети</div>
+        </div>
+        <div class="prob-card">
+            <div class="prob-num">87%</div>
+            <div class="prob-label">новичков уходят<br>в первые 3 месяца</div>
+        </div>
+    </div>
+    <div class="prob-solution">
+        <b>Наше решение — реклама от $5</b>
+        <span>Оплатил — контакты приходят в ваш кабинет автоматически</span>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section animate d2">
+    <div class="section-title">Что вы получаете</div>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <div class="feat-icon">💻</div>
+            <div class="feat-name">Личный кабинет</div>
+            <div class="feat-desc">CRM, контакты, аналитика — всё в одном месте</div>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🎨</div>
+            <div class="feat-name">Свой лендинг</div>
+            <div class="feat-desc">Ваш логотип, цвета, домен — за 5 минут</div>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">📢</div>
+            <div class="feat-name">Реклама от $5</div>
+            <div class="feat-desc">Оплатил — менеджер запускает рекламу за вас</div>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🤖</div>
+            <div class="feat-name">Telegram-бот</div>
+            <div class="feat-desc">Автоматические рассылки и пуш-уведомления</div>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">💰</div>
+            <div class="feat-name">9 уровней дохода</div>
+            <div class="feat-desc">Партнёрская программа на блокчейне</div>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🛡️</div>
+            <div class="feat-name">Блокчейн-защита</div>
+            <div class="feat-desc">Все выплаты прозрачны, смарт-контракт</div>
+        </div>
+    </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section animate d3">
+    <div class="section-title">Как это работает</div>
+    <div class="steps">
+        <div class="step">
+            <div class="step-num" style="background:#3b82f6">1</div>
+            <div class="step-title">Регистрация в GlobalWay</div>
+            <div class="step-desc">Подключаете кошелёк — получаете кабинет со всеми инструментами</div>
+        </div>
+        <div class="step">
+            <div class="step-num" style="background:#FFD700;color:#000">2</div>
+            <div class="step-title">Настройте свой лендинг</div>
+            <div class="step-desc">Выберите логотип, цвета и информацию о вашем продукте</div>
+        </div>
+        <div class="step">
+            <div class="step-num" style="background:#10b981">3</div>
+            <div class="step-title">Оплатите рекламу в USDT</div>
+            <div class="step-desc">80% — рекламный бюджет, 20% — партнёрка по 9 уровням. Всё на блокчейне.</div>
+        </div>
+        <div class="step">
+            <div class="step-num" style="background:#a855f7">4</div>
+            <div class="step-title">Получайте клиентов</div>
+            <div class="step-desc">Менеджер запускает рекламу в Facebook, Telegram, TikTok. Контакты идут в ваш кабинет.</div>
+        </div>
+    </div>
+</div>
+
+<!-- KEEP YOUR TEAM -->
+<div class="section animate d4">
+    <div class="keep-card">
+        <div class="keep-title">Компания закрылась?</div>
+        <div class="keep-desc">Ваша команда остаётся с вами навсегда.<br>Просто переключаете на новый продукт.<br>БАДы, бриллианты, недвижимость — любое направление.</div>
+        <div class="keep-accent">Ваша база — это ВАШ актив. Навсегда.</div>
+    </div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="section animate d4">
+    <div class="section-title">Раз и навсегда — в своё распоряжение</div>
+    <ul class="check-list">
+        <li>Личный кабинет с CRM и аналитикой</li>
+        <li>Свой лендинг: логотип, цвета, домен</li>
+        <li>Telegram-бот для автоматических рассылок</li>
+        <li>Пуш-уведомления для всех контактов</li>
+        <li>Опросники и вирусный маркетинг</li>
+        <li>Блог с корпоративным брендингом</li>
+        <li>Реклама от $5 — контакты в ваш кабинет</li>
+        <li>9-уровневая партнёрская программа</li>
+        <li>Все выплаты на блокчейне — прозрачно</li>
+        <li>Команда сохраняется при смене продукта</li>
+    </ul>
+</div>
+
+<!-- DISTRIBUTION -->
+<div class="section animate d5">
+    <div class="dist-card">
+        <div style="font-size:16px;font-weight:700;color:#fff">Распределение каждого платежа</div>
+        <div style="font-size:12px;color:#888;margin-top:4px">Пример: $100 за рекламу</div>
+        <div class="dist-bar">
+            <div class="dist-bar-budget">$80 — бюджет</div>
+            <div class="dist-bar-mkt">$20</div>
+        </div>
+        <div class="dist-levels">
+            <b>$20 маркетинг:</b><br>
+            Уровень 1 — <b>20%</b> · Уровень 2 — <b>15%</b> · Уровень 3 — <b>10%</b><br>
+            Уровень 4 — <b>9%</b> · Уровень 5 — <b>8%</b> · Уровень 6 — <b>6%</b><br>
+            Уровень 7 — <b>5%</b> · Уровень 8 — <b>4%</b> · Уровень 9 — <b>3%</b><br>
+            + <b>1%</b> клуб · <b>2%</b> авторские · <b>4%</b> токенизация GWT+CGT
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section animate d5">
+    <a href="#" class="cta-btn" onclick="return false;">
+        <span class="cta-btn-text">🚀 НАЧАТЬ ЗАРАБАТЫВАТЬ</span>
+        <span class="cta-btn-sub">Регистрация в GlobalWay</span>
+    </a>
+    <div class="cta-note">Требуется кошелёк SafePal · opBNB сеть · Оплата в USDT</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="footer-brand">GlobalWay AdPlatform · 2026</div>
+    <div class="footer-link">gwads.app</div>
+</div>
+
+</div>
+
+</body>
+</html>
