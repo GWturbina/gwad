@@ -5,7 +5,251 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GlobalWay AdPlatform — Рекламная площадка для сетевого бизнеса</title>
 <meta property="og:title" content="Лень — двигатель прогресса. Рекламная площадка нового поколения">
-<meta property="og:description" content="Один клик — и вся воронка работает за тебя. Кабинет, лендинг, CRM, боты, рассылки — всё в одном месте.">
+<meta property="og:description" content="Один <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рекламная площадка нового поколения</title>
+<meta property="og:title" content="Лень — двигатель прогресса">
+<meta property="og:description" content="Реклама от $5. Кабинет, лендинг, CRM, боты — всё в одном клике.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:620px;margin:0 auto;padding:0 20px}
+.gold-bar{height:4px;background:linear-gradient(90deg,#FFD700,#FFA000,#FFD700)}
+
+.hero{padding:40px 0 30px;text-align:center}
+.hero-badge{display:inline-block;padding:5px 16px;border-radius:20px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);font-size:11px;color:#FFD700;letter-spacing:1.5px;margin-bottom:14px}
+.hero-title{font-size:34px;font-weight:800;color:#fff;line-height:1.2}
+.hero-title em{color:#FFD700;font-style:normal}
+.hero-sub{font-size:16px;color:#aaa;margin-top:10px;line-height:1.6}
+.hero-banner{width:100%;border-radius:16px;margin:20px 0;border:2px solid rgba(255,215,0,0.2)}
+
+/* Two paths */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.path-card{background:#141428;border-radius:16px;padding:24px 18px;border:1px solid #2a2a4a;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit;display:block}
+.path-card:hover{border-color:rgba(255,215,0,0.5);transform:translateY(-3px);box-shadow:0 8px 30px rgba(255,215,0,0.1)}
+.path-icon{font-size:40px;margin-bottom:12px}
+.path-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+.path-desc{font-size:12px;color:#888;line-height:1.6}
+.path-btn{display:inline-block;margin-top:14px;padding:8px 20px;border-radius:10px;font-size:12px;font-weight:600}
+.path-green{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)}
+.path-gold{background:rgba(255,215,0,0.15);color:#FFD700;border:1px solid rgba(255,215,0,0.3)}
+
+/* Stats */
+.stats-row{display:flex;justify-content:center;gap:24px;padding:16px;background:#141428;border-radius:12px;margin-bottom:24px;border:1px solid #2a2a4a}
+.stat{text-align:center}
+.stat-n{font-size:22px;font-weight:700;color:#FFD700}
+.stat-l{font-size:10px;color:#888;margin-top:2px}
+
+/* Section */
+.stag{font-size:11px;color:#FFD700;letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:6px}
+.stitle{font-size:22px;font-weight:800;color:#fff;text-align:center;margin-bottom:18px;line-height:1.3}
+.stitle em{color:#FFD700;font-style:normal}
+
+/* Benefits */
+.ben-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px}
+.ben{background:#141428;border-radius:12px;padding:14px 10px;text-align:center;border:1px solid #2a2a4a}
+.ben-i{font-size:24px;margin-bottom:6px}
+.ben-t{font-size:11px;color:#ccc;line-height:1.4}
+
+/* Projects */
+.proj{display:flex;gap:14px;align-items:center;background:#141428;border-radius:14px;padding:18px;border:1px solid #2a2a4a;margin-bottom:10px;text-decoration:none;color:inherit;transition:border-color .3s}
+.proj:hover{border-color:rgba(255,215,0,0.3)}
+.proj-i{font-size:36px;min-width:44px;text-align:center}
+.proj-n{font-size:15px;font-weight:700;color:#fff}
+.proj-d{font-size:11px;color:#888;margin-top:3px;line-height:1.5}
+.proj-tag{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:600}
+
+/* How */
+.how-steps{counter-reset:s;margin-bottom:24px}
+.how-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.how-step::before{counter-increment:s;content:counter(s);width:32px;height:32px;min-width:32px;border-radius:50%;background:#FFD700;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.how-t{font-size:14px;font-weight:600;color:#fff}
+.how-d{font-size:12px;color:#888;margin-top:3px;line-height:1.5}
+
+/* Key */
+.key-card{background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,165,0,0.03));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:22px;text-align:center;margin-bottom:20px}
+.key-card h3{color:#FFD700;font-size:17px;margin-bottom:8px}
+.key-card p{font-size:13px;color:#ccc;line-height:1.7}
+
+/* CTA */
+.cta-btn{display:block;width:100%;padding:18px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:14px;font-size:18px;font-weight:800;color:#000;cursor:pointer;text-align:center;text-decoration:none;transition:transform .2s,box-shadow .2s;margin-bottom:10px}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,215,0,0.3)}
+.cta-note{text-align:center;font-size:11px;color:#666;line-height:1.6}
+
+/* Templates preview */
+.tmpl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.tmpl{background:#141428;border-radius:14px;padding:20px 12px;border:1px solid #2a2a4a;text-align:center;cursor:pointer;transition:all .3s}
+.tmpl:hover{border-color:rgba(255,215,0,0.4);transform:translateY(-2px)}
+.tmpl-i{font-size:32px;margin-bottom:8px}
+.tmpl-n{font-size:12px;font-weight:600;color:#fff}
+.tmpl-d{font-size:10px;color:#888;margin-top:4px}
+
+.footer{padding:24px 0;text-align:center;border-top:1px solid #1a1a35;margin-top:24px;font-size:11px;color:#555}
+.footer a{color:#666;margin:0 6px;text-decoration:none}
+.footer a:hover{color:#FFD700}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .5s ease both}
+.d1{animation-delay:.1s}.d2{animation-delay:.15s}.d3{animation-delay:.2s}.d4{animation-delay:.25s}
+</style>
+</head>
+<body>
+<div class="gold-bar"></div>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero fade">
+    <div class="hero-badge">РЕКЛАМНАЯ ПЛОЩАДКА</div>
+    <div class="hero-title">Лень — <em>двигатель прогресса</em></div>
+    <div class="hero-sub">Один клик — и вся воронка работает за тебя.<br>Кабинет, лендинг, CRM, боты, рассылки.</div>
+    <img src="/hero-banner.png" class="hero-banner" onerror="this.style.display='none'">
+</div>
+
+<!-- TWO PATHS -->
+<div class="paths fade d1">
+    <a href="#start" class="path-card" onclick="document.getElementById('start').scrollIntoView({behavior:'smooth'});return false">
+        <div class="path-icon">🚀</div>
+        <div class="path-title">Нет бизнеса?</div>
+        <div class="path-desc">Начни зарабатывать прямо сейчас. Без опыта, без вложений. Рекламируй готовые проекты.</div>
+        <div class="path-btn path-green">Начать с $5</div>
+    </a>
+    <a href="/cabinet" class="path-card">
+        <div class="path-icon">💼</div>
+        <div class="path-title">Есть бизнес?</div>
+        <div class="path-desc">Создай свой лендинг за 5 минут. Логотип, цвета, контент — всё твоё. Запусти рекламу.</div>
+        <div class="path-btn path-gold">Создать лендинг</div>
+    </a>
+</div>
+
+<!-- STATS -->
+<div class="stats-row fade d1">
+    <div class="stat"><div class="stat-n">$5</div><div class="stat-l">минимум</div></div>
+    <div class="stat"><div class="stat-n">80%</div><div class="stat-l">на рекламу</div></div>
+    <div class="stat"><div class="stat-n">9</div><div class="stat-l">уровней дохода</div></div>
+    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">автоматика</div></div>
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="fade d2" style="margin-bottom:24px">
+    <div class="stag">Инструменты</div>
+    <div class="stitle">Всё в <em>одном кабинете</em></div>
+    <div class="ben-grid">
+        <div class="ben"><div class="ben-i">💻</div><div class="ben-t">Личный кабинет + CRM</div></div>
+        <div class="ben"><div class="ben-i">🎨</div><div class="ben-t">Свой лендинг</div></div>
+        <div class="ben"><div class="ben-i">🤖</div><div class="ben-t">Telegram-бот</div></div>
+        <div class="ben"><div class="ben-i">🔔</div><div class="ben-t">Пуш-уведомления</div></div>
+        <div class="ben"><div class="ben-i">📋</div><div class="ben-t">Вирусные опросы</div></div>
+        <div class="ben"><div class="ben-i">📢</div><div class="ben-t">Реклама от $5</div></div>
+    </div>
+</div>
+
+<!-- KEY MESSAGE -->
+<div class="key-card fade d2">
+    <h3>🔐 Ваши контакты — только ВАШИ</h3>
+    <p>Никто никогда не получит доступ к вашей базе. Она останется с вами <b style="color:#10b981">навсегда</b>. Компания закрылась — команда не исчезнет.</p>
+</div>
+
+<!-- TEMPLATES -->
+<div class="fade d3" style="margin-bottom:24px">
+    <div class="stag">Шаблоны</div>
+    <div class="stitle">Выберите <em>стиль лендинга</em></div>
+    <div class="tmpl-grid">
+        <div class="tmpl" onclick="window.location='/c/demo-cards'">
+            <div class="tmpl-i">🃏</div>
+            <div class="tmpl-n">Карточки</div>
+            <div class="tmpl-d">Свайп, стопка листочков</div>
+        </div>
+        <div class="tmpl" onclick="window.location='/c/demo-book'">
+            <div class="tmpl-i">📖</div>
+            <div class="tmpl-n">Книга</div>
+            <div class="tmpl-d">Перелистывание страниц</div>
+        </div>
+        <div class="tmpl" onclick="window.location='/c/demo-classic'">
+            <div class="tmpl-i">📄</div>
+            <div class="tmpl-n">Классика</div>
+            <div class="tmpl-d">Скролл с галереей</div>
+        </div>
+    </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="fade d3" id="start" style="margin-bottom:24px">
+    <div class="stag">Уже работают</div>
+    <div class="stitle">Готовые направления</div>
+
+    <a href="/c/diamond" class="proj">
+        <div class="proj-i">💎</div>
+        <div>
+            <div class="proj-n">Бриллианты</div>
+            <div class="proj-d">Реальные камни от завода. Стейкинг, инвестиции, доли. Экономия до 70%.</div>
+            <div class="proj-tag" style="background:rgba(59,130,246,0.15);color:#3b82f6">Инвестиции</div>
+        </div>
+    </a>
+
+    <a href="/c/metr" class="proj">
+        <div class="proj-i">🏠</div>
+        <div>
+            <div class="proj-n">Метр Квадратный</div>
+            <div class="proj-d">Свой дом под 0%. Заработай 35% — клуб добавит 65%. Строительные технологии.</div>
+            <div class="proj-tag" style="background:rgba(245,158,11,0.15);color:#f59e0b">Недвижимость</div>
+        </div>
+    </a>
+
+    <a href="/c/health" class="proj" style="opacity:.6;border-style:dashed">
+        <div class="proj-i">🌿</div>
+        <div>
+            <div class="proj-n">Здоровье</div>
+            <div class="proj-d">Натуральные продукты. Скоро запуск.</div>
+            <div class="proj-tag" style="background:rgba(16,185,129,0.15);color:#10b981">Скоро</div>
+        </div>
+    </a>
+
+    <div style="text-align:center;font-size:12px;color:#888;margin-top:12px;line-height:1.7">
+        Салон красоты, туризм, крипта, адвокатская практика — <b style="color:#FFD700">любой бизнес</b>.<br>
+        Создайте свой лендинг и запустите рекламу.
+    </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="fade d3" style="margin-bottom:24px">
+    <div class="stag">5 шагов</div>
+    <div class="stitle">От <em>$5</em> до своей команды</div>
+    <div class="how-steps">
+        <div class="how-step"><div><div class="how-t">Регистрация</div><div class="how-d">Создаёте кошелёк. Получаете кабинет со всеми инструментами. 20 минут.</div></div></div>
+        <div class="how-step"><div><div class="how-t">Выберите направление</div><div class="how-d">Готовое (Бриллианты, Метр²) или создайте свой лендинг для своего бизнеса.</div></div></div>
+        <div class="how-step"><div><div class="how-t">Оплатите рекламу от $5</div><div class="how-d">80% на рекламу, 20% партнёрка. Всё на блокчейне — прозрачно.</div></div></div>
+        <div class="how-step"><div><div class="how-t">Получайте клиентов</div><div class="how-d">Менеджер запускает рекламу. Контакты приходят в ваш кабинет автоматически.</div></div></div>
+        <div class="how-step"><div><div class="how-t">Зарабатывайте</div><div class="how-d">Партнёрская программа на 9 уровней. Доход на автопилоте.</div></div></div>
+    </div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="key-card fade d4">
+    <h3>🛡️ Полная децентрализация</h3>
+    <p>Нет человеческого фактора. Все выплаты через смарт-контракт — напрямую с кошелька на кошелёк. Даже если какая-то компания закроется — ваша команда и база останутся с вами.</p>
+</div>
+
+<!-- CTA -->
+<div class="fade d4" style="padding:20px 0">
+    <a href="https://cgift.club/registration.html" class="cta-btn">🚀 НАЧАТЬ ЗАРАБАТЫВАТЬ</a>
+    <a href="/cabinet" class="cta-btn" style="background:linear-gradient(135deg,#1a1a3a,#2a2a5a);color:#FFD700;border:2px solid rgba(255,215,0,0.3)">💼 СОЗДАТЬ СВОЙ ЛЕНДИНГ</a>
+    <div class="cta-note">Реклама от $5 · Кошелёк SafePal · Блокчейн opBNB</div>
+</div>
+
+<div class="footer">
+    Рекламная площадка · 2026<br>
+    <a href="/cabinet">Кабинет лидера</a>
+    <a href="/c/diamond">Бриллианты</a>
+    <a href="/c/metr">Метр²</a>
+</div>
+
+</div>
+</body>
+</html>
+клик — и вся воронка работает за тебя. Кабинет, лендинг, CRM, боты, рассылки — всё в одном месте.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
