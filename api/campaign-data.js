@@ -42,6 +42,7 @@ module.exports = async function handler(req, res) {
                 hero_image_url: c.hero_image_url || '',
                 features: c.features || '',
                 cta_text: c.cta_text || 'Начать зарабатывать',
+                template: c.template || 'cards',
                 total_clicks: c.total_clicks || 0,
                 total_registrations: c.total_registrations || 0,
                 active_participants: active.length
