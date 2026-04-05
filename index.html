@@ -3,88 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GlobalWay AdPlatform</title>
+<title>GlobalWay AdPlatform — Рекламная площадка для сетевого бизнеса</title>
+<meta property="og:title" content="Лень — двигатель прогресса. Рекламная площадка нового поколения">
+<meta property="og:description" content="Один клик — и вся воронка работает за тебя. Кабинет, лендинг, CRM, боты, рассылки — всё в одном месте.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 20%,rgba(255,215,0,0.06) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(255,215,0,0.06) 0%,transparent 50%);pointer-events:none;z-index:-1}
-.wrap{max-width:520px;margin:0 auto;padding:0 20px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 20%,rgba(255,215,0,0.04) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(255,215,0,0.04) 0%,transparent 50%);pointer-events:none;z-index:-1}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px}
+a{color:#FFD700;text-decoration:none}
+
+/* Gold bar */
 .gold-bar{height:4px;background:linear-gradient(90deg,#FFD700,#FFA000,#FFD700)}
 
 /* Hero */
 .hero{padding:50px 0 40px;text-align:center}
-.hero-sub{font-size:13px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
-.hero-title{font-size:42px;font-weight:800;color:#FFD700;line-height:1.1}
-.hero-subtitle{font-size:22px;color:#fff;margin-top:6px;font-weight:300}
-.hero-desc{font-size:15px;color:#aaa;margin-top:16px;line-height:1.7}
+.hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);font-size:12px;color:#FFD700;letter-spacing:1px;margin-bottom:16px}
+.hero-title{font-size:36px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:8px}
+.hero-title em{color:#FFD700;font-style:normal}
+.hero-subtitle{font-size:18px;color:#aaa;line-height:1.6;margin-top:12px}
 .hero-line{width:80px;height:2px;background:#FFD700;margin:24px auto}
-.hero-motto{font-size:14px;color:#FFD700;font-style:italic}
+.hero-quote{font-size:15px;color:#FFD700;font-style:italic;max-width:440px;margin:0 auto;line-height:1.6}
 
 /* Section */
-.section{padding:30px 0}
-.section-title{font-size:20px;font-weight:700;color:#FFD700;text-align:center;margin-bottom:20px}
+.section{padding:32px 0}
+.section-tag{font-size:11px;color:#FFD700;letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.section-title{font-size:24px;font-weight:800;color:#fff;text-align:center;margin-bottom:20px;line-height:1.3}
+.section-title em{color:#FFD700;font-style:normal}
 
-/* Problem cards */
-.prob-grid{display:flex;gap:12px;margin-bottom:14px}
-.prob-card{flex:1;text-align:center;padding:20px 12px;background:#141428;border-radius:14px;border:1px solid #2a2a4a}
-.prob-num{font-size:30px;font-weight:800;color:#ef4444}
-.prob-label{font-size:11px;color:#888;margin-top:6px;line-height:1.4}
-.prob-solution{text-align:center;padding:14px;background:rgba(16,185,129,0.08);border-radius:12px;border:1px solid rgba(16,185,129,0.2)}
-.prob-solution b{color:#10b981;font-size:14px}
-.prob-solution span{display:block;font-size:12px;color:#888;margin-top:3px}
+/* Pain cards */
+.pain-card{background:#141428;border-radius:16px;padding:24px;border:1px solid #2a2a4a;margin-bottom:14px;position:relative;overflow:hidden}
+.pain-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#ef4444}
+.pain-num{font-size:36px;font-weight:800;color:#ef4444;margin-bottom:6px}
+.pain-text{font-size:14px;color:#ccc;line-height:1.7}
+.pain-text b{color:#fff}
 
-/* Features grid */
-.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.feat-card{background:#141428;border-radius:14px;padding:18px;border:1px solid #2a2a4a;transition:border-color .3s}
-.feat-card:hover{border-color:rgba(255,215,0,0.3)}
-.feat-icon{font-size:28px;margin-bottom:8px}
-.feat-name{font-size:13px;font-weight:700;color:#fff}
-.feat-desc{font-size:11px;color:#888;margin-top:4px;line-height:1.5}
+/* Story */
+.story-card{background:#141428;border-radius:16px;padding:24px;border:1px solid #2a2a4a;margin-bottom:14px;font-size:15px;color:#bbb;line-height:1.8}
+.story-card .author{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.story-card .author-name{font-weight:700;color:#FFD700;font-size:14px}
+.story-card .author-desc{font-size:11px;color:#888}
+.story-card .highlight{color:#FFD700;font-weight:600}
+.story-card .red{color:#ef4444;font-weight:600}
+
+/* Solution */
+.solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.sol-card{background:#141428;border-radius:14px;padding:18px;border:1px solid #2a2a4a;transition:border-color .3s}
+.sol-card:hover{border-color:rgba(255,215,0,0.4)}
+.sol-icon{font-size:28px;margin-bottom:8px}
+.sol-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.sol-desc{font-size:11px;color:#888;line-height:1.5}
+
+/* Key message */
+.key-msg{background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,165,0,0.03));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px}
+.key-msg .icon{font-size:32px;margin-bottom:10px}
+.key-msg h3{color:#FFD700;font-size:18px;margin-bottom:8px;font-weight:700}
+.key-msg p{font-size:14px;color:#ccc;line-height:1.7}
+.key-msg .accent{color:#10b981;font-weight:700}
+
+/* Projects */
+.project-card{display:flex;gap:16px;align-items:center;background:#141428;border-radius:16px;padding:20px;border:1px solid #2a2a4a;margin-bottom:12px;transition:border-color .3s}
+.project-card:hover{border-color:rgba(255,215,0,0.3)}
+.project-icon{font-size:40px;min-width:50px;text-align:center}
+.project-name{font-size:16px;font-weight:700;color:#fff}
+.project-desc{font-size:12px;color:#888;margin-top:3px;line-height:1.5}
+.project-tag{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:8px;font-size:10px;font-weight:600}
+
+/* Distribution */
+.dist-card{background:#141428;border-radius:16px;padding:24px;border:1px solid #2a2a4a;margin-bottom:20px}
+.dist-bar{display:flex;height:32px;border-radius:10px;overflow:hidden;margin:14px 0 10px}
+.dist-80{flex:4;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
+.dist-20{flex:1;background:#FFD700;display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;font-weight:700}
+.dist-detail{font-size:12px;color:#888;line-height:2}
+.dist-detail b{color:#FFD700}
 
 /* Steps */
-.steps{position:relative;padding-left:36px}
-.steps::before{content:'';position:absolute;left:14px;top:14px;bottom:14px;width:2px;background:#2a2a4a}
-.step{position:relative;margin-bottom:22px}
+.steps{position:relative;padding-left:40px;margin-bottom:24px}
+.steps::before{content:'';position:absolute;left:16px;top:16px;bottom:16px;width:2px;background:#2a2a4a}
+.step{position:relative;margin-bottom:24px}
 .step:last-child{margin-bottom:0}
-.step-num{position:absolute;left:-30px;top:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
-.step-title{font-size:14px;font-weight:700;color:#fff}
-.step-desc{font-size:12px;color:#888;margin-top:2px;line-height:1.5}
-
-/* Keep card */
-.keep-card{background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,165,0,0.03));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:24px;text-align:center}
-.keep-title{font-size:16px;font-weight:700;color:#FFD700;margin-bottom:8px}
-.keep-desc{font-size:13px;color:#ccc;line-height:1.7}
-.keep-accent{font-size:12px;color:#FFD700;margin-top:10px;font-style:italic}
-
-/* Distribution bar */
-.dist-card{background:#141428;border-radius:16px;padding:24px;text-align:center;border:1px solid #2a2a4a}
-.dist-bar{display:flex;height:28px;border-radius:8px;overflow:hidden;margin:14px 0}
-.dist-bar-budget{flex:4;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
-.dist-bar-mkt{flex:1;background:#FFD700;display:flex;align-items:center;justify-content:center;font-size:10px;color:#000;font-weight:700}
-.dist-levels{text-align:left;font-size:11px;color:#888;line-height:2}
-.dist-levels b{color:#FFD700}
-
-/* CTA */
-.cta-section{padding:30px 0 20px}
-.cta-btn{display:block;width:100%;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:14px;padding:18px;text-align:center;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
-.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,215,0,0.3)}
-.cta-btn-text{font-size:18px;font-weight:800;color:#000;display:block}
-.cta-btn-sub{font-size:12px;color:rgba(0,0,0,0.6);display:block;margin-top:4px}
-.cta-note{text-align:center;margin-top:14px;font-size:12px;color:#666}
+.step-num{position:absolute;left:-32px;top:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.step-title{font-size:15px;font-weight:700;color:#fff}
+.step-desc{font-size:13px;color:#888;margin-top:4px;line-height:1.6}
 
 /* Checklist */
-.check-list{list-style:none}
-.check-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:13px;color:#ccc;line-height:1.5}
-.check-list li::before{content:'';display:block;width:18px;height:18px;min-width:18px;margin-top:1px;border-radius:50%;background:#10b981;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'/%3E%3C/svg%3E");background-size:12px;background-position:center;background-repeat:no-repeat}
+.check-list{list-style:none;margin-bottom:20px}
+.check-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;font-size:14px;color:#ccc;line-height:1.6;border-bottom:1px solid #1a1a35}
+.check-list li:last-child{border-bottom:none}
+.check-mark{width:20px;height:20px;min-width:20px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.check-mark::after{content:'';width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+
+/* Guarantee */
+.guarantee{background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(16,185,129,0.02));border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px}
+.guarantee h3{color:#10b981;font-size:18px;margin-bottom:10px}
+.guarantee p{font-size:14px;color:#ccc;line-height:1.7}
+
+/* CTA */
+.cta-section{padding:30px 0 10px}
+.cta-btn{display:block;width:100%;padding:20px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:16px;font-size:20px;font-weight:800;color:#000;cursor:pointer;text-align:center;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,215,0,0.35)}
+.cta-sub{text-align:center;font-size:12px;color:#666;margin-top:12px;line-height:1.6}
+
+/* FAQ */
+.faq-item{background:#141428;border-radius:14px;padding:18px;border:1px solid #2a2a4a;margin-bottom:10px;cursor:pointer}
+.faq-q{font-size:14px;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.faq-a{font-size:13px;color:#888;line-height:1.7;margin-top:10px;display:none}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-arrow{color:#FFD700;font-size:16px;transition:transform .3s}
 
 /* Footer */
-.footer{padding:24px 0;text-align:center;border-top:1px solid #1a1a35;margin-top:20px}
-.footer-brand{font-size:12px;color:#555}
-.footer-link{font-size:11px;color:#444;margin-top:4px}
+.footer{padding:30px 0;text-align:center;border-top:1px solid #1a1a35;margin-top:30px}
+.footer-brand{font-size:13px;color:#555}
+.footer-links{margin-top:8px;font-size:12px}
+.footer-links a{color:#666;margin:0 8px}
+.footer-links a:hover{color:#FFD700}
 
-/* Animate */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.animate{animation:fadeUp .6s ease-out both}
+.fade{animation:fadeUp .6s ease both}
 .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}
 </style>
 </head>
@@ -94,161 +130,274 @@ body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;backg
 
 <div class="wrap">
 
-<!-- HERO -->
-<div class="hero animate">
-    <div class="hero-sub">GlobalWay</div>
-    <div class="hero-title">AdPlatform</div>
-    <div class="hero-subtitle">Рекламная площадка</div>
-    <div class="hero-desc">Готовый бизнес-инструмент<br>для сетевого бизнеса нового поколения</div>
+<!-- ═══ HERO ═══ -->
+<div class="hero fade">
+    <div class="hero-badge">GLOBALWAY ADPLATFORM</div>
+    <div class="hero-title">Лень — <em>двигатель прогресса</em></div>
+    <div class="hero-subtitle">Рекламная площадка, которая переворачивает сознание</div>
     <div class="hero-line"></div>
-    <div class="hero-motto">Одна кнопка. Вся воронка работает за тебя.</div>
+    <img src="/hero-banner.png" style="width:100%;border-radius:16px;margin-bottom:20px;border:2px solid rgba(255,215,0,0.3)">
+    <div class="hero-quote">«Один бизнес в один клик.<br>Кабинет, лендинг, CRM, боты, рассылки — всё работает за вас.»</div>
 </div>
 
-<!-- PROBLEM -->
-<div class="section animate d1">
-    <div class="section-title">Знакомая ситуация?</div>
-    <div class="prob-grid">
-        <div class="prob-card">
-            <div class="prob-num">$5 000</div>
-            <div class="prob-label">нужно продать товара, чтобы заработать $1 000</div>
-        </div>
-        <div class="prob-card">
-            <div class="prob-num">$150+</div>
-            <div class="prob-label">стоимость рекламы<br>в одной соц. сети</div>
-        </div>
-        <div class="prob-card">
-            <div class="prob-num">87%</div>
-            <div class="prob-label">новичков уходят<br>в первые 3 месяца</div>
-        </div>
-    </div>
-    <div class="prob-solution">
-        <b>Наше решение — реклама от $5</b>
-        <span>Оплатил — контакты приходят в ваш кабинет автоматически</span>
-    </div>
-</div>
+<!-- ═══ PROBLEM ═══ -->
+<div class="section fade d1">
+    <div class="section-tag">Проблема</div>
+    <div class="section-title">Почему <em>95% дистрибьюторов</em> не зарабатывают</div>
 
-<!-- FEATURES -->
-<div class="section animate d2">
-    <div class="section-title">Что вы получаете</div>
-    <div class="feat-grid">
-        <div class="feat-card">
-            <div class="feat-icon">💻</div>
-            <div class="feat-name">Личный кабинет</div>
-            <div class="feat-desc">CRM, контакты, аналитика — всё в одном месте</div>
-        </div>
-        <div class="feat-card">
-            <div class="feat-icon">🎨</div>
-            <div class="feat-name">Свой лендинг</div>
-            <div class="feat-desc">Ваш логотип, цвета, домен — за 5 минут</div>
-        </div>
-        <div class="feat-card">
-            <div class="feat-icon">📢</div>
-            <div class="feat-name">Реклама от $5</div>
-            <div class="feat-desc">Оплатил — менеджер запускает рекламу за вас</div>
-        </div>
-        <div class="feat-card">
-            <div class="feat-icon">🤖</div>
-            <div class="feat-name">Telegram-бот</div>
-            <div class="feat-desc">Автоматические рассылки и пуш-уведомления</div>
-        </div>
-        <div class="feat-card">
-            <div class="feat-icon">💰</div>
-            <div class="feat-name">9 уровней дохода</div>
-            <div class="feat-desc">Партнёрская программа на блокчейне</div>
-        </div>
-        <div class="feat-card">
-            <div class="feat-icon">🛡️</div>
-            <div class="feat-name">Блокчейн-защита</div>
-            <div class="feat-desc">Все выплаты прозрачны, смарт-контракт</div>
-        </div>
+    <div class="pain-card">
+        <div class="pain-num">$5 000</div>
+        <div class="pain-text">Чтобы заработать <b>$1 000</b>, нужно продать товара на <b>$5 000</b>. Каждый месяц. Сможете? Большинство — нет. А для этого нужна огромная товаропроводящая сеть.</div>
+    </div>
+
+    <div class="pain-card">
+        <div class="pain-num">$150+</div>
+        <div class="pain-text">Столько стоит реклама <b>в одной соцсети</b> в месяц. Человек приходит на эмоциях, регистрируется, покупает один раз и уходит. Их нужно постоянно удерживать — а это снова деньги.</div>
+    </div>
+
+    <div class="pain-card">
+        <div class="pain-num">87%</div>
+        <div class="pain-text">Новичков уходят <b>в первые 3 месяца</b>. Огромная текучка. 30 лет в этой индустрии — и эта статистика не даёт мне покоя.</div>
     </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<div class="section animate d3">
-    <div class="section-title">Как это работает</div>
+<!-- ═══ STORY ═══ -->
+<div class="section fade d2">
+    <div class="section-tag">История</div>
+    <div class="section-title">Боль, которую знает <em>каждый лидер</em></div>
+
+    <div class="story-card">
+        <div class="author">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFD700,#FFA000);display:flex;align-items:center;justify-content:center;font-size:20px">👔</div>
+            <div><div class="author-name">30 лет в MLM</div><div class="author-desc">С 1996 года. Прошёл путь от новичка до легенды.</div></div>
+        </div>
+        <p>За эти годы я видел одну и ту же картину снова и снова.</p>
+        <p style="margin-top:10px">Люди приходили ко мне и говорили: <span class="highlight">«Классно, но я не могу привести свою команду — она сидит на здоровье»</span>. Или: «У меня команда на туризме». Или на крипте. Или на косметике.</p>
+        <p style="margin-top:10px">Лидеры <b>годами</b> собирали команды. Создавали личные кабинеты, пуш-рассылки, системы удержания. А потом <span class="red">компания закрывалась</span>. Личные кабинеты исчезали вместе с ней. <b>Тысячи людей</b> уходили в никуда.</p>
+        <p style="margin-top:10px">Лидеры получали серьёзные психологические травмы. Потому что искренне хотели помочь людям, а в итоге оказывались виноватыми.</p>
+        <p style="margin-top:14px;color:#FFD700;font-weight:600">Именно поэтому я создал решение, которое закрывает все эти боли.</p>
+    </div>
+</div>
+
+<!-- ═══ SOLUTION ═══ -->
+<div class="section fade d2">
+    <div class="section-tag">Решение</div>
+    <div class="section-title">Один бизнес — <em>один клик</em></div>
+
+    <div class="solution-grid">
+        <div class="sol-card"><div class="sol-icon">💻</div><div class="sol-name">Личный кабинет</div><div class="sol-desc">CRM, контакты, аналитика — всё в одном месте. Настройка за 20 минут.</div></div>
+        <div class="sol-card"><div class="sol-icon">🎨</div><div class="sol-name">Свой лендинг</div><div class="sol-desc">Ваш логотип, цвета, контент. Полностью ваш бренд.</div></div>
+        <div class="sol-card"><div class="sol-icon">🤖</div><div class="sol-name">Telegram-бот</div><div class="sol-desc">Автоматические рассылки. Работает 24/7 вместо вас.</div></div>
+        <div class="sol-card"><div class="sol-icon">🔔</div><div class="sol-name">Пуш-уведомления</div><div class="sol-desc">Доставка контента прямо на экран. Без спама.</div></div>
+        <div class="sol-card"><div class="sol-icon">📋</div><div class="sol-name">Вирусные опросы</div><div class="sol-desc">Сарафанное радио на автопилоте. Клиенты приводят клиентов.</div></div>
+        <div class="sol-card"><div class="sol-icon">📢</div><div class="sol-name">Реклама от $5</div><div class="sol-desc">Не $150 в месяц, а $5. И контакты приходят прямо в кабинет.</div></div>
+    </div>
+
+    <div class="key-msg">
+        <div class="icon">🔐</div>
+        <h3>Ваши контакты — только ВАШИ</h3>
+        <p>Никто никогда не получит доступ к вашей базе. Она останется с вами <span class="accent">навсегда</span>. Даже если компания закроется — команда не исчезнет.</p>
+    </div>
+</div>
+
+<!-- ═══ KEY INSIGHT ═══ -->
+<div class="section fade d3">
+    <div class="section-tag">Главная идея</div>
+    <div class="section-title">Компания закрылась? <em>Команда остаётся</em></div>
+
+    <div class="guarantee">
+        <h3>Клиентская база — это настоящий капитал</h3>
+        <p>Сегодня товаром или услугой никого не удивишь. А вот база из нескольких тысяч <b>платёжеспособных клиентов</b> — это актив, с которым вы можете прийти в любой бизнес.</p>
+    </div>
+
+    <div class="key-msg">
+        <div class="icon">🛡️</div>
+        <h3>Полная децентрализация</h3>
+        <p>Нет человеческого фактора. Нет вмешательства извне. Все выплаты идут <span class="accent">напрямую через блокчейн</span> — с кошелька на кошелёк. 98% денег уходят на партнёрскую программу.</p>
+    </div>
+</div>
+
+<!-- ═══ PROJECTS ═══ -->
+<div class="section fade d3">
+    <div class="section-tag">Уже работает</div>
+    <div class="section-title">Два направления <em>уже запущены</em></div>
+
+    <div class="project-card">
+        <div class="project-icon">💎</div>
+        <div>
+            <div class="project-name">Diamond Club</div>
+            <div class="project-desc">Реальные бриллианты от завода по клубной цене. Стейкинг, инвестиции, доли камней. Экономия до 70%.</div>
+            <div class="project-tag" style="background:rgba(59,130,246,0.15);color:#3b82f6">Бриллианты · Инвестиции</div>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <div class="project-icon">🏠</div>
+        <div>
+            <div class="project-name">Метр Квадратный</div>
+            <div class="project-desc">Строительные технологии. Свой дом под 0%. Заработай 35% — клуб добавит 65%. Каждый нуждается в жилье.</div>
+            <div class="project-tag" style="background:rgba(245,158,11,0.15);color:#f59e0b">Недвижимость · Строительство</div>
+        </div>
+    </div>
+
+    <div class="project-card" style="border-color:rgba(16,185,129,0.3)">
+        <div class="project-icon">🌿</div>
+        <div>
+            <div class="project-name">Здоровье</div>
+            <div class="project-desc">Скоро. Натуральные продукты для здоровья. Ваша команда, ваш логотип, ваш кабинет.</div>
+            <div class="project-tag" style="background:rgba(16,185,129,0.15);color:#10b981">Скоро запуск</div>
+        </div>
+    </div>
+
+    <div style="text-align:center;font-size:13px;color:#888;margin-top:16px;line-height:1.7">
+        В ваших руках может быть <b style="color:#FFD700">любое количество направлений</b>.<br>
+        Адвокатская практика, салон красоты, туризм — любой бизнес.<br>
+        Главное — вам нужны инструменты, которые работают на вас.
+    </div>
+</div>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<div class="section fade d3">
+    <div class="section-tag">Как это работает</div>
+    <div class="section-title">От <em>$5</em> до многотысячной команды</div>
+
     <div class="steps">
         <div class="step">
-            <div class="step-num" style="background:#3b82f6">1</div>
+            <div class="step-num" style="background:#3b82f6;color:#fff">1</div>
             <div class="step-title">Регистрация в GlobalWay</div>
-            <div class="step-desc">Подключаете кошелёк — получаете кабинет со всеми инструментами</div>
+            <div class="step-desc">Создаёте кошелёк SafePal. Получаете кабинет со всеми инструментами. Настройка — 20 минут.</div>
         </div>
         <div class="step">
             <div class="step-num" style="background:#FFD700;color:#000">2</div>
-            <div class="step-title">Настройте свой лендинг</div>
-            <div class="step-desc">Выберите логотип, цвета и информацию о вашем продукте</div>
+            <div class="step-title">Настраиваете свой лендинг</div>
+            <div class="step-desc">Логотип, цвета, описание вашего продукта. Это ваш бренд — полностью уникальный.</div>
         </div>
         <div class="step">
-            <div class="step-num" style="background:#10b981">3</div>
-            <div class="step-title">Оплатите рекламу в USDT</div>
-            <div class="step-desc">80% — рекламный бюджет, 20% — партнёрка по 9 уровням. Всё на блокчейне.</div>
+            <div class="step-num" style="background:#10b981;color:#fff">3</div>
+            <div class="step-title">Оплачиваете рекламу от $5</div>
+            <div class="step-desc">80% идёт на рекламу. 20% — партнёрская программа на 9 уровней. Всё на блокчейне, прозрачно.</div>
         </div>
         <div class="step">
-            <div class="step-num" style="background:#a855f7">4</div>
-            <div class="step-title">Получайте клиентов</div>
-            <div class="step-desc">Менеджер запускает рекламу в Facebook, Telegram, TikTok. Контакты идут в ваш кабинет.</div>
+            <div class="step-num" style="background:#a855f7;color:#fff">4</div>
+            <div class="step-title">Получаете клиентов</div>
+            <div class="step-desc">Менеджер запускает рекламу. Контакты приходят в ваш кабинет. Автоматические рассылки работают за вас.</div>
+        </div>
+        <div class="step">
+            <div class="step-num" style="background:#ef4444;color:#fff">5</div>
+            <div class="step-title">Зарабатываете</div>
+            <div class="step-desc">Каждый зарегистрированный попадает в GlobalWay. Три маркетинга. Партнёрская программа на 12 уровней — доход всю жизнь.</div>
         </div>
     </div>
 </div>
 
-<!-- KEEP YOUR TEAM -->
-<div class="section animate d4">
-    <div class="keep-card">
-        <div class="keep-title">Компания закрылась?</div>
-        <div class="keep-desc">Ваша команда остаётся с вами навсегда.<br>Просто переключаете на новый продукт.<br>БАДы, бриллианты, недвижимость — любое направление.</div>
-        <div class="keep-accent">Ваша база — это ВАШ актив. Навсегда.</div>
-    </div>
-</div>
+<!-- ═══ DISTRIBUTION ═══ -->
+<div class="section fade d4">
+    <div class="section-tag">Финансы</div>
+    <div class="section-title">Куда идут <em>ваши деньги</em></div>
 
-<!-- CHECKLIST -->
-<div class="section animate d4">
-    <div class="section-title">Раз и навсегда — в своё распоряжение</div>
-    <ul class="check-list">
-        <li>Личный кабинет с CRM и аналитикой</li>
-        <li>Свой лендинг: логотип, цвета, домен</li>
-        <li>Telegram-бот для автоматических рассылок</li>
-        <li>Пуш-уведомления для всех контактов</li>
-        <li>Опросники и вирусный маркетинг</li>
-        <li>Блог с корпоративным брендингом</li>
-        <li>Реклама от $5 — контакты в ваш кабинет</li>
-        <li>9-уровневая партнёрская программа</li>
-        <li>Все выплаты на блокчейне — прозрачно</li>
-        <li>Команда сохраняется при смене продукта</li>
-    </ul>
-</div>
-
-<!-- DISTRIBUTION -->
-<div class="section animate d5">
     <div class="dist-card">
-        <div style="font-size:16px;font-weight:700;color:#fff">Распределение каждого платежа</div>
-        <div style="font-size:12px;color:#888;margin-top:4px">Пример: $100 за рекламу</div>
+        <div style="font-size:14px;color:#fff;font-weight:600;text-align:center">Каждый платёж за рекламу</div>
         <div class="dist-bar">
-            <div class="dist-bar-budget">$80 — бюджет</div>
-            <div class="dist-bar-mkt">$20</div>
+            <div class="dist-80">80% — реклама</div>
+            <div class="dist-20">20%</div>
         </div>
-        <div class="dist-levels">
-            <b>$20 маркетинг:</b><br>
-            Уровень 1 — <b>20%</b> · Уровень 2 — <b>15%</b> · Уровень 3 — <b>10%</b><br>
-            Уровень 4 — <b>9%</b> · Уровень 5 — <b>8%</b> · Уровень 6 — <b>6%</b><br>
-            Уровень 7 — <b>5%</b> · Уровень 8 — <b>4%</b> · Уровень 9 — <b>3%</b><br>
-            + <b>1%</b> клуб · <b>2%</b> авторские · <b>4%</b> токенизация GWT+CGT
+        <div class="dist-detail">
+            <b>80%</b> — рекламный бюджет (продвижение вашей кампании)<br>
+            <b>20%</b> — маркетинг:<br>
+            &nbsp;&nbsp;→ 9 уровней спонсоров (<b>от 20% до 3%</b>)<br>
+            &nbsp;&nbsp;→ 9% менеджеру кампании<br>
+            &nbsp;&nbsp;→ 1% содержание платформы<br>
+            &nbsp;&nbsp;→ 2% авторские<br>
+            &nbsp;&nbsp;→ 4% токенизация (GWT + CGT)
+        </div>
+        <div style="margin-top:14px;padding:12px;background:rgba(16,185,129,0.08);border-radius:10px;text-align:center;font-size:12px;color:#10b981;font-weight:600">
+            Всё на блокчейне. Без человеческого фактора. Смарт-контракт.
         </div>
     </div>
 </div>
 
-<!-- CTA -->
-<div class="cta-section animate d5">
-    <a href="#" class="cta-btn" onclick="return false;">
-        <span class="cta-btn-text">🚀 НАЧАТЬ ЗАРАБАТЫВАТЬ</span>
-        <span class="cta-btn-sub">Регистрация в GlobalWay</span>
-    </a>
-    <div class="cta-note">Требуется кошелёк SafePal · opBNB сеть · Оплата в USDT</div>
+<!-- ═══ WHAT YOU GET ═══ -->
+<div class="section fade d4">
+    <div class="section-tag">Результат</div>
+    <div class="section-title">Что вы получаете <em>навсегда</em></div>
+
+    <ul class="check-list">
+        <li><div class="check-mark"></div>Личный кабинет с CRM и аналитикой</li>
+        <li><div class="check-mark"></div>Свой лендинг: логотип, цвета, домен — ваш бренд</li>
+        <li><div class="check-mark"></div>Telegram-бот для автоматических рассылок</li>
+        <li><div class="check-mark"></div>Пуш-уведомления для всех контактов</li>
+        <li><div class="check-mark"></div>Вирусные опросы — сарафанное радио на автопилоте</li>
+        <li><div class="check-mark"></div>Блог с корпоративным брендингом</li>
+        <li><div class="check-mark"></div>Реклама от $5 — контакты прямо в ваш кабинет</li>
+        <li><div class="check-mark"></div>9-уровневая партнёрская программа на рекламу</li>
+        <li><div class="check-mark"></div>12-уровневая партнёрская программа GlobalWay</li>
+        <li><div class="check-mark"></div>Все выплаты на блокчейне — прозрачно и навсегда</li>
+        <li><div class="check-mark"></div>Команда сохраняется при смене продукта</li>
+    </ul>
+
+    <div style="text-align:center;font-size:14px;color:#888;line-height:1.7;margin-bottom:20px">
+        Все инструменты CardGift стоят <b style="color:#fff">несколько тысяч долларов</b>, если покупать по отдельности.<br>
+        Вам они даются <b style="color:#10b981">в подарок</b> при определённом уровне доступа.
+    </div>
 </div>
 
-<!-- FOOTER -->
+<!-- ═══ ЖАБА ═══ -->
+<div class="section fade d4">
+    <div class="key-msg">
+        <div class="icon">🐸</div>
+        <h3>Лень и «жаба»</h3>
+        <p>За 30 лет я видел, как половина людей отказывалась из-за «нет денег». Хотя деньги были.</p>
+        <p style="margin-top:10px">Когда человек платит <span class="accent">$5</span>, получает первых клиентов и видит результат — он начинает вкладывать больше. Мы сделали так, что <b style="color:#fff">даже на запуске рекламы можно зарабатывать</b>.</p>
+    </div>
+</div>
+
+<!-- ═══ FAQ ═══ -->
+<div class="section fade d5">
+    <div class="section-tag">Вопросы</div>
+    <div class="section-title">Часто спрашивают</div>
+
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Я ничего не понимаю в интернете. Смогу ли?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Настройка занимает 20-30 минут. Всё на русском. Если не умеете — наймите сына, внука, знакомого. Дайте ему права — и он запустит рекламу за вас.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">А если компания, в которой я работаю, закроется?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Ваша клиентская база останется с вами навсегда. Просто переключаете на новый продукт. Это и есть главное преимущество — ваш актив не зависит от компании.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">$5 — это реально работает?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Да. $5 — это минимум. 80% идёт на рекламу, 20% на партнёрку. Кто больше вкладывает — получает больше трафика. Система распределяет клиентов максимально справедливо.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Это пирамида?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Нет. У нас есть реальные продукты и услуги. Но даже если вы раньше работали в такой сфере — ваша база останется с вами. Когда пирамида закроется, у вас будет ликвидный актив — платёжеспособная клиентская база.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Что такое SafePal и блокчейн?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">SafePal — это кошелёк на телефоне. Скачиваете приложение, создаёте кошелёк за 3 минуты. Блокчейн — это технология, которая гарантирует что все выплаты прозрачны и никто не может их забрать.</div>
+    </div>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<div class="cta-section fade d5">
+    <a href="https://cgift.club/registration.html" class="cta-btn">
+        🚀 ПОЛУЧИТЬ СВОЙ КАБИНЕТ
+    </a>
+    <div class="cta-sub">
+        Регистрация через SafePal · opBNB сеть · Оплата в USDT<br>
+        <b style="color:#FFD700">Это семейный бизнес, который нельзя упустить.</b><br>
+        Уже завтра вы будете очень востребованы.
+    </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
 <div class="footer">
     <div class="footer-brand">GlobalWay AdPlatform · 2026</div>
-    <div class="footer-link">gwads.app</div>
+    <div class="footer-links">
+        <a href="/cabinet">Кабинет лидера</a>
+        <a href="https://cgift.club">CardGift</a>
+        <a href="https://gway.club">GlobalWay</a>
+    </div>
 </div>
 
 </div>
