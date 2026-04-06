@@ -1,21 +1,58 @@
 {
   "rewrites": [
-    { "source": "/register", "destination": "/register.html" },
-    { "source": "/cabinet", "destination": "/cabinet.html" },
-    { "source": "/cabinet-leader", "destination": "/cabinet-leader.html" },
-    { "source": "/c/:slug", "destination": "/campaign.html" },
-    { "source": "/go/:slug", "destination": "/api/go?slug=:slug" },
-    { "source": "/r/:id", "destination": "/api/go?type=ref&project=cardgift&id=:id" },
-    { "source": "/d/:id", "destination": "/api/go?type=ref&project=diamond_club&id=:id" },
-    { "source": "/m/:id", "destination": "/api/go?type=ref&project=metr&id=:id" },
-    { "source": "/s/:code", "destination": "/api/go?type=short&code=:code" }
+    {
+      "source": "/register",
+      "destination": "/register.html"
+    },
+    {
+      "source": "/cabinet",
+      "destination": "/cabinet.html"
+    },
+    {
+      "source": "/partner",
+      "destination": "/partner.html"
+    },
+    {
+      "source": "/cabinet-leader",
+      "destination": "/cabinet-leader.html"
+    },
+    {
+      "source": "/c/:slug",
+      "destination": "/campaign.html"
+    },
+    {
+      "source": "/go/:slug",
+      "destination": "/api/go?slug=:slug"
+    },
+    {
+      "source": "/r/:id",
+      "destination": "/api/go?type=ref&project=cardgift&id=:id"
+    },
+    {
+      "source": "/d/:id",
+      "destination": "/api/go?type=ref&project=diamond_club&id=:id"
+    },
+    {
+      "source": "/m/:id",
+      "destination": "/api/go?type=ref&project=metr&id=:id"
+    },
+    {
+      "source": "/s/:code",
+      "destination": "/api/go?type=short&code=:code"
+    }
   ],
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, X-Wallet-Address" }
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, X-Wallet-Address"
+        }
       ]
     }
   ]
