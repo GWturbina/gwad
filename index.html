@@ -221,7 +221,7 @@ ru: {
     q4q:'Чем это отличается от того что было раньше?', q4a:'Блокчейн. Твои контакты — только твои. Выплаты напрямую. Нет «компании» которая может закрыться. Система работает автоматически — 24/7.',
     q5q:'Что нужно сделать прямо сейчас?', q5a:'Нажми кнопку ниже. Зарегистрируйся. Получи доступ. Настрой за 20 минут. Дальше система работает за тебя.',
     ctaBtn:'🚀 ПОЛУЧИТЬ БЕСПЛАТНЫЙ ДОСТУП', ctaNote:'Бесплатно · Без риска · 20 минут настройки<br><b style="color:#FFD700">Всё только начинается. И ты — в самом начале.</b>',
-    pageTitle:'Всё только начинается'
+    pageTitle:'Всё только начинается',exitTitle:'Не спешите закрывать!',exitText:'Вы были в шаге от системы которая может изменить ваш доход. Посмотрите — это займёт 2 минуты.',exitYes:'\\u{1F680} Хорошо, посмотрю',exitInfo:'\\u{1F4E9} Получить информацию',exitNo:'Всё равно закрыть'
 },
 ua: {
     heroTag:'✅ ВСЕ ТІЛЬКИ ПОЧИНАЄТЬСЯ', heroSub:'Не продавай дорого — продавай багато.<br>Немає клієнтів? Система приведе тисячі.', heroMotto:'Лінь — двигун прогресу. Налаштуй за 20 хвилин.',
@@ -252,7 +252,7 @@ ua: {
     q4q:'Чим це відрізняється від того що було раніше?', q4a:'Блокчейн. Твої контакти — тільки твої. Виплати напряму. Немає «компанії» яка може закритися. Система працює автоматично — 24/7.',
     q5q:'Що треба зробити прямо зараз?', q5a:'Натисни кнопку нижче. Зареєструйся. Отримай доступ. Налаштуй за 20 хвилин. Далі система працює за тебе.',
     ctaBtn:'🚀 ОТРИМАТИ БЕЗКОШТОВНИЙ ДОСТУП', ctaNote:'Безкоштовно · Без ризику · 20 хвилин налаштування<br><b style="color:#FFD700">Все тільки починається. І ти — на самому початку.</b>',
-    pageTitle:'Все тільки починається'
+    pageTitle:'Все тільки починається',exitTitle:'Не поспішайте закривати!',exitText:'Ви були в кроці від системи яка може змінити ваш дохід. Подивіться — це займе 2 хвилини.',exitYes:'\\u{1F680} Добре, подивлюсь',exitInfo:'\\u{1F4E9} Отримати інформацію',exitNo:'Все одно закрити'
 },
 en: {
     heroTag:'✅ IT\'S JUST THE BEGINNING', heroSub:'Don\'t sell expensive — sell a lot.<br>No clients? The system will bring thousands.', heroMotto:'Laziness drives progress. Set up in 20 minutes.',
@@ -283,7 +283,7 @@ en: {
     q4q:'How is this different from before?', q4a:'Blockchain. Your contacts — only yours. Direct payments. No "company" that can shut down. System works automatically — 24/7.',
     q5q:'What should I do right now?', q5a:'Press the button below. Register. Get access. Set up in 20 minutes. The system works for you from there.',
     ctaBtn:'🚀 GET FREE ACCESS', ctaNote:'Free · No risk · 20 min setup<br><b style="color:#FFD700">It\'s just the beginning. And you\'re at the start.</b>',
-    pageTitle:'It\'s just the beginning'
+    pageTitle:'It\\'s just the beginning',exitTitle:'Don\\'t leave yet!',exitText:'You were one step away from a system that can change your income. Take 2 minutes.',exitYes:'\\u{1F680} OK, I\\'ll look',exitInfo:'\\u{1F4E9} Get more info',exitNo:'Close anyway'
 }
 };
 
@@ -309,5 +309,48 @@ function setLang(lang) {
     else setLang('ru');
 })();
 </script>
+
+<!-- EXIT-INTENT POPUP -->
+<style>
+.exit-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:300;align-items:center;justify-content:center;padding:20px}
+.exit-overlay.show{display:flex}
+.exit-box{background:#141428;border:2px solid rgba(255,215,0,0.3);border-radius:20px;max-width:400px;width:100%;padding:24px;text-align:center;animation:exitPop .4s ease}
+@keyframes exitPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.exit-img{width:100%;border-radius:14px;margin-bottom:14px;max-height:200px;object-fit:cover;display:none}
+.exit-title{font-size:20px;font-weight:800;color:#FFD700;margin-bottom:8px}
+.exit-text{font-size:13px;color:#bbb;line-height:1.7;margin-bottom:16px}
+.exit-btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;transition:.2s}
+.exit-btn:hover{transform:translateY(-2px)}
+.exit-btn-gold{background:linear-gradient(135deg,#FFD700,#FFA000);color:#000}
+.exit-btn-green{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981}
+.exit-btn-ghost{background:transparent;border:1px solid #333;color:#666;font-size:12px;padding:10px}
+</style>
+<div class="exit-overlay" id="exit-popup">
+<div class="exit-box">
+<img src="/exit-image.png" class="exit-img" id="exit-img" onerror="this.style.display='none'">
+<div class="exit-title" data-i18n="exitTitle">Не спешите закрывать!</div>
+<div class="exit-text" data-i18n="exitText">Вы были в шаге от системы которая может изменить ваш доход. Посмотрите — это займёт 2 минуты.</div>
+<a href="/register" class="exit-btn exit-btn-gold" data-i18n="exitYes">\u{1F680} Хорошо, посмотрю</a>
+<a href="/register" class="exit-btn exit-btn-green" data-i18n="exitInfo">\u{1F4E9} Получить информацию</a>
+<button class="exit-btn exit-btn-ghost" onclick="document.getElementById('exit-popup').classList.remove('show')" data-i18n="exitNo">Всё равно закрыть</button>
+</div>
+</div>
+<script>
+(function(){
+var shown=false;
+document.addEventListener('mouseout',function(e){
+    if(shown)return;
+    if(e.clientY<5&&e.relatedTarget==null){
+        shown=true;
+        document.getElementById('exit-popup').classList.add('show');
+    }
+});
+// Mobile: back button / visibility change
+document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden'&&!shown){shown=true}
+});
+})();
+</script>
+
 </body>
 </html>
