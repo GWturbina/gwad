@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мой кабинет — AdPlatform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:18px;color:var(--gold)}
+.topbar .wallet-id{font-size:11px;color:var(--muted);background:#1a1a35;padding:4px 10px;border-radius:8px}
+.wrap{max-width:520px;margin:0 auto;padding:16px}
+
+/* Stats row */
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.stat-val{font-size:24px;font-weight:800;color:var(--gold)}
+.stat-val.green{color:var(--green)}
+.stat-val.blue{color:var(--blue)}
+.stat-label{font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.card-hdr{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:600;color:var(--gold);font-size:14px;display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:16px}
+
+/* Links */
+.link-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e1e35}
+.link-row:last-child{border-bottom:none}
+.link-icon{font-size:20px;min-width:28px;text-align:center}
+.link-url{flex:1;font-size:12px;color:var(--blue);word-break:break-all;cursor:pointer}
+.link-url:hover{text-decoration:underline}
+.copy-btn{padding:6px 10px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);border-radius:8px;color:var(--gold);font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
+.copy-btn:hover{background:rgba(255,215,0,0.2)}
+.copy-btn.copied{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);color:var(--green)}
+
+/* Campaigns to join */
+.camp{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #1e1e35}
+.camp:last-child{border-bottom:none}
+.camp-icon{font-size:28px}
+.camp-info{flex:1}
+.camp-name{font-size:14px;font-weight:700;color:#fff}
+.camp-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.camp-price{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap}
+
+/* Orders */
+.order{padding:12px;border-bottom:1px solid #1e1e35}
+.order:last-child{border-bottom:none}
+.order-top{display:flex;justify-content:space-between;align-items:center}
+.order-amount{font-size:14px;font-weight:700;color:#fff}
+.order-status{font-size:11px;padding:3px 8px;border-radius:6px}
+.order-status.active{background:rgba(16,185,129,0.12);color:var(--green)}
+.order-status.ended{background:rgba(136,136,136,0.12);color:var(--muted)}
+.order-stats{font-size:11px;color:var(--muted);margin-top:4px}
+.order-stats span{color:var(--green);font-weight:600}
+
+/* CTA */
+.cta-section{text-align:center;padding:20px 0}
+.cta-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--gold),#FFA000);border:none;border-radius:14px;font-size:16px;font-weight:700;color:#000;cursor:pointer;transition:transform .2s;text-decoration:none;margin-bottom:8px}
+.cta-btn:hover{transform:translateY(-2px)}
+.cta-btn.secondary{background:transparent;border:1px solid var(--border);color:#ccc;font-size:13px;padding:12px}
+.cta-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#1a1a35;border:1px solid var(--border);border-radius:20px;max-width:440px;width:100%;padding:28px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal h2{color:var(--gold);font-size:18px;text-align:center;margin-bottom:6px}
+.modal .msub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:18px;line-height:1.6}
+.variant{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.variant:hover{border-color:rgba(255,215,0,0.4)}
+.variant-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.variant-icon{font-size:24px}
+.variant-title{font-size:15px;font-weight:700;color:#fff}
+.variant-price{font-size:13px;font-weight:700;color:var(--gold);margin-left:auto}
+.variant-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.modal-close{display:block;width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#888;font-size:13px;cursor:pointer;margin-top:8px;transition:.2s}
+.modal-close:hover{border-color:var(--gold);color:#fff}
+
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.foot{text-align:center;padding:16px 0;font-size:10px;color:#444}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.nav-links{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.nav-link{padding:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:#ccc;font-size:12px;text-decoration:none;transition:.2s}
+.nav-link:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<h1>\u{1F4CA} Мой кабинет</h1>
+<span class="wallet-id" id="wallet-tag">...</span>
+</div>
+
+<div class="wrap">
+
+<!-- Navigation -->
+<div class="nav-links">
+<a href="https://cgift.club/dashboard.html" class="nav-link">\u{1F3E0} CardGift</a>
+<a href="https://gws.ink" class="nav-link">\u{1F48E} Diamond Club</a>
+<a href="https://gwm.ink" class="nav-link">\u{1F3E0} Метр\u00B2</a>
+</div>
+
+<!-- Stats -->
+<div class="stats" id="stats">
+<div class="stat"><div class="stat-val" id="st-clicks">0</div><div class="stat-label">Кликов</div></div>
+<div class="stat"><div class="stat-val green" id="st-regs">0</div><div class="stat-label">Регистраций</div></div>
+<div class="stat"><div class="stat-val blue" id="st-active">0</div><div class="stat-label">Активных</div></div>
+</div>
+
+<!-- My links -->
+<div class="card">
+<div class="card-hdr">\u{1F517} Мои ссылки</div>
+<div id="my-links" class="card-body">
+<div class="link-row">
+<div class="link-icon">\u{1F381}</div>
+<div class="link-url" onclick="copyLink(this)">gwad.ink/r/<span id="link-r">...</span></div>
+<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
+</div>
+<div class="link-row">
+<div class="link-icon">\u{1F48E}</div>
+<div class="link-url" onclick="copyLink(this)">gwad.ink/d/<span id="link-d">...</span></div>
+<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
+</div>
+<div class="link-row">
+<div class="link-icon">\u{1F3E0}</div>
+<div class="link-url" onclick="copyLink(this)">gwad.ink/m/<span id="link-m">...</span></div>
+<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
+</div>
+</div>
+</div>
+
+<!-- Available campaigns -->
+<div class="card">
+<div class="card-hdr">\u{1F4E2} Доступные кампании <span style="font-size:11px;color:var(--muted);font-weight:400">Оплати — получи контакты</span></div>
+<div id="campaigns">
+<div class="camp">
+<div class="camp-icon">\u{1F48E}</div>
+<div class="camp-info"><div class="camp-name">Diamond Club</div><div class="camp-desc">Бриллианты со скидкой 70%. Пассивный доход.</div></div>
+<div class="camp-price">от $5</div>
+</div>
+<div class="camp">
+<div class="camp-icon">\u{1F3E0}</div>
+<div class="camp-info"><div class="camp-name">Метр\u00B2</div><div class="camp-desc">Коллективное строительство. Без ипотеки.</div></div>
+<div class="camp-price">от $5</div>
+</div>
+</div>
+</div>
+
+<!-- Buy advertising CTA -->
+<div class="cta-section">
+<button class="cta-btn" onclick="showVariants()">\u{1F680} Начать получать контакты</button>
+<button class="cta-btn secondary" onclick="location.href='https://cgift.club/dashboard.html'">Перейти в CardGift</button>
+</div>
+
+<!-- My orders -->
+<div class="card">
+<div class="card-hdr">\u{1F4CB} Мои заказы</div>
+<div id="my-orders"><div class="empty">У вас пока нет заказов. Выберите кампанию и оплатите рекламу — контакты начнут приходить автоматически.</div></div>
+</div>
+
+<div class="foot">gwad.ink · 2026</div>
+</div>
+
+<!-- VARIANTS MODAL -->
+<div class="modal-overlay" id="modal-variants">
+<div class="modal">
+<h2>\u{1F3AF} Выберите свой вариант</h2>
+<div class="msub">Система предлагает несколько путей — выберите тот который вам подходит</div>
+
+<div class="variant" onclick="location.href='https://cgift.club/dashboard.html'">
+<div class="variant-hdr">
+<div class="variant-icon">\u{1F441}</div>
+<div class="variant-title">Ознакомиться</div>
+<div class="variant-price" style="color:var(--green)">$0</div>
+</div>
+<div class="variant-desc">Бесплатная регистрация. Посмотрите все возможности системы, ознакомьтесь с инструментами. Ничего платить не нужно.</div>
+</div>
+
+<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
+<div class="variant-hdr">
+<div class="variant-icon">\u{1F680}</div>
+<div class="variant-title">Полный старт</div>
+<div class="variant-price">~$120</div>
+</div>
+<div class="variant-desc">7 уровней доступа (0.192 opBNB) + все инструменты + Академия CardGift которая платит за образование. Первая $1,000 за 21 день.</div>
+</div>
+
+<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
+<div class="variant-hdr">
+<div class="variant-icon">\u{26A1}</div>
+<div class="variant-title">Быстрый старт</div>
+<div class="variant-price">~$25 + $5</div>
+</div>
+<div class="variant-desc">4 уровня доступа + реклама от $5. Система сразу работает — контакты приходят автоматически. Минимум вложений, максимум действий.</div>
+</div>
+
+<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
+<div class="variant-hdr">
+<div class="variant-icon">\u{1F3E2}</div>
+<div class="variant-title">Для предпринимателей</div>
+<div class="variant-price">~$120 + $5</div>
+</div>
+<div class="variant-desc">Полный доступ + свой лендинг + CRM + рассылки. Предлагайте свои товары и услуги клиентской базе. Система приводит клиентов.</div>
+</div>
+
+<button class="modal-close" onclick="closeModal()">Закрыть</button>
+</div>
+</div>
+
+<script>
+var walletAddress='';
+var gwId='';
+
+function showVariants(){document.getElementById('modal-variants').classList.add('show')}
+function closeModal(){document.getElementById('modal-variants').classList.remove('show')}
+document.getElementById('modal-variants').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+function copyLink(el){
+    var text=el.textContent||el.innerText;
+    navigator.clipboard.writeText('https://'+text).then(function(){
+        var btn=el.nextElementSibling||el.parentElement.querySelector('.copy-btn');
+        if(btn){btn.textContent='\u2705';btn.classList.add('copied');setTimeout(function(){btn.textContent='Копировать';btn.classList.remove('copied')},2000)}
+    });
+}
+
+(async function(){
+    var provider=window.ethereum||(window.safepal&&window.safepal.ethereum);
+    if(provider){
+        try{
+            var accounts=await provider.request({method:'eth_accounts'});
+            if(accounts&&accounts.length){
+                walletAddress=accounts[0].toLowerCase();
+                document.getElementById('wallet-tag').textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
+            }
+        }catch(e){}
+    }
+    // Try to get GW ID from localStorage or derive from wallet
+    gwId=localStorage.getItem('gwad-user-id')||'';
+    var shortId=gwId.replace(/^GW/i,'')||walletAddress.slice(2,9)||'0000000';
+    document.getElementById('link-r').textContent=shortId;
+    document.getElementById('link-d').textContent=shortId;
+    document.getElementById('link-m').textContent=shortId;
+
+    // Load real stats from API if available
+    if(walletAddress){
+        try{
+            var r=await fetch('https://cgift.club/api/ad-platform?action=my_stats',{headers:{'X-Wallet-Address':walletAddress}});
+            var d=await r.json();
+            if(d.ok){
+                if(d.clicks)document.getElementById('st-clicks').textContent=d.clicks;
+                if(d.registrations)document.getElementById('st-regs').textContent=d.registrations;
+                if(d.active)document.getElementById('st-active').textContent=d.active;
+            }
+        }catch(e){}
+    }
+})();
+</script>
+</body>
+</html>
