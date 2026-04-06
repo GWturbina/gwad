@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="t-title">Регистрация</title>
+<meta property="og:title" content="Получить бесплатный доступ — MLM 4.0">
+<meta property="og:description" content="Инструменты на $1,700 — бесплатно. Настрой за 20 минут.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.lang-sw{position:fixed;top:12px;right:12px;z-index:100;display:flex;gap:4px;background:rgba(10,10,26,0.9);border:1px solid #2a2a4a;border-radius:10px;padding:4px}
+.lang-btn{padding:6px 12px;border:none;border-radius:7px;background:transparent;color:#888;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:#FFD700;color:#000}
+.card{max-width:440px;width:100%;background:#141428;border:1px solid #2a2a4a;border-radius:20px;padding:32px 28px;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.logo{text-align:center;margin-bottom:20px}
+.logo-icon{font-size:48px;margin-bottom:8px}
+.logo-text{font-size:22px;font-weight:800;color:#fff}
+.logo-sub{font-size:13px;color:#888;margin-top:4px;line-height:1.6}
+.gold-line{width:40px;height:3px;background:#FFD700;margin:16px auto 20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:#888;margin-bottom:5px;font-weight:600}
+.field input,.field select{width:100%;padding:13px 14px;background:#1e1e3a;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:14px;transition:border-color .2s}
+.field input:focus,.field select:focus{outline:none;border-color:#FFD700}
+.field input::placeholder{color:#555}
+.contact-row{display:grid;grid-template-columns:auto 1fr;gap:8px}
+.contact-type{padding:13px 10px;background:#1e1e3a;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:13px;cursor:pointer;min-width:50px;text-align:center;transition:border-color .2s}
+.contact-type:focus{outline:none;border-color:#FFD700}
+.submit-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:14px;font-size:17px;font-weight:800;color:#000;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:18px}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,215,0,0.3)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.note{text-align:center;font-size:11px;color:#555;margin-top:12px;line-height:1.6}
+.note a{color:#FFD700;text-decoration:none}
+.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:#ef4444;margin-bottom:12px;display:none}
+.ok-screen{text-align:center;display:none}
+.ok-screen .ok-icon{font-size:56px;margin-bottom:12px}
+.ok-screen h2{color:#10b981;font-size:22px;margin-bottom:8px}
+.ok-screen p{color:#888;font-size:14px;line-height:1.7;margin-bottom:16px}
+.ok-btn{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#FFD700,#FFA000);border-radius:12px;font-size:15px;font-weight:700;color:#000;text-decoration:none;transition:transform .2s}
+.ok-btn:hover{transform:translateY(-2px)}
+.gifts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:16px}
+.gift{text-align:center;padding:8px 4px;background:rgba(255,215,0,0.04);border-radius:8px;border:1px solid rgba(255,215,0,0.1)}
+.gift-e{font-size:18px}
+.gift-t{font-size:9px;color:#888;margin-top:2px;line-height:1.3}
+</style>
+</head>
+<body>
+
+<div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<div class="card">
+    <!-- FORM -->
+    <div id="form-screen">
+        <div class="logo">
+            <div class="logo-icon">🚀</div>
+            <div class="logo-text" data-i18n="formTitle">Получить доступ</div>
+            <div class="logo-sub" data-i18n="formSub">Оставьте контакт — мы отправим ссылку и поможем настроить систему за 20 минут</div>
+        </div>
+        <div class="gold-line"></div>
+
+        <div class="err" id="err"></div>
+
+        <div class="field">
+            <label data-i18n="labelName">Ваше имя *</label>
+            <input id="f-name" placeholder="" data-ph="namePh" autocomplete="given-name">
+        </div>
+
+        <div class="field">
+            <label data-i18n="labelContact">Telegram или телефон *</label>
+            <div class="contact-row">
+                <select class="contact-type" id="f-type">
+                    <option value="telegram">📱 TG</option>
+                    <option value="phone">📞</option>
+                    <option value="whatsapp">💬 WA</option>
+                </select>
+                <input id="f-contact" placeholder="" data-ph="contactPh" autocomplete="off">
+            </div>
+        </div>
+
+        <button class="submit-btn" id="btn-submit" onclick="doRegister()" data-i18n="btnSubmit">🚀 ПОЛУЧИТЬ ДОСТУП</button>
+
+        <div class="note" data-i18n="formNote">Бесплатно · Без спама · Только полезная информация</div>
+
+        <div class="gifts">
+            <div class="gift"><div class="gift-e">💻</div><div class="gift-t" data-i18n="g1">Кабинет + CRM</div></div>
+            <div class="gift"><div class="gift-e">🤖</div><div class="gift-t" data-i18n="g2">Боты + рассылки</div></div>
+            <div class="gift"><div class="gift-e">🎨</div><div class="gift-t" data-i18n="g3">Свой лендинг</div></div>
+            <div class="gift"><div class="gift-e">📢</div><div class="gift-t" data-i18n="g4">Реклама от $5</div></div>
+            <div class="gift"><div class="gift-e">🎓</div><div class="gift-t" data-i18n="g5">Академия</div></div>
+            <div class="gift"><div class="gift-e">📋</div><div class="gift-t" data-i18n="g6">Опросы</div></div>
+        </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="ok-screen" id="ok-screen">
+        <div class="ok-icon">✅</div>
+        <h2 data-i18n="okTitle">Вы зарегистрированы!</h2>
+        <p data-i18n="okText">Сейчас мы перенаправим вас в кабинет.<br>Там — пошаговая инструкция как настроить всё за 20 минут.</p>
+        <a href="/cabinet" class="ok-btn" id="ok-btn" data-i18n="okBtn">Перейти в кабинет →</a>
+    </div>
+</div>
+
+<script>
+var T = {
+ru: {
+    formTitle:'Получить доступ', formSub:'Оставьте контакт — мы отправим ссылку и поможем настроить систему за 20 минут',
+    labelName:'Ваше имя *', namePh:'Как вас зовут?',
+    labelContact:'Telegram или телефон *', contactPh:'@username или +380...',
+    btnSubmit:'🚀 ПОЛУЧИТЬ ДОСТУП',
+    formNote:'Бесплатно · Без спама · Только полезная информация',
+    g1:'Кабинет + CRM', g2:'Боты + рассылки', g3:'Свой лендинг', g4:'Реклама от $5', g5:'Академия', g6:'Опросы',
+    okTitle:'Вы зарегистрированы!', okText:'Сейчас мы перенаправим вас в кабинет.<br>Там — пошаговая инструкция как настроить всё за 20 минут.', okBtn:'Перейти в кабинет →',
+    errName:'Укажите имя', errContact:'Укажите Telegram или телефон', errServer:'Ошибка сервера. Попробуйте ещё раз.',
+    pageTitle:'Регистрация'
+},
+ua: {
+    formTitle:'Отримати доступ', formSub:'Залиште контакт — ми надішлемо посилання і допоможемо налаштувати систему за 20 хвилин',
+    labelName:'Ваше ім\'я *', namePh:'Як вас звати?',
+    labelContact:'Telegram або телефон *', contactPh:'@username або +380...',
+    btnSubmit:'🚀 ОТРИМАТИ ДОСТУП',
+    formNote:'Безкоштовно · Без спаму · Тільки корисна інформація',
+    g1:'Кабінет + CRM', g2:'Боти + розсилки', g3:'Свій лендінг', g4:'Реклама від $5', g5:'Академія', g6:'Опитування',
+    okTitle:'Ви зареєстровані!', okText:'Зараз ми перенаправимо вас в кабінет.<br>Там — покрокова інструкція як налаштувати все за 20 хвилин.', okBtn:'Перейти в кабінет →',
+    errName:'Вкажіть ім\'я', errContact:'Вкажіть Telegram або телефон', errServer:'Помилка сервера. Спробуйте ще раз.',
+    pageTitle:'Реєстрація'
+},
+en: {
+    formTitle:'Get access', formSub:'Leave your contact — we\'ll send you the link and help you set up in 20 minutes',
+    labelName:'Your name *', namePh:'What\'s your name?',
+    labelContact:'Telegram or phone *', contactPh:'@username or +1...',
+    btnSubmit:'🚀 GET ACCESS',
+    formNote:'Free · No spam · Only useful information',
+    g1:'Dashboard + CRM', g2:'Bots + mailings', g3:'Your landing page', g4:'Ads from $5', g5:'Academy', g6:'Surveys',
+    okTitle:'You\'re registered!', okText:'We\'re redirecting you to the dashboard.<br>Step-by-step guide to set up everything in 20 minutes.', okBtn:'Go to dashboard →',
+    errName:'Enter your name', errContact:'Enter Telegram or phone', errServer:'Server error. Please try again.',
+    pageTitle:'Registration'
+}
+};
+
+var curLang = 'ru';
+
+function setLang(lang) {
+    curLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelector('.lang-btn[onclick*="'+lang+'"]').classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.querySelectorAll('[data-ph]').forEach(function(el){
+        var key = el.getAttribute('data-ph');
+        if (T[lang] && T[lang][key]) el.placeholder = T[lang][key];
+    });
+    document.getElementById('t-title').textContent = T[lang].pageTitle || '';
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    localStorage.setItem('gwad-lang', lang);
+}
+
+// Auto-detect
+(function(){
+    var saved = localStorage.getItem('gwad-lang');
+    if (saved && T[saved]) { setLang(saved); return; }
+    var nav = (navigator.language || '').toLowerCase();
+    if (nav.startsWith('uk')) setLang('ua');
+    else if (nav.startsWith('en')) setLang('en');
+    else setLang('ru');
+})();
+
+// Get ref from URL (passed from landing or campaign)
+var urlParams = new URLSearchParams(location.search);
+var refId = urlParams.get('ref') || '';
+var utmCampaign = urlParams.get('utm_campaign') || '';
+var utmSource = urlParams.get('utm_source') || '';
+
+async function doRegister() {
+    var errEl = document.getElementById('err');
+    errEl.style.display = 'none';
+
+    var name = document.getElementById('f-name').value.trim();
+    var contactType = document.getElementById('f-type').value;
+    var contact = document.getElementById('f-contact').value.trim();
+
+    if (!name) { errEl.textContent = T[curLang].errName; errEl.style.display = 'block'; return; }
+    if (!contact) { errEl.textContent = T[curLang].errContact; errEl.style.display = 'block'; return; }
+
+    var btn = document.getElementById('btn-submit');
+    btn.disabled = true;
+    btn.textContent = '⏳...';
+
+    try {
+        var r = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                contact_type: contactType,
+                contact_value: contact,
+                ref_id: refId,
+                utm_campaign: utmCampaign,
+                utm_source: utmSource,
+                lang: curLang
+            })
+        });
+        var data = await r.json();
+
+        if (data.ok) {
+            // Save contact_id for cabinet
+            if (data.contact_id) localStorage.setItem('gwad-contact-id', data.contact_id);
+            localStorage.setItem('gwad-name', name);
+
+            document.getElementById('form-screen').style.display = 'none';
+            document.getElementById('ok-screen').style.display = 'block';
+
+            // Auto-redirect after 3 sec
+            setTimeout(function() { location.href = '/cabinet'; }, 3000);
+        } else {
+            errEl.textContent = data.error || T[curLang].errServer;
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = T[curLang].btnSubmit;
+        }
+    } catch(e) {
+        errEl.textContent = T[curLang].errServer;
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = T[curLang].btnSubmit;
+    }
+}
+
+// Enter key support
+document.getElementById('f-contact').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doRegister();
+});
+</script>
+</body>
+</html>
