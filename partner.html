@@ -7,253 +7,391 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
-:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
-.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-.topbar h1{font-size:18px;color:var(--gold)}
-.topbar .wallet-id{font-size:11px;color:var(--muted);background:#1a1a35;padding:4px 10px;border-radius:8px}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--orange:#f59e0b;--purple:#a855f7;--card:#141428;--border:#2a2a4a;--muted:#888;--input:#1e1e3a}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.topbar h1{font-size:17px;color:var(--gold);flex:1}
+.topbar h1 span{font-size:11px;color:var(--muted);font-weight:400}
+.help-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);background:transparent;color:var(--gold);font-size:16px;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.help-btn:hover{background:rgba(255,215,0,0.15)}
+.notif-btn{position:relative;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:transparent;color:#ccc;font-size:16px;cursor:pointer}
+.notif-badge{position:absolute;top:-2px;right:-2px;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:10px}
+.wallet-tag{font-size:10px;color:var(--muted);background:#1a1a35;padding:4px 8px;border-radius:6px}
 .wrap{max-width:520px;margin:0 auto;padding:16px}
 
-/* Stats row */
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
-.stat-val{font-size:24px;font-weight:800;color:var(--gold)}
-.stat-val.green{color:var(--green)}
-.stat-val.blue{color:var(--blue)}
-.stat-label{font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+/* Role switcher */
+.role-sw{display:flex;gap:4px;background:#0e0e20;padding:4px;border-radius:10px;margin-bottom:14px}
+.role-btn{flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:.2s;text-align:center}
+.role-btn:hover{color:#fff}
+.role-btn.active{background:rgba(255,215,0,0.12);color:var(--gold)}
 
-/* Cards */
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
+.stat-val{font-size:22px;font-weight:800}
+.stat-label{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* Card */
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
-.card-hdr{padding:14px 16px;border-bottom:1px solid var(--border);font-weight:600;color:var(--gold);font-size:14px;display:flex;align-items:center;justify-content:space-between}
-.card-body{padding:16px}
+.card-hdr{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;color:var(--gold);font-size:13px;display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:14px 16px}
+
+/* Balance */
+.balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bal{padding:14px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)}
+.bal-val{font-size:20px;font-weight:800;color:var(--gold)}
+.bal-label{font-size:10px;color:var(--muted);margin-top:2px}
+.bal-sub{font-size:10px;color:var(--green);margin-top:2px}
 
 /* Links */
-.link-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e1e35}
+.link-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e1e35}
 .link-row:last-child{border-bottom:none}
-.link-icon{font-size:20px;min-width:28px;text-align:center}
-.link-url{flex:1;font-size:12px;color:var(--blue);word-break:break-all;cursor:pointer}
-.link-url:hover{text-decoration:underline}
-.copy-btn{padding:6px 10px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);border-radius:8px;color:var(--gold);font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
-.copy-btn:hover{background:rgba(255,215,0,0.2)}
-.copy-btn.copied{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);color:var(--green)}
+.link-icon{font-size:18px;min-width:24px;text-align:center}
+.link-url{flex:1;font-size:11px;color:var(--blue);cursor:pointer;word-break:break-all}
+.copy-btn{padding:5px 8px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.15);border-radius:6px;color:var(--gold);font-size:10px;cursor:pointer;white-space:nowrap}
+.copy-btn.ok{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:var(--green)}
 
-/* Campaigns to join */
-.camp{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #1e1e35}
+/* Campaigns */
+.camp{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #1e1e35}
 .camp:last-child{border-bottom:none}
-.camp-icon{font-size:28px}
+.camp-icon{font-size:24px}
 .camp-info{flex:1}
-.camp-name{font-size:14px;font-weight:700;color:#fff}
-.camp-desc{font-size:11px;color:var(--muted);margin-top:2px}
-.camp-price{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap}
+.camp-name{font-size:13px;font-weight:700;color:#fff}
+.camp-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.camp-price{font-size:12px;font-weight:700;color:var(--green)}
 
 /* Orders */
-.order{padding:12px;border-bottom:1px solid #1e1e35}
+.order{padding:10px;border-bottom:1px solid #1e1e35}
 .order:last-child{border-bottom:none}
 .order-top{display:flex;justify-content:space-between;align-items:center}
-.order-amount{font-size:14px;font-weight:700;color:#fff}
-.order-status{font-size:11px;padding:3px 8px;border-radius:6px}
-.order-status.active{background:rgba(16,185,129,0.12);color:var(--green)}
-.order-status.ended{background:rgba(136,136,136,0.12);color:var(--muted)}
-.order-stats{font-size:11px;color:var(--muted);margin-top:4px}
-.order-stats span{color:var(--green);font-weight:600}
+.order-amount{font-size:13px;font-weight:700;color:#fff}
+.order-st{font-size:10px;padding:2px 8px;border-radius:6px}
+.order-st.active{background:rgba(16,185,129,0.12);color:var(--green)}
+.order-st.ended{background:rgba(136,136,136,0.12);color:var(--muted)}
+.order-stats{font-size:10px;color:var(--muted);margin-top:3px}
+.order-stats b{color:var(--green)}
+
+/* Team (partner tree) */
+.team-line{padding:8px 10px;border-bottom:1px solid #1e1e35;display:flex;align-items:center;gap:8px;font-size:12px}
+.team-line:last-child{border-bottom:none}
+.team-lvl{width:24px;height:24px;border-radius:50%;background:rgba(255,215,0,0.1);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.team-id{color:var(--gold);font-weight:600;font-size:11px}
+.team-wallet{color:var(--muted);font-size:10px}
+.team-level{margin-left:auto;font-size:10px;color:var(--green)}
 
 /* CTA */
-.cta-section{text-align:center;padding:20px 0}
-.cta-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--gold),#FFA000);border:none;border-radius:14px;font-size:16px;font-weight:700;color:#000;cursor:pointer;transition:transform .2s;text-decoration:none;margin-bottom:8px}
+.cta-btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;color:#000;cursor:pointer;transition:transform .2s;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--gold),#FFA000);margin-bottom:8px}
 .cta-btn:hover{transform:translateY(-2px)}
-.cta-btn.secondary{background:transparent;border:1px solid var(--border);color:#ccc;font-size:13px;padding:12px}
-.cta-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+.cta-secondary{background:transparent;border:1px solid var(--border);color:#ccc;font-size:12px;padding:12px}
+.cta-secondary:hover{border-color:var(--gold);color:var(--gold)}
 
-/* Modal */
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.show{display:flex}
-.modal{background:#1a1a35;border:1px solid var(--border);border-radius:20px;max-width:440px;width:100%;padding:28px;animation:fadeUp .3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h2{color:var(--gold);font-size:18px;text-align:center;margin-bottom:6px}
-.modal .msub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:18px;line-height:1.6}
-.variant{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+/* Telegram bot button */
+.tg-bot{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,rgba(0,136,204,0.1),rgba(0,136,204,0.03));border:1px solid rgba(0,136,204,0.25);border-radius:12px;cursor:pointer;transition:.2s;margin-bottom:12px;text-decoration:none;color:inherit}
+.tg-bot:hover{border-color:rgba(0,136,204,0.5)}
+.tg-bot-icon{font-size:28px}
+.tg-bot-text{flex:1}
+.tg-bot-title{font-size:13px;font-weight:700;color:#fff}
+.tg-bot-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+
+/* Nav cards */
+.nav-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;text-decoration:none;color:inherit;transition:border-color .2s}
+.nav-card:hover{border-color:rgba(255,215,0,0.3)}
+.nav-card-icon{font-size:24px}
+.nav-card-title{font-size:13px;font-weight:700;color:#fff}
+.nav-card-desc{font-size:11px;color:var(--muted);margin-top:1px}
+
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:12px}
+.foot{text-align:center;padding:16px 0;font-size:10px;color:#444}
+
+/* ═══ MODALS ═══ */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:#1a1a35;border:1px solid var(--border);border-radius:20px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;animation:mUp .3s ease}
+@keyframes mUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal h2{color:var(--gold);font-size:18px;text-align:center;margin-bottom:4px}
+.modal .msub{color:var(--muted);font-size:12px;text-align:center;margin-bottom:16px;line-height:1.6}
+.variant{padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
 .variant:hover{border-color:rgba(255,215,0,0.4)}
-.variant-hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.variant-icon{font-size:24px}
-.variant-title{font-size:15px;font-weight:700;color:#fff}
-.variant-price{font-size:13px;font-weight:700;color:var(--gold);margin-left:auto}
-.variant-desc{font-size:12px;color:var(--muted);line-height:1.6}
-.modal-close{display:block;width:100%;padding:12px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#888;font-size:13px;cursor:pointer;margin-top:8px;transition:.2s}
+.variant-hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.variant-icon{font-size:22px}
+.variant-title{font-size:14px;font-weight:700;color:#fff}
+.variant-price{font-size:12px;font-weight:700;color:var(--gold);margin-left:auto}
+.variant-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.modal-close{display:block;width:100%;padding:10px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#888;font-size:12px;cursor:pointer;margin-top:8px;transition:.2s}
 .modal-close:hover{border-color:var(--gold);color:#fff}
 
-.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
-.foot{text-align:center;padding:16px 0;font-size:10px;color:#444}
-.loading{text-align:center;padding:40px;color:var(--muted)}
-.nav-links{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.nav-link{padding:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;color:#ccc;font-size:12px;text-decoration:none;transition:.2s}
-.nav-link:hover{border-color:var(--gold);color:var(--gold)}
+/* Guide modal */
+.guide-item{padding:12px;border-bottom:1px solid var(--border)}
+.guide-item:last-child{border-bottom:none}
+.guide-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
+.guide-text{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* Onboarding tooltip */
+.onboard-tip{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:150;display:none;max-width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.onboard-tip.show{display:block;animation:mUp .3s ease}
+.onboard-tip .tip-close{background:rgba(0,0,0,0.2);border:none;color:#000;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-top:6px;font-weight:700}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
-<h1>\u{1F4CA} Мой кабинет</h1>
-<span class="wallet-id" id="wallet-tag">...</span>
+<h1>&#x1F4CA; AdPlatform <span>Мой кабинет</span></h1>
+<button class="help-btn" onclick="showGuide()">?</button>
+<button class="notif-btn" onclick="location.href='https://cgift.club/dashboard.html'">&#x1F514;<span class="notif-badge" id="notif-count" style="display:none">0</span></button>
+<span class="wallet-tag" id="wallet-tag">...</span>
 </div>
 
 <div class="wrap">
 
-<!-- Navigation -->
-<div class="nav-links">
-<a href="https://cgift.club/dashboard.html" class="nav-link">\u{1F3E0} CardGift</a>
-<a href="https://gws.ink" class="nav-link">\u{1F48E} Diamond Club</a>
-<a href="https://gwm.ink" class="nav-link">\u{1F3E0} Метр\u00B2</a>
+<!-- ROLE SWITCHER -->
+<div class="role-sw" id="role-sw">
+<button class="role-btn" data-role="client" onclick="setRole('client')">&#x1F441; Клиент</button>
+<button class="role-btn active" data-role="partner" onclick="setRole('partner')">&#x1F91D; Партнёр</button>
+<button class="role-btn" data-role="leader" onclick="setRole('leader')">&#x1F451; Лидер</button>
 </div>
 
-<!-- Stats -->
-<div class="stats" id="stats">
-<div class="stat"><div class="stat-val" id="st-clicks">0</div><div class="stat-label">Кликов</div></div>
-<div class="stat"><div class="stat-val green" id="st-regs">0</div><div class="stat-label">Регистраций</div></div>
-<div class="stat"><div class="stat-val blue" id="st-active">0</div><div class="stat-label">Активных</div></div>
+<!-- STATS -->
+<div class="stats" id="stats-block">
+<div class="stat"><div class="stat-val" style="color:var(--gold)" id="st-invested">$0</div><div class="stat-label">Вложено</div></div>
+<div class="stat"><div class="stat-val" style="color:var(--blue)" id="st-clicks">0</div><div class="stat-label">Кликов</div></div>
+<div class="stat"><div class="stat-val" style="color:var(--green)" id="st-regs">0</div><div class="stat-label">Регистраций</div></div>
 </div>
 
-<!-- My links -->
+<!-- BALANCE -->
 <div class="card">
-<div class="card-hdr">\u{1F517} Мои ссылки</div>
-<div id="my-links" class="card-body">
-<div class="link-row">
-<div class="link-icon">\u{1F381}</div>
-<div class="link-url" onclick="copyLink(this)">gwad.ink/r/<span id="link-r">...</span></div>
-<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
-</div>
-<div class="link-row">
-<div class="link-icon">\u{1F48E}</div>
-<div class="link-url" onclick="copyLink(this)">gwad.ink/d/<span id="link-d">...</span></div>
-<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
-</div>
-<div class="link-row">
-<div class="link-icon">\u{1F3E0}</div>
-<div class="link-url" onclick="copyLink(this)">gwad.ink/m/<span id="link-m">...</span></div>
-<button class="copy-btn" onclick="copyLink(this.previousElementSibling)">Копировать</button>
+<div class="card-hdr">&#x1F4B0; Баланс</div>
+<div class="card-body">
+<div class="balance-grid">
+<div class="bal"><div class="bal-val" id="bal-usdt">$0.00</div><div class="bal-label">USDT (реклама)</div><div class="bal-sub">Заработано с маркетинга</div></div>
+<div class="bal"><div class="bal-val" style="color:var(--green)" id="bal-academy">$0.00</div><div class="bal-label">Академия</div><div class="bal-sub">За обучение + команду</div></div>
 </div>
 </div>
 </div>
 
-<!-- Available campaigns -->
+<!-- TELEGRAM BOT -->
+<a class="tg-bot" href="https://t.me/CardGiftBot" target="_blank" id="tg-bot-link">
+<div class="tg-bot-icon">&#x1F916;</div>
+<div class="tg-bot-text">
+<div class="tg-bot-title">Активируй образовательный бот</div>
+<div class="tg-bot-desc">Ежедневные уведомления + обучение — как управлять системой и выйти на доход от нескольких тысяч в месяц</div>
+</div>
+</a>
+
+<!-- MY LINKS -->
 <div class="card">
-<div class="card-hdr">\u{1F4E2} Доступные кампании <span style="font-size:11px;color:var(--muted);font-weight:400">Оплати — получи контакты</span></div>
-<div id="campaigns">
-<div class="camp">
-<div class="camp-icon">\u{1F48E}</div>
-<div class="camp-info"><div class="camp-name">Diamond Club</div><div class="camp-desc">Бриллианты со скидкой 70%. Пассивный доход.</div></div>
-<div class="camp-price">от $5</div>
-</div>
-<div class="camp">
-<div class="camp-icon">\u{1F3E0}</div>
-<div class="camp-info"><div class="camp-name">Метр\u00B2</div><div class="camp-desc">Коллективное строительство. Без ипотеки.</div></div>
-<div class="camp-price">от $5</div>
-</div>
+<div class="card-hdr">&#x1F517; Мои ссылки</div>
+<div class="card-body" id="links-block">
+<div class="link-row"><div class="link-icon">&#x1F381;</div><div class="link-url" onclick="copyL(this)">gwad.ink/r/<span class="lnk-id">...</span></div><button class="copy-btn" onclick="copyL(this.previousElementSibling)">&#x1F4CB;</button></div>
+<div class="link-row"><div class="link-icon">&#x1F48E;</div><div class="link-url" onclick="copyL(this)">gwad.ink/d/<span class="lnk-id">...</span></div><button class="copy-btn" onclick="copyL(this.previousElementSibling)">&#x1F4CB;</button></div>
+<div class="link-row"><div class="link-icon">&#x1F3E0;</div><div class="link-url" onclick="copyL(this)">gwad.ink/m/<span class="lnk-id">...</span></div><button class="copy-btn" onclick="copyL(this.previousElementSibling)">&#x1F4CB;</button></div>
 </div>
 </div>
 
-<!-- Buy advertising CTA -->
-<div class="cta-section">
-<button class="cta-btn" onclick="showVariants()">\u{1F680} Начать получать контакты</button>
-<button class="cta-btn secondary" onclick="location.href='https://cgift.club/dashboard.html'">Перейти в CardGift</button>
-</div>
-
-<!-- My orders -->
+<!-- CAMPAIGNS -->
 <div class="card">
-<div class="card-hdr">\u{1F4CB} Мои заказы</div>
-<div id="my-orders"><div class="empty">У вас пока нет заказов. Выберите кампанию и оплатите рекламу — контакты начнут приходить автоматически.</div></div>
+<div class="card-hdr">&#x1F4E2; Доступные кампании</div>
+<div id="campaigns-block">
+<div class="camp"><div class="camp-icon">&#x1F48E;</div><div class="camp-info"><div class="camp-name">Diamond Club</div><div class="camp-meta">Бриллианты со скидкой 70%</div></div><div class="camp-price">от $5</div></div>
+<div class="camp"><div class="camp-icon">&#x1F3E0;</div><div class="camp-info"><div class="camp-name">Метр&#x00B2;</div><div class="camp-meta">Коллективное строительство</div></div><div class="camp-price">от $5</div></div>
+</div>
 </div>
 
-<div class="foot">gwad.ink · 2026</div>
+<!-- BUY AD -->
+<button class="cta-btn" onclick="showVariants()">&#x1F680; Начать получать контакты</button>
+
+<!-- MY ORDERS -->
+<div class="card">
+<div class="card-hdr">&#x1F4CB; Мои заказы</div>
+<div id="orders-block"><div class="empty">Нет активных заказов. Оплатите рекламу — контакты начнут приходить автоматически.</div></div>
 </div>
 
-<!-- VARIANTS MODAL -->
-<div class="modal-overlay" id="modal-variants">
+<!-- TEAM (partner/leader only) -->
+<div class="card" id="team-card" style="display:none">
+<div class="card-hdr">&#x1F465; Команда <span style="font-size:11px;color:var(--muted);font-weight:400" id="team-count">0 чел.</span></div>
+<div id="team-block"><div class="empty">Данные команды загружаются из GlobalWay...</div></div>
+</div>
+
+<!-- NAVIGATION -->
+<div style="margin-top:16px">
+<a class="nav-card" href="https://cgift.club/dashboard.html" target="_blank" id="nav-cardgift">
+<div class="nav-card-icon">&#x1F381;</div>
+<div><div class="nav-card-title">CardGift</div><div class="nav-card-desc">Генератор, CRM, блог, опросы, рассылки — все инструменты</div></div>
+</a>
+<a class="nav-card" href="https://cgift.club/academy.html" target="_blank">
+<div class="nav-card-icon">&#x1F393;</div>
+<div><div class="nav-card-title">Академия</div><div class="nav-card-desc">Обучение которое платит за ваше образование</div></div>
+</a>
+<a class="nav-card" href="https://gws.ink" target="_blank">
+<div class="nav-card-icon">&#x1F48E;</div>
+<div><div class="nav-card-title">Diamond Club</div><div class="nav-card-desc">Инвестиции в бриллианты. Пассивный доход.</div></div>
+</a>
+<a class="nav-card" href="https://gwm.ink" target="_blank">
+<div class="nav-card-icon">&#x1F3E0;</div>
+<div><div class="nav-card-title">Метр&#x00B2;</div><div class="nav-card-desc">Коллективное строительство без ипотеки</div></div>
+</a>
+</div>
+
+<div class="foot">gwad.ink &middot; AdPlatform &middot; 2026</div>
+</div>
+
+<!-- ═══ ROLE SELECTION MODAL (first visit) ═══ -->
+<div class="modal-bg" id="modal-role">
 <div class="modal">
-<h2>\u{1F3AF} Выберите свой вариант</h2>
-<div class="msub">Система предлагает несколько путей — выберите тот который вам подходит</div>
+<h2>&#x1F3AF; Кто вы?</h2>
+<div class="msub">Выберите — это определит какие инструменты и информацию вы увидите. Можно изменить позже.</div>
 
-<div class="variant" onclick="location.href='https://cgift.club/dashboard.html'">
-<div class="variant-hdr">
-<div class="variant-icon">\u{1F441}</div>
-<div class="variant-title">Ознакомиться</div>
-<div class="variant-price" style="color:var(--green)">$0</div>
-</div>
-<div class="variant-desc">Бесплатная регистрация. Посмотрите все возможности системы, ознакомьтесь с инструментами. Ничего платить не нужно.</div>
+<div class="variant" onclick="selectRole('client')">
+<div class="variant-hdr"><div class="variant-icon">&#x1F441;</div><div class="variant-title">Клиент</div><div class="variant-price" style="color:var(--green)">$0</div></div>
+<div class="variant-desc">Хочу посмотреть что есть. Ознакомиться с товарами и услугами. Пока ничего покупать не планирую.</div>
 </div>
 
-<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
-<div class="variant-hdr">
-<div class="variant-icon">\u{1F680}</div>
-<div class="variant-title">Полный старт</div>
-<div class="variant-price">~$120</div>
-</div>
-<div class="variant-desc">7 уровней доступа (0.192 opBNB) + все инструменты + Академия CardGift которая платит за образование. Первая $1,000 за 21 день.</div>
+<div class="variant" onclick="selectRole('partner')">
+<div class="variant-hdr"><div class="variant-icon">&#x26A1;</div><div class="variant-title">Партнёр</div><div class="variant-price">от $25</div></div>
+<div class="variant-desc">Нужны деньги. Покупаю 4 уровня доступа + рекламу от $5. Система работает — контакты приходят сами. Быстрый старт.</div>
 </div>
 
-<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
-<div class="variant-hdr">
-<div class="variant-icon">\u{26A1}</div>
-<div class="variant-title">Быстрый старт</div>
-<div class="variant-price">~$25 + $5</div>
-</div>
-<div class="variant-desc">4 уровня доступа + реклама от $5. Система сразу работает — контакты приходят автоматически. Минимум вложений, максимум действий.</div>
+<div class="variant" onclick="selectRole('leader')">
+<div class="variant-hdr"><div class="variant-icon">&#x1F680;</div><div class="variant-title">Лидер</div><div class="variant-price">~$120</div></div>
+<div class="variant-desc">Полный доступ (7 уровней) + Академия которая платит за обучение. Первая $1,000 за 21 день. Полное сопровождение.</div>
 </div>
 
-<div class="variant" onclick="location.href='https://cgift.club/levels.html'">
-<div class="variant-hdr">
-<div class="variant-icon">\u{1F3E2}</div>
-<div class="variant-title">Для предпринимателей</div>
-<div class="variant-price">~$120 + $5</div>
+<div class="variant" onclick="selectRole('business')">
+<div class="variant-hdr"><div class="variant-icon">&#x1F3E2;</div><div class="variant-title">Предприниматель</div><div class="variant-price">~$120 + $5</div></div>
+<div class="variant-desc">У меня есть товар/услуга. Нужна клиентская база. Свой лендинг + CRM + рассылки + реклама. Система приводит клиентов.</div>
 </div>
-<div class="variant-desc">Полный доступ + свой лендинг + CRM + рассылки. Предлагайте свои товары и услуги клиентской базе. Система приводит клиентов.</div>
+</div>
 </div>
 
-<button class="modal-close" onclick="closeModal()">Закрыть</button>
+<!-- ═══ VARIANTS MODAL (buy ad) ═══ -->
+<div class="modal-bg" id="modal-variants">
+<div class="modal">
+<h2>&#x1F4B3; Выберите вариант</h2>
+<div class="msub">Оплата через смарт-контракт в USDT (opBNB). 80% на рекламу, 20% партнёрская программа.</div>
+<div class="variant" onclick="location.href='https://cgift.club/levels.html'"><div class="variant-hdr"><div class="variant-icon">&#x26A1;</div><div class="variant-title">Быстрый старт</div><div class="variant-price">~$30</div></div><div class="variant-desc">4 уровня + реклама $5. Контакты начнут приходить сразу.</div></div>
+<div class="variant" onclick="location.href='https://cgift.club/levels.html'"><div class="variant-hdr"><div class="variant-icon">&#x1F680;</div><div class="variant-title">Полный доступ</div><div class="variant-price">~$125</div></div><div class="variant-desc">7 уровней + реклама $5. Максимум возможностей + Академия.</div></div>
+<button class="modal-close" onclick="closeM('modal-variants')">Закрыть</button>
 </div>
+</div>
+
+<!-- ═══ GUIDE MODAL ═══ -->
+<div class="modal-bg" id="modal-guide">
+<div class="modal">
+<h2>&#x1F4D6; Руководство</h2>
+<div class="msub">Как работать с платформой</div>
+<div class="guide-item"><div class="guide-title">&#x1F4CA; Дашборд</div><div class="guide-text">Главный экран — статистика, баланс, ссылки. Переключайте роль вверху для разных режимов.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F517; Мои ссылки</div><div class="guide-text">Скопируйте и отправьте куда угодно. /r/ — CardGift, /d/ — Diamond Club, /m/ — Метр&#x00B2;. Вирусная система подключена.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F4E2; Кампании</div><div class="guide-text">Выберите направление и оплатите рекламу от $5. Система автоматически распределяет трафик между участниками.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F4B0; Баланс</div><div class="guide-text">USDT — заработок от маркетинговой программы (9 уровней). Академия — оплата за обучение и рост команды.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F465; Команда</div><div class="guide-text">Ваши партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, адрес кошелька — как в Diamond Club.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F916; Telegram бот</div><div class="guide-text">Активируйте бот — ежедневные уведомления и обучение. Поможет выйти на доход от нескольких тысяч в месяц.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F381; CardGift</div><div class="guide-text">Центральная платформа экосистемы — генератор, CRM, блог, опросы, AI Studio, рассылки. Переход по кнопке внизу.</div></div>
+<button class="modal-close" onclick="closeM('modal-guide')">Закрыть</button>
+</div>
+</div>
+
+<!-- ═══ CARDGIFT OVERVIEW MODAL (first time) ═══ -->
+<div class="modal-bg" id="modal-cgift">
+<div class="modal">
+<h2>&#x1F381; Что такое CardGift?</h2>
+<div class="msub">Центральная платформа экосистемы GlobalWay</div>
+<div class="guide-item"><div class="guide-title">&#x1F4BB; Личный кабинет + CRM</div><div class="guide-text">Все контакты, аналитика, история — в одном месте. Ваша база клиентов навсегда.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F3A8; Генератор маркетинговых материалов</div><div class="guide-text">Визитки, лендинги, посты — создаёте за минуты. AI Studio помогает с текстами.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F393; Академия</div><div class="guide-text">Бесплатное обучение. За каждое достижение — оплата. 21 день = первая $1,000.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F4CB; Вирусные опросы</div><div class="guide-text">Клиенты приводят клиентов. Сарафанное радио на автопилоте.</div></div>
+<div class="guide-item"><div class="guide-title">&#x1F916; Боты + рассылки</div><div class="guide-text">Telegram-бот + пуш + 7-дневная воронка. Работает пока вы отдыхаете.</div></div>
+<a href="https://cgift.club/dashboard.html" target="_blank" class="cta-btn" style="margin-top:12px;display:block">Открыть CardGift &#x2192;</a>
+<button class="modal-close" onclick="closeM('modal-cgift');localStorage.setItem('gwad-cgift-seen','1')">Закрыть</button>
+</div>
+</div>
+
+<!-- ONBOARDING TIP -->
+<div class="onboard-tip" id="onboard-tip">
+<div id="onboard-text"></div>
+<button class="tip-close" onclick="nextTip()">Понятно &#x2192;</button>
 </div>
 
 <script>
-var walletAddress='';
-var gwId='';
+var walletAddress='',gwId='',currentRole='partner';
 
-function showVariants(){document.getElementById('modal-variants').classList.add('show')}
-function closeModal(){document.getElementById('modal-variants').classList.remove('show')}
-document.getElementById('modal-variants').addEventListener('click',function(e){if(e.target===this)closeModal()});
+// ═══ MODALS ═══
+function showM(id){document.getElementById(id).classList.add('show')}
+function closeM(id){document.getElementById(id).classList.remove('show')}
+function showVariants(){showM('modal-variants')}
+function showGuide(){showM('modal-guide')}
+document.querySelectorAll('.modal-bg').forEach(function(m){m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')})});
 
-function copyLink(el){
-    var text=el.textContent||el.innerText;
-    navigator.clipboard.writeText('https://'+text).then(function(){
-        var btn=el.nextElementSibling||el.parentElement.querySelector('.copy-btn');
-        if(btn){btn.textContent='\u2705';btn.classList.add('copied');setTimeout(function(){btn.textContent='Копировать';btn.classList.remove('copied')},2000)}
-    });
+// ═══ ROLE ═══
+function setRole(role){
+    currentRole=role; localStorage.setItem('gwad-role',role);
+    document.querySelectorAll('.role-btn').forEach(function(b){b.classList.toggle('active',b.dataset.role===role)});
+    document.getElementById('team-card').style.display=(role==='client')?'none':'block';
+}
+function selectRole(role){
+    setRole(role==='business'?'leader':role);
+    closeM('modal-role'); localStorage.setItem('gwad-role-selected','1');
+    startOnboarding();
 }
 
+// ═══ ONBOARDING ═══
+var tips=['&#x1F4CA; Это ваш DashBoard — здесь вся статистика, баланс и ссылки','&#x1F517; Скопируйте ссылку и отправьте кому угодно — система сама приведёт контакты','&#x1F4E2; Выберите кампанию и оплатите рекламу от $5 — контакты начнут приходить','&#x1F916; Не забудьте активировать Telegram-бот — ежедневное обучение бесплатно'];
+var tipIdx=0;
+function startOnboarding(){if(localStorage.getItem('gwad-onboard-done'))return;tipIdx=0;showTip()}
+function showTip(){if(tipIdx>=tips.length){localStorage.setItem('gwad-onboard-done','1');document.getElementById('onboard-tip').classList.remove('show');return}document.getElementById('onboard-text').innerHTML=tips[tipIdx];document.getElementById('onboard-tip').classList.add('show')}
+function nextTip(){tipIdx++;showTip()}
+
+// ═══ COPY LINK ═══
+function copyL(el){var t=el.textContent||el.innerText;navigator.clipboard.writeText('https://'+t).then(function(){var b=el.nextElementSibling||el.parentElement.querySelector('.copy-btn');if(b){b.textContent='\\u2705';b.classList.add('ok');setTimeout(function(){b.textContent='\\u{1F4CB}';b.classList.remove('ok')},2000)}})}
+
+// ═══ FIRST VISIT TO CARDGIFT ═══
+document.getElementById('nav-cardgift').addEventListener('click',function(e){
+    if(!localStorage.getItem('gwad-cgift-seen')){e.preventDefault();showM('modal-cgift')}
+});
+
+// ═══ INIT ═══
 (async function(){
+    // Check wallet
     var provider=window.ethereum||(window.safepal&&window.safepal.ethereum);
     if(provider){
         try{
             var accounts=await provider.request({method:'eth_accounts'});
+            if(!accounts||!accounts.length)accounts=await provider.request({method:'eth_requestAccounts'});
             if(accounts&&accounts.length){
                 walletAddress=accounts[0].toLowerCase();
                 document.getElementById('wallet-tag').textContent=walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
             }
         }catch(e){}
     }
-    // Try to get GW ID from localStorage or derive from wallet
+
+    // If no wallet — redirect to registration
+    if(!walletAddress&&!localStorage.getItem('gwad-registered')){
+        // Allow viewing but show limited
+    }
+
+    // Set GW ID
     gwId=localStorage.getItem('gwad-user-id')||'';
     var shortId=gwId.replace(/^GW/i,'')||walletAddress.slice(2,9)||'0000000';
-    document.getElementById('link-r').textContent=shortId;
-    document.getElementById('link-d').textContent=shortId;
-    document.getElementById('link-m').textContent=shortId;
+    document.querySelectorAll('.lnk-id').forEach(function(el){el.textContent=shortId});
 
-    // Load real stats from API if available
-    if(walletAddress){
+    // Restore role
+    var savedRole=localStorage.getItem('gwad-role')||'partner';
+    setRole(savedRole);
+
+    // Show role selection on first visit
+    if(!localStorage.getItem('gwad-role-selected')){
+        setTimeout(function(){showM('modal-role')},800);
+    }
+
+    // Load stats from API
+    if(gwId||walletAddress){
         try{
-            var r=await fetch('https://cgift.club/api/ad-platform?action=my_stats',{headers:{'X-Wallet-Address':walletAddress}});
+            var headers={'Content-Type':'application/json'};
+            if(walletAddress)headers['X-Wallet-Address']=walletAddress;
+            var r=await fetch('https://cgift.club/api/ad-platform?action=my_stats&gwId='+(gwId||''),{headers:headers});
             var d=await r.json();
             if(d.ok){
+                if(d.total_spent)document.getElementById('st-invested').textContent='$'+d.total_spent;
                 if(d.clicks)document.getElementById('st-clicks').textContent=d.clicks;
                 if(d.registrations)document.getElementById('st-regs').textContent=d.registrations;
-                if(d.active)document.getElementById('st-active').textContent=d.active;
             }
         }catch(e){}
     }
