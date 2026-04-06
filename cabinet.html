@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="t-title">Кабинет — GlobalWay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
+.lang-sw{position:fixed;top:12px;right:12px;z-index:100;display:flex;gap:4px;background:rgba(10,10,26,0.9);border:1px solid var(--border);border-radius:10px;padding:4px}
+.lang-btn{padding:6px 12px;border:none;border-radius:7px;background:transparent;color:#888;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:var(--gold);color:#000}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:18px;color:var(--gold)}
+.topbar h1 span{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+.wrap{max-width:700px;margin:0 auto;padding:20px}
+.welcome{text-align:center;padding:20px 0 10px}
+.welcome-name{font-size:20px;font-weight:800;color:#fff}
+.welcome-sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* Steps */
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:border-color .3s}
+.step-card.active{border-color:rgba(255,215,0,0.4)}
+.step-card.done{border-color:rgba(16,185,129,0.3);opacity:.75}
+.step-hdr{padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer}
+.step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;transition:.2s}
+.step-card:not(.done) .step-num{background:rgba(255,215,0,0.15);color:var(--gold);border:2px solid rgba(255,215,0,0.3)}
+.step-card.done .step-num{background:rgba(16,185,129,0.15);color:var(--green);border:2px solid rgba(16,185,129,0.3)}
+.step-card.active .step-num{background:var(--gold);color:#000;border-color:var(--gold)}
+.step-title{font-size:15px;font-weight:700;color:#fff;flex:1}
+.step-card.done .step-title{color:var(--green)}
+.step-status{font-size:11px;color:var(--muted)}
+.step-body{padding:0 18px 18px;display:none}
+.step-card.active .step-body{display:block}
+.step-text{font-size:13px;color:#bbb;line-height:1.8;margin-bottom:14px}
+.step-text b{color:#fff}
+.step-text a{color:var(--gold);text-decoration:none}
+.step-text a:hover{text-decoration:underline}
+.btn{display:inline-block;padding:12px 20px;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;text-decoration:none;transition:.2s;text-align:center}
+.btn:hover{opacity:.85;transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#000}
+.btn-green{background:var(--green);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:#ccc}
+.btn-block{display:block;width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.tip{font-size:12px;color:var(--muted);margin-top:10px;padding:10px 14px;background:rgba(255,215,0,0.04);border-radius:8px;border-left:3px solid var(--gold);line-height:1.6}
+
+/* Progress bar */
+.progress-wrap{margin:16px 0;background:#1a1a35;border-radius:8px;height:6px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:8px;transition:width .5s ease}
+
+/* Leader section */
+.leader-section{margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+.leader-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,165,0,0.05));border:1px solid rgba(255,215,0,0.2);border-radius:14px;text-align:center;color:var(--gold);font-size:15px;font-weight:700;cursor:pointer;transition:.2s;text-decoration:none}
+.leader-btn:hover{border-color:var(--gold);background:rgba(255,215,0,0.12)}
+
+.card-link{display:block;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;text-decoration:none;color:#fff;transition:border-color .2s;display:flex;align-items:center;gap:12px}
+.card-link:hover{border-color:rgba(255,215,0,0.3)}
+.card-link-icon{font-size:24px}
+.card-link-text{font-size:13px;font-weight:600}
+.card-link-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.foot{text-align:center;padding:20px 0;font-size:11px;color:#444}
+</style>
+</head>
+<body>
+
+<div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<div class="topbar">
+    <h1>🎯 <span data-i18n="topTitle">Личный кабинет</span></h1>
+    <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
+</div>
+
+<div class="wrap">
+    <div class="welcome">
+        <div class="welcome-name" id="w-name"></div>
+        <div class="welcome-sub" data-i18n="welcomeSub">Пройдите 4 шага — и система начнёт работать</div>
+    </div>
+
+    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:25%"></div></div>
+
+    <!-- STEP 1: SafePal -->
+    <div class="step-card active" id="step-1">
+        <div class="step-hdr" onclick="openStep(1)">
+            <div class="step-num">1</div>
+            <div class="step-title" data-i18n="s1title">Скачайте SafePal</div>
+            <div class="step-status" id="s1-status"></div>
+        </div>
+        <div class="step-body">
+            <div class="step-text" data-i18n="s1text">
+                <b>SafePal</b> — это криптокошелёк, через который работает вся система. Без него регистрация невозможна.<br><br>
+                📱 Скачайте приложение → Создайте кошелёк → Запишите seed-фразу (12 слов) в безопасное место.<br><br>
+                ⚠️ <b>Seed-фразу нельзя потерять</b> — это ваш единственный ключ к кошельку!
+            </div>
+            <div class="btns">
+                <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank" class="btn btn-gold">📱 iOS (App Store)</a>
+                <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank" class="btn btn-gold">🤖 Android (Google Play)</a>
+            </div>
+            <div class="tip" data-i18n="s1tip">💡 Уже установлен SafePal? Нажмите «Далее» ниже.</div>
+            <button class="btn btn-green btn-block" onclick="completeStep(1)" style="margin-top:12px" data-i18n="btnNext">✅ Готово — SafePal установлен</button>
+        </div>
+    </div>
+
+    <!-- STEP 2: Connect Wallet -->
+    <div class="step-card" id="step-2">
+        <div class="step-hdr" onclick="openStep(2)">
+            <div class="step-num">2</div>
+            <div class="step-title" data-i18n="s2title">Подключите кошелёк</div>
+            <div class="step-status" id="s2-status"></div>
+        </div>
+        <div class="step-body">
+            <div class="step-text" data-i18n="s2text">
+                Откройте эту страницу <b>внутри SafePal</b>:<br><br>
+                1. Откройте SafePal → вкладка <b>Dapp</b> (внизу)<br>
+                2. В адресной строке введите: <b>gwad.ink/cabinet</b><br>
+                3. Нажмите кнопку «Подключить» ниже<br><br>
+                Ваш кошелёк привяжется к системе автоматически.
+            </div>
+            <button class="btn btn-gold btn-block" onclick="doConnect()" id="btn-connect" data-i18n="btnConnect">🔗 Подключить кошелёк</button>
+            <div id="wallet-result" style="margin-top:10px"></div>
+            <div class="tip" data-i18n="s2tip">💡 Если вы уже в SafePal DApp — кошелёк подключится мгновенно.</div>
+        </div>
+    </div>
+
+    <!-- STEP 3: Register in CardGift -->
+    <div class="step-card" id="step-3">
+        <div class="step-hdr" onclick="openStep(3)">
+            <div class="step-num">3</div>
+            <div class="step-title" data-i18n="s3title">Регистрация в системе</div>
+            <div class="step-status" id="s3-status"></div>
+        </div>
+        <div class="step-body">
+            <div class="step-text" data-i18n="s3text">
+                Теперь зарегистрируйтесь в <b>CardGift</b> — это центральная платформа экосистемы.<br><br>
+                После регистрации вы получите:<br>
+                • Личный кабинет с CRM<br>
+                • Генератор маркетинговых материалов<br>
+                • Доступ к Академии (бесплатно + оплата за достижения)<br>
+                • Вирусные опросы и рассылки
+            </div>
+            <a href="https://cgift.club/registration.html" target="_blank" class="btn btn-gold btn-block" id="btn-register" data-i18n="btnRegister">🚀 Зарегистрироваться в CardGift</a>
+            <button class="btn btn-green btn-block" onclick="completeStep(3)" style="margin-top:8px" data-i18n="btnDoneReg">✅ Готово — я зарегистрировался</button>
+            <div class="tip" data-i18n="s3tip">💡 Регистрация бесплатная. Первый месяц — полный доступ ко всем инструментам.</div>
+        </div>
+    </div>
+
+    <!-- STEP 4: Choose direction -->
+    <div class="step-card" id="step-4">
+        <div class="step-hdr" onclick="openStep(4)">
+            <div class="step-num">4</div>
+            <div class="step-title" data-i18n="s4title">Выберите направление</div>
+            <div class="step-status" id="s4-status"></div>
+        </div>
+        <div class="step-body">
+            <div class="step-text" data-i18n="s4text">Система предлагает несколько направлений. Выберите одно или несколько:</div>
+
+            <a class="card-link" href="https://gws.ink" target="_blank">
+                <div class="card-link-icon">💎</div>
+                <div><div class="card-link-text">Diamond Club</div><div class="card-link-sub" data-i18n="dir1">Инвестиции в бриллианты со скидкой 70%. Пассивный доход.</div></div>
+            </a>
+            <a class="card-link" href="https://gwm.ink" target="_blank">
+                <div class="card-link-icon">🏠</div>
+                <div><div class="card-link-text">Метр²</div><div class="card-link-sub" data-i18n="dir2">Коллективное строительство. Недвижимость без ипотеки.</div></div>
+            </a>
+            <a class="card-link" href="https://cgift.club/dashboard.html" target="_blank">
+                <div class="card-link-icon">📢</div>
+                <div><div class="card-link-text" data-i18n="dir3t">Рекламная платформа</div><div class="card-link-sub" data-i18n="dir3">Продвигай готовые направления от $5. Контакты приходят автоматически.</div></div>
+            </a>
+            <a class="card-link" href="https://cgift.club/academy.html" target="_blank">
+                <div class="card-link-icon">🎓</div>
+                <div><div class="card-link-text" data-i18n="dir4t">Академия</div><div class="card-link-sub" data-i18n="dir4">Бесплатное обучение. За каждое достижение — оплата.</div></div>
+            </a>
+
+            <button class="btn btn-green btn-block" onclick="completeStep(4)" style="margin-top:12px" data-i18n="btnReady">✅ Я выбрал — начинаю работать!</button>
+        </div>
+    </div>
+
+    <!-- ALL DONE -->
+    <div id="all-done" style="display:none;text-align:center;padding:30px 0">
+        <div style="font-size:48px;margin-bottom:12px">🎉</div>
+        <div style="font-size:20px;font-weight:800;color:var(--green)" data-i18n="doneTitle">Всё готово!</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:8px;line-height:1.7" data-i18n="doneText">Система настроена. Контакты начнут приходить автоматически.<br>Откройте CardGift для управления.</div>
+        <a href="https://cgift.club/dashboard.html" class="btn btn-gold" style="margin-top:16px;padding:14px 28px;font-size:16px" data-i18n="doneBtn">Открыть CardGift →</a>
+    </div>
+
+    <!-- LEADER SECTION -->
+    <div class="leader-section">
+        <a href="/cabinet-leader" class="leader-btn" data-i18n="leaderBtn">🎯 Кабинет лидера — создать свою кампанию</a>
+    </div>
+
+    <div class="foot">gwad.ink · 2026</div>
+</div>
+
+<script>
+var T = {
+ru: {
+    topTitle:'Личный кабинет', welcomeSub:'Пройдите 4 шага — и система начнёт работать',
+    s1title:'Скачайте SafePal', s1text:'<b>SafePal</b> — это криптокошелёк, через который работает вся система. Без него регистрация невозможна.<br><br>📱 Скачайте приложение → Создайте кошелёк → Запишите seed-фразу (12 слов) в безопасное место.<br><br>⚠️ <b>Seed-фразу нельзя потерять</b> — это ваш единственный ключ к кошельку!',
+    s1tip:'💡 Уже установлен SafePal? Нажмите «Далее» ниже.',
+    s2title:'Подключите кошелёк', s2text:'Откройте эту страницу <b>внутри SafePal</b>:<br><br>1. Откройте SafePal → вкладка <b>Dapp</b> (внизу)<br>2. В адресной строке введите: <b>gwad.ink/cabinet</b><br>3. Нажмите кнопку «Подключить» ниже<br><br>Ваш кошелёк привяжется к системе автоматически.',
+    s2tip:'💡 Если вы уже в SafePal DApp — кошелёк подключится мгновенно.',
+    s3title:'Регистрация в системе', s3text:'Теперь зарегистрируйтесь в <b>CardGift</b> — это центральная платформа экосистемы.<br><br>После регистрации вы получите:<br>• Личный кабинет с CRM<br>• Генератор маркетинговых материалов<br>• Доступ к Академии (бесплатно + оплата за достижения)<br>• Вирусные опросы и рассылки',
+    s3tip:'💡 Регистрация бесплатная. Первый месяц — полный доступ ко всем инструментам.',
+    s4title:'Выберите направление', s4text:'Система предлагает несколько направлений. Выберите одно или несколько:',
+    dir1:'Инвестиции в бриллианты со скидкой 70%. Пассивный доход.', dir2:'Коллективное строительство. Недвижимость без ипотеки.',
+    dir3t:'Рекламная платформа', dir3:'Продвигай готовые направления от $5. Контакты приходят автоматически.',
+    dir4t:'Академия', dir4:'Бесплатное обучение. За каждое достижение — оплата.',
+    btnNext:'✅ Готово — SafePal установлен', btnConnect:'🔗 Подключить кошелёк', btnRegister:'🚀 Зарегистрироваться в CardGift', btnDoneReg:'✅ Готово — я зарегистрировался', btnReady:'✅ Я выбрал — начинаю работать!',
+    doneTitle:'Всё готово!', doneText:'Система настроена. Контакты начнут приходить автоматически.<br>Откройте CardGift для управления.', doneBtn:'Открыть CardGift →',
+    leaderBtn:'🎯 Кабинет лидера — создать свою кампанию',
+    connected:'Подключён', notConnected:'Не подключён',
+    pageTitle:'Кабинет — GlobalWay'
+},
+ua: {
+    topTitle:'Особистий кабінет', welcomeSub:'Пройдіть 4 кроки — і система почне працювати',
+    s1title:'Завантажте SafePal', s1text:'<b>SafePal</b> — це криптогаманець, через який працює вся система. Без нього реєстрація неможлива.<br><br>📱 Завантажте додаток → Створіть гаманець → Запишіть seed-фразу (12 слів) у безпечне місце.<br><br>⚠️ <b>Seed-фразу не можна загубити</b> — це ваш єдиний ключ до гаманця!',
+    s1tip:'💡 Вже встановлений SafePal? Натисніть «Далі» нижче.',
+    s2title:'Підключіть гаманець', s2text:'Відкрийте цю сторінку <b>всередині SafePal</b>:<br><br>1. Відкрийте SafePal → вкладка <b>Dapp</b> (внизу)<br>2. В адресному рядку введіть: <b>gwad.ink/cabinet</b><br>3. Натисніть кнопку «Підключити» нижче<br><br>Ваш гаманець прив\'яжеться до системи автоматично.',
+    s2tip:'💡 Якщо ви вже в SafePal DApp — гаманець підключиться миттєво.',
+    s3title:'Реєстрація в системі', s3text:'Тепер зареєструйтесь в <b>CardGift</b> — це центральна платформа екосистеми.<br><br>Після реєстрації ви отримаєте:<br>• Особистий кабінет з CRM<br>• Генератор маркетингових матеріалів<br>• Доступ до Академії (безкоштовно + оплата за досягнення)<br>• Вірусні опитування та розсилки',
+    s3tip:'💡 Реєстрація безкоштовна. Перший місяць — повний доступ до всіх інструментів.',
+    s4title:'Оберіть напрямок', s4text:'Система пропонує кілька напрямків. Оберіть один або кілька:',
+    dir1:'Інвестиції в діаманти зі знижкою 70%. Пасивний дохід.', dir2:'Колективне будівництво. Нерухомість без іпотеки.',
+    dir3t:'Рекламна платформа', dir3:'Просувай готові напрямки від $5. Контакти приходять автоматично.',
+    dir4t:'Академія', dir4:'Безкоштовне навчання. За кожне досягнення — оплата.',
+    btnNext:'✅ Готово — SafePal встановлено', btnConnect:'🔗 Підключити гаманець', btnRegister:'🚀 Зареєструватися в CardGift', btnDoneReg:'✅ Готово — я зареєструвався', btnReady:'✅ Я обрав — починаю працювати!',
+    doneTitle:'Все готово!', doneText:'Система налаштована. Контакти почнуть приходити автоматично.<br>Відкрийте CardGift для керування.', doneBtn:'Відкрити CardGift →',
+    leaderBtn:'🎯 Кабінет лідера — створити свою кампанію',
+    connected:'Підключено', notConnected:'Не підключено',
+    pageTitle:'Кабінет — GlobalWay'
+},
+en: {
+    topTitle:'Dashboard', welcomeSub:'Complete 4 steps — and the system starts working',
+    s1title:'Download SafePal', s1text:'<b>SafePal</b> is a crypto wallet that powers the entire system. Registration is impossible without it.<br><br>📱 Download the app → Create a wallet → Write down the seed phrase (12 words) in a safe place.<br><br>⚠️ <b>Never lose the seed phrase</b> — it\'s your only key to the wallet!',
+    s1tip:'💡 Already have SafePal installed? Click "Next" below.',
+    s2title:'Connect wallet', s2text:'Open this page <b>inside SafePal</b>:<br><br>1. Open SafePal → <b>Dapp</b> tab (bottom)<br>2. Type in the address bar: <b>gwad.ink/cabinet</b><br>3. Click the "Connect" button below<br><br>Your wallet will link to the system automatically.',
+    s2tip:'💡 If you\'re already in SafePal DApp — the wallet connects instantly.',
+    s3title:'Register in the system', s3text:'Now register in <b>CardGift</b> — the central platform of the ecosystem.<br><br>After registration you\'ll get:<br>• Personal dashboard with CRM<br>• Marketing materials generator<br>• Academy access (free + payment for achievements)<br>• Viral surveys and mailings',
+    s3tip:'💡 Registration is free. First month — full access to all tools.',
+    s4title:'Choose a direction', s4text:'The system offers several directions. Choose one or more:',
+    dir1:'Diamond investments at 70% discount. Passive income.', dir2:'Collective construction. Real estate without a mortgage.',
+    dir3t:'Ad platform', dir3:'Promote ready-made offers from $5. Contacts come automatically.',
+    dir4t:'Academy', dir4:'Free education. Payment for every achievement.',
+    btnNext:'✅ Done — SafePal installed', btnConnect:'🔗 Connect wallet', btnRegister:'🚀 Register in CardGift', btnDoneReg:'✅ Done — I registered', btnReady:'✅ I chose — let\'s go!',
+    doneTitle:'All set!', doneText:'System is configured. Contacts will start coming automatically.<br>Open CardGift to manage.', doneBtn:'Open CardGift →',
+    leaderBtn:'🎯 Leader dashboard — create your campaign',
+    connected:'Connected', notConnected:'Not connected',
+    pageTitle:'Dashboard — GlobalWay'
+}
+};
+var curLang = 'ru';
+var currentStep = 1;
+var walletAddress = '';
+
+function setLang(lang) {
+    curLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelector('.lang-btn[onclick*="'+lang+'"]').classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (T[lang] && T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.getElementById('t-title').textContent = T[lang].pageTitle || '';
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    localStorage.setItem('gwad-lang', lang);
+    updateStatuses();
+}
+
+function openStep(n) {
+    if (n > currentStep + 1) return; // Can't skip ahead more than 1
+    document.querySelectorAll('.step-card').forEach(function(c){ c.classList.remove('active') });
+    document.getElementById('step-' + n).classList.add('active');
+}
+
+function completeStep(n) {
+    var card = document.getElementById('step-' + n);
+    card.classList.remove('active');
+    card.classList.add('done');
+
+    if (n >= currentStep) currentStep = n + 1;
+    localStorage.setItem('gwad-step', currentStep);
+
+    // Update progress
+    var pct = Math.min(100, (currentStep / 4) * 100);
+    document.getElementById('prog').style.width = pct + '%';
+
+    if (currentStep <= 4) {
+        var next = document.getElementById('step-' + currentStep);
+        if (next) { next.classList.add('active'); }
+    }
+
+    if (currentStep > 4) {
+        document.getElementById('all-done').style.display = 'block';
+    }
+
+    updateStatuses();
+}
+
+function updateStatuses() {
+    for (var i = 1; i <= 4; i++) {
+        var el = document.getElementById('s' + i + '-status');
+        if (!el) continue;
+        if (i < currentStep) el.textContent = '✅';
+        else if (i === currentStep) el.textContent = '';
+        else el.textContent = '';
+    }
+    // Special: if wallet connected, show address in step 2
+    if (walletAddress) {
+        document.getElementById('s2-status').textContent = '✅ ' + walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+    }
+}
+
+// Wallet connection
+async function doConnect() {
+    var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
+    if (!provider) {
+        document.getElementById('wallet-result').innerHTML = '<div style="color:var(--red);font-size:12px;margin-top:8px">⚠️ Откройте эту страницу внутри SafePal → Dapp</div>';
+        return;
+    }
+    try {
+        var accounts = await provider.request({ method: 'eth_requestAccounts' });
+        walletAddress = accounts[0].toLowerCase();
+        document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+        document.getElementById('wallet-result').innerHTML = '<div style="color:var(--green);font-size:13px;font-weight:600">✅ ' + walletAddress.slice(0,6) + '...' + walletAddress.slice(-4) + '</div>';
+        document.getElementById('btn-connect').textContent = '✅ ' + (T[curLang].connected || 'Connected');
+        document.getElementById('btn-connect').disabled = true;
+        document.getElementById('btn-connect').style.opacity = '.6';
+
+        // Add ref to CardGift registration link if available
+        var ref = new URLSearchParams(location.search).get('ref') || localStorage.getItem('gwad-ref') || '';
+        if (ref) {
+            document.getElementById('btn-register').href = 'https://cgift.club/registration.html?ref=' + ref;
+        }
+
+        // Auto-complete step 2
+        setTimeout(function(){ completeStep(2); }, 800);
+    } catch(e) {
+        document.getElementById('wallet-result').innerHTML = '<div style="color:var(--red);font-size:12px">❌ ' + (e.message || 'Connection failed') + '</div>';
+    }
+}
+
+// Init
+(function(){
+    // Language
+    var saved = localStorage.getItem('gwad-lang');
+    if (saved && T[saved]) setLang(saved);
+    else {
+        var nav = (navigator.language || '').toLowerCase();
+        if (nav.startsWith('uk')) setLang('ua');
+        else if (nav.startsWith('en')) setLang('en');
+        else setLang('ru');
+    }
+
+    // Name
+    var name = localStorage.getItem('gwad-name') || '';
+    if (name) document.getElementById('w-name').textContent = name + ' 👋';
+
+    // Restore progress
+    var savedStep = parseInt(localStorage.getItem('gwad-step') || '1');
+    if (savedStep > 1 && savedStep <= 5) {
+        for (var i = 1; i < savedStep && i <= 4; i++) {
+            var c = document.getElementById('step-' + i);
+            c.classList.remove('active');
+            c.classList.add('done');
+        }
+        currentStep = savedStep;
+        if (currentStep <= 4) document.getElementById('step-' + currentStep).classList.add('active');
+        else {
+            document.querySelectorAll('.step-card').forEach(function(c){ c.classList.remove('active') });
+            document.getElementById('all-done').style.display = 'block';
+        }
+        document.getElementById('prog').style.width = Math.min(100, (currentStep / 4) * 100) + '%';
+    }
+
+    // Save ref from URL
+    var ref = new URLSearchParams(location.search).get('ref') || '';
+    if (ref) localStorage.setItem('gwad-ref', ref);
+
+    // Auto-connect wallet if available
+    var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
+    if (provider) {
+        provider.request({ method: 'eth_accounts' }).then(function(accounts) {
+            if (accounts && accounts.length) {
+                walletAddress = accounts[0].toLowerCase();
+                document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+                document.getElementById('wallet-result').innerHTML = '<div style="color:var(--green);font-size:13px;font-weight:600">✅ ' + walletAddress.slice(0,6) + '...' + walletAddress.slice(-4) + '</div>';
+                document.getElementById('btn-connect').textContent = '✅ ' + (T[curLang].connected || 'Connected');
+                document.getElementById('btn-connect').disabled = true;
+                document.getElementById('btn-connect').style.opacity = '.6';
+                // If step 2 not done yet, mark done
+                if (currentStep === 2) completeStep(2);
+            }
+        }).catch(function(){});
+    }
+
+    updateStatuses();
+})();
+</script>
+</body>
+</html>
