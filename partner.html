@@ -387,17 +387,38 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
 <!-- ═══ КОМАНДА ═══ -->
 <div class="panel fade" id="p-team">
-    <!-- Сводка -->
-    <div class="stats" style="grid-template-columns:1fr 1fr">
-        <div class="stat"><div class="num" style="color:var(--gold)" id="team-direct">0</div><div class="lbl" data-i18n="teamDirect">Прямых партнёров</div></div>
-        <div class="stat"><div class="num" style="color:var(--green)" id="team-total">0</div><div class="lbl" data-i18n="teamTotal">Всего в структуре</div></div>
+    <!-- Под-табы -->
+    <div style="display:flex;gap:4px;margin-bottom:12px">
+        <button class="tab active" id="team-sub-partners" onclick="showTeamSub('partners')" style="flex:1;padding:8px;font-size:12px">👥 Партнёры</button>
+        <button class="tab" id="team-sub-contacts" onclick="showTeamSub('contacts')" style="flex:1;padding:8px;font-size:12px" data-i18n="teamContacts">📋 Контакты</button>
     </div>
 
-    <!-- 9 линий -->
-    <div class="card">
-        <div class="card-hdr"><span data-i18n="hdrTeam">👥 Партнёрская программа</span> <button class="btn btn-ghost btn-sm" onclick="loadTeamLine(0)" style="font-size:10px">🔄</button></div>
-        <div class="card-body" style="padding:8px" id="team-lines-container">
-            <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px" data-i18n="teamLoading">Подключите кошелёк для просмотра команды</div>
+    <!-- ПАРТНЁРЫ -->
+    <div id="team-sub-p-partners">
+        <div class="stats" style="grid-template-columns:1fr 1fr">
+            <div class="stat"><div class="num" style="color:var(--gold)" id="team-direct">0</div><div class="lbl" data-i18n="teamDirect">Прямых партнёров</div></div>
+            <div class="stat"><div class="num" style="color:var(--green)" id="team-total">0</div><div class="lbl" data-i18n="teamTotal">Всего в структуре</div></div>
+        </div>
+        <div class="card">
+            <div class="card-hdr"><span data-i18n="hdrTeam">👥 Партнёрская программа</span> <button class="btn btn-ghost btn-sm" onclick="loadTeamLine(0)" style="font-size:10px">🔄</button></div>
+            <div class="card-body" style="padding:8px" id="team-lines-container">
+                <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px" data-i18n="teamLoading">Подключите кошелёк для просмотра команды</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- КОНТАКТЫ -->
+    <div id="team-sub-p-contacts" style="display:none">
+        <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+            <div class="stat"><div class="num" style="color:var(--blue)" id="ct-total">0</div><div class="lbl" data-i18n="ctTotal">Всего</div></div>
+            <div class="stat"><div class="num" style="color:var(--gold)" id="ct-new">0</div><div class="lbl" data-i18n="ctNew">Новых</div></div>
+            <div class="stat"><div class="num" style="color:var(--green)" id="ct-converted">0</div><div class="lbl" data-i18n="ctConverted">Конвертировано</div></div>
+        </div>
+        <div class="card">
+            <div class="card-hdr"><span data-i18n="hdrContacts">📋 Мои контакты</span> <button class="btn btn-ghost btn-sm" onclick="loadMyContacts()" style="font-size:10px">🔄</button></div>
+            <div class="card-body" style="padding:0" id="contacts-list">
+                <div style="text-align:center;padding:24px;color:var(--muted);font-size:12px" data-i18n="ctLoading">Загрузка контактов...</div>
+            </div>
         </div>
     </div>
 </div>
@@ -728,6 +749,76 @@ async function loadMarketingData() {
 
     // 3. Загружаем команду
     loadTeamLine(0);
+}
+
+// ═══ КОМАНДА — под-табы ═══
+function showTeamSub(sub) {
+    document.getElementById('team-sub-p-partners').style.display = sub === 'partners' ? '' : 'none';
+    document.getElementById('team-sub-p-contacts').style.display = sub === 'contacts' ? '' : 'none';
+    document.getElementById('team-sub-partners').classList.toggle('active', sub === 'partners');
+    document.getElementById('team-sub-contacts').classList.toggle('active', sub === 'contacts');
+    if (sub === 'contacts') loadMyContacts();
+}
+
+// ═══ КОНТАКТЫ — загрузка ═══
+var _contactsLoaded = false;
+
+async function loadMyContacts() {
+    if (!gwId && !GwadContract.gwIdNumeric) return;
+    var listEl = document.getElementById('contacts-list');
+    if (_contactsLoaded) return;
+
+    listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">⏳ Загрузка...</div>';
+
+    try {
+        var id = gwId || ('GW' + GwadContract.gwIdNumeric);
+        var r = await fetch('/api/contacts?action=my_contacts&gwId=' + encodeURIComponent(id));
+        var d = await r.json();
+
+        if (!d.ok || !d.contacts || d.contacts.length === 0) {
+            listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:12px">' +
+                '📋 Пока нет контактов.<br><span style="font-size:11px">Поделитесь реферальной ссылкой — когда человек оставит контакт, он появится здесь</span></div>';
+            return;
+        }
+
+        // Статистика
+        document.getElementById('ct-total').textContent = d.stats.total;
+        document.getElementById('ct-new').textContent = d.stats.new;
+        document.getElementById('ct-converted').textContent = d.stats.converted;
+
+        // Список
+        var messengerIcons = { telegram:'📱', whatsapp:'💬', viber:'📞', facebook:'📘', instagram:'📷', phone:'📲', email:'📧' };
+        var statusLabels = { new:'🆕 Новый', active:'✅ Активен', converted:'💰 Конвертирован', pending:'⏳ Ожидание' };
+        var statusColors = { new:'var(--gold)', active:'var(--green)', converted:'var(--blue)', pending:'var(--muted)' };
+
+        var html = '';
+        for (var i = 0; i < d.contacts.length; i++) {
+            var c = d.contacts[i];
+            var icon = messengerIcons[c.messenger] || '👤';
+            var stLabel = statusLabels[c.status] || c.status;
+            var stColor = statusColors[c.status] || 'var(--muted)';
+            var date = c.created_at ? new Date(c.created_at).toLocaleDateString() : '—';
+
+            html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1e1e35;font-size:12px">';
+            html += '<span style="font-size:18px">' + icon + '</span>';
+            html += '<div style="flex:1;min-width:0">';
+            html += '<div style="font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (c.name || 'Без имени').replace(/</g,'&lt;') + '</div>';
+            html += '<div style="font-size:10px;color:var(--muted)">' + (c.messenger || '—') + ' · ' + date + '</div>';
+            html += '</div>';
+            html += '<div style="text-align:right">';
+            html += '<div style="font-size:10px;font-weight:600;color:' + stColor + '">' + stLabel + '</div>';
+            if (c.contact) {
+                html += '<div style="font-size:9px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + c.contact.replace(/</g,'&lt;') + '</div>';
+            }
+            html += '</div>';
+            html += '</div>';
+        }
+
+        listEl.innerHTML = html;
+        _contactsLoaded = true;
+    } catch(e) {
+        listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--red);font-size:12px">❌ Ошибка: ' + (e.message || '').slice(0, 60) + '</div>';
+    }
 }
 
 // ═══ КОМАНДА — 9 линий из GlobalWay ═══
