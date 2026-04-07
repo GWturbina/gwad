@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
         return res.redirect(302, 'https://cgift.club');
     }
 
-    // Прямая ссылка
+    // Прямая ссылка — с OG-превью для мессенджеров
     if (type === 'ref' && gwId) {
         var id = gwId.replace(/^GW/i, '');
         var u = {
@@ -35,7 +35,45 @@ module.exports = async function handler(req, res) {
             diamond_club: 'https://gws.ink/invite/gems?ref=' + id,
             metr: 'https://gwm.ink/invite/house?ref=' + id
         };
-        return res.redirect(302, (u[project] || u.cardgift) + '&utm_source=gwads');
+        var target = (u[project] || u.cardgift) + '&utm_source=gwads';
+
+        // OG-мета для красивого превью в Telegram/WhatsApp
+        var og = {
+            cardgift: {
+                title: 'GlobalWay — Рекламная платформа',
+                desc: 'Бесплатные инструменты для бизнеса — CRM, лендинг, реклама. 9 уровней партнёрской программы. Присоединяйся!',
+                img: 'https://gwad.ink/img/hero-banner.png',
+            },
+            diamond_club: {
+                title: '💎 Diamond Club — Инвестиции в бриллианты',
+                desc: 'Бриллианты со скидкой до 70%. Стейкинг от 50% годовых. Бесплатный старт в Diamond Club!',
+                img: 'https://gws.ink/og-diamond.png',
+            },
+            metr: {
+                title: '🏠 Метр Квадратный — Свой дом под 0%',
+                desc: 'Заработай 35% депозит через клуб — мы добавим 65% под 0% годовых. Дом в любой стране мира.',
+                img: 'https://gwm.ink/og-metr.png',
+            }
+        };
+        var o = og[project] || og.cardgift;
+
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.send('<!DOCTYPE html><html><head>' +
+            '<meta charset="utf-8">' +
+            '<meta property="og:title" content="' + o.title + '">' +
+            '<meta property="og:description" content="' + o.desc + '">' +
+            '<meta property="og:image" content="' + o.img + '">' +
+            '<meta property="og:url" content="https://gwad.ink/' + (project === 'diamond_club' ? 'd' : project === 'metr' ? 'm' : 'r') + '/' + id + '">' +
+            '<meta property="og:type" content="website">' +
+            '<meta property="og:site_name" content="GlobalWay AdPlatform">' +
+            '<meta name="twitter:card" content="summary_large_image">' +
+            '<meta name="twitter:title" content="' + o.title + '">' +
+            '<meta name="twitter:description" content="' + o.desc + '">' +
+            '<meta name="twitter:image" content="' + o.img + '">' +
+            '<meta http-equiv="refresh" content="0;url=' + target + '">' +
+            '</head><body style="background:#0a0a1a;color:#fff;font-family:sans-serif;text-align:center;padding:40px">' +
+            '<p>Переход...</p><script>window.location.href="' + target + '";</script>' +
+            '</body></html>');
     }
 
     // Ротация кампании
