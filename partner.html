@@ -88,15 +88,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 .help-btn:hover{background:rgba(255,215,0,0.15)}
 
 /* Wallet connection block */
-.wallet-block{margin:16px;max-width:1100px;margin-left:auto;margin-right:auto}
-.wallet-connect-card{background:linear-gradient(135deg,rgba(255,215,0,0.06),rgba(255,165,0,0.02));border:1px solid rgba(255,215,0,0.25);border-radius:16px;padding:24px;text-align:center}
-.wallet-connect-card h2{color:var(--gold);font-size:18px;margin-bottom:8px}
-.wallet-connect-card p{color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:16px}
-.btn-connect{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:12px;font-size:16px;font-weight:700;color:#000;cursor:pointer;transition:.2s}
-.btn-connect:hover{opacity:.9;transform:translateY(-1px)}
-.wallet-links{margin-top:14px;font-size:12px;color:var(--muted)}
-.wallet-links a{color:var(--gold);text-decoration:none;margin:0 6px}
-.wallet-links a:hover{text-decoration:underline}
+.wallet-block{margin:0 16px 0;max-width:1100px;margin-left:auto;margin-right:auto}
+.wallet-connect-bar{display:flex;align-items:center;gap:12px;padding:12px 18px;background:linear-gradient(135deg,rgba(255,215,0,0.06),rgba(255,165,0,0.02));border:1px solid rgba(255,215,0,0.2);border-radius:12px;margin-top:10px}
+.wallet-connect-bar .wc-icon{font-size:22px}
+.wallet-connect-bar .wc-text{flex:1;font-size:12px;color:var(--muted);line-height:1.5}
+.wallet-connect-bar .wc-text b{color:var(--gold);font-size:13px;display:block;margin-bottom:2px}
+.btn-connect{padding:10px 22px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:10px;font-size:13px;font-weight:700;color:#000;cursor:pointer;transition:.2s;white-space:nowrap}
+.btn-connect:hover{opacity:.9}
+.wc-links{font-size:10px;color:var(--muted);white-space:nowrap}
+.wc-links a{color:var(--gold);text-decoration:none;margin:0 3px}
 
 .wallet-info-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .wallet-info-card .wi-row{display:flex;align-items:center;gap:8px;font-size:13px}
@@ -172,16 +172,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
 <!-- ═══ WALLET CONNECTION BLOCK ═══ -->
 <div class="wallet-block" id="wallet-block-connect" style="display:none">
-    <div class="wallet-connect-card">
-        <div style="font-size:36px;margin-bottom:8px">🔗</div>
-        <h2 data-i18n="wcTitle">Подключите кошелёк SafePal</h2>
-        <p data-i18n="wcDesc">Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.</p>
-        <button class="btn-connect" onclick="doConnectWallet()" data-i18n="wcBtn">🔗 Подключить кошелёк</button>
-        <div class="wallet-links" data-i18n="wcLinks">
-            💡 Ещё нет SafePal?
-            <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a>
-            <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>
+    <div class="wallet-connect-bar">
+        <div class="wc-icon">🔗</div>
+        <div class="wc-text">
+            <b data-i18n="wcTitle">Подключите кошелёк SafePal</b>
+            <span data-i18n="wcDescShort">Откройте в SafePal → Dapp браузер</span>
         </div>
+        <button class="btn-connect" onclick="doConnectWallet()" data-i18n="wcBtn">🔗 Подключить</button>
+        <div class="wc-links" data-i18n="wcLinks">💡 <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">Android</a></div>
     </div>
 </div>
 
