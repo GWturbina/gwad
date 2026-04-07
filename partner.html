@@ -141,6 +141,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <div class="tabs">
     <button class="tab active" onclick="showTab('dashboard')">📊 Дашборд</button>
     <button class="tab" onclick="showTab('pool')">📢 Рекламный пул</button>
+    <button class="tab" onclick="showTab('marketing')" id="tab-marketing">💰 Маркетинг</button>
     <button class="tab" onclick="showTab('team')" id="tab-team">👥 Команда</button>
     <button class="tab" onclick="showTab('chat')">💬 Чат</button>
     <button class="tab" onclick="showTab('settings')">⚙️ Настройки</button>
@@ -240,6 +241,77 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
     <div class="card">
         <div class="card-hdr" style="color:#fff">📋 Мои заказы</div>
         <div id="orders-block"><div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">Нет заказов. Оплатите рекламу — контакты начнут приходить.</div></div>
+    </div>
+</div>
+
+<!-- ═══ КОМАНДА ═══ -->
+<!-- ═══ МАРКЕТИНГ ═══ -->
+<div class="panel fade" id="p-marketing">
+
+    <!-- Общий доход -->
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="stat"><div class="num" style="color:var(--green)" id="mkt-total">$0.00</div><div class="lbl">Общий доход</div></div>
+        <div class="stat"><div class="num" style="color:var(--gold)" id="mkt-month">$0.00</div><div class="lbl">За месяц</div></div>
+        <div class="stat"><div class="num" style="color:var(--blue)" id="mkt-refs">0</div><div class="lbl">Рефералов в пуле</div></div>
+    </div>
+
+    <!-- Как работает -->
+    <div class="card" style="background:linear-gradient(135deg,rgba(255,215,0,0.04),rgba(255,165,0,0.02));border-color:rgba(255,215,0,0.2)">
+        <div class="card-body" style="font-size:12px;color:var(--muted);line-height:1.8">
+            <b style="color:var(--gold)">Как работает маркетинг:</b><br>
+            Когда твой реферал оплачивает рекламу — ты автоматически получаешь % от суммы.<br>
+            Контракт сам находит 9 уровней спонсоров через GlobalWay и раздаёт USDT напрямую на кошельки.
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;text-align:center">
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--gold);font-weight:700">Ур.1</div><div style="font-size:10px">20%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--gold);font-weight:700">Ур.2</div><div style="font-size:10px">15%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--gold);font-weight:700">Ур.3</div><div style="font-size:10px">10%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.4</div><div style="font-size:10px">9%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.5</div><div style="font-size:10px">8%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.6</div><div style="font-size:10px">6%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.7</div><div style="font-size:10px">5%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.8</div><div style="font-size:10px">4%</div></div>
+                <div style="background:#1a1a35;border-radius:8px;padding:8px"><div style="color:var(--muted);font-weight:700">Ур.9</div><div style="font-size:10px">3%</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Цепочка спонсоров -->
+    <div class="card">
+        <div class="card-hdr">🔗 Моя цепочка спонсоров</div>
+        <div class="card-body" style="overflow-x:auto;padding:0">
+            <table class="tbl">
+                <thead><tr><th>Уровень</th><th>GW ID</th><th>Кошелёк</th><th>%</th></tr></thead>
+                <tbody id="sponsor-chain-body">
+                    <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px" id="sponsor-loading">Загрузка из блокчейна...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- История доходов -->
+    <div class="card">
+        <div class="card-hdr">📋 История маркетинговых доходов <button class="btn-sm" onclick="loadMarketingData()" style="margin-left:auto;padding:4px 12px;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-size:11px">🔄</button></div>
+        <div class="card-body" style="overflow-x:auto;padding:0">
+            <table class="tbl">
+                <thead><tr><th>От кого</th><th>Уровень</th><th>Сумма</th><th>TX</th></tr></thead>
+                <tbody id="marketing-tbody">
+                    <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px" id="marketing-loading">Загрузка из блокчейна...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Превью распределения -->
+    <div class="card">
+        <div class="card-hdr">🧮 Калькулятор распределения</div>
+        <div class="card-body">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+                <input class="inp" type="number" id="calc-amount" value="100" style="width:120px">
+                <span style="color:var(--muted);font-size:12px">USDT</span>
+                <button class="btn-sm" onclick="calcSplit()" style="padding:6px 14px;background:var(--gold);color:#000;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">Рассчитать</button>
+            </div>
+            <div id="calc-result" style="font-size:12px;color:var(--muted);line-height:2"></div>
+        </div>
     </div>
 </div>
 
@@ -418,11 +490,144 @@ async function loadContractData() {
     } catch(e) {}
 }
 
+// ═══ МАРКЕТИНГ — загрузка данных ═══
+async function loadMarketingData() {
+    if (!GwadContract.connected) {
+        var ok = await GwadContract.connectWallet();
+        if (!ok) return;
+        walletAddress = GwadContract.walletAddress;
+    }
+
+    // 1. Цепочка спонсоров
+    var chainBody = document.getElementById('sponsor-chain-body');
+    try {
+        var chain = await GwadContract.getSponsorChain();
+        var percents = [20,15,10,9,8,6,5,4,3];
+        if (chain.length > 0) {
+            var html = '';
+            chain.forEach(function(s) {
+                html += '<tr><td style="color:var(--gold);font-weight:600">Ур.' + s.level + '</td><td>GW' + s.gwId + '</td><td style="font-size:11px;font-family:monospace;color:var(--muted)">' + GwadContract.shortAddr(s.address) + '</td><td>' + percents[s.level-1] + '%</td></tr>';
+            });
+            chainBody.innerHTML = html;
+        } else {
+            chainBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Цепочка спонсоров пуста. Зарегистрируйтесь в GlobalWay.</td></tr>';
+        }
+    } catch(e) {
+        chainBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--red);padding:20px">Ошибка загрузки: ' + (e.message||'').slice(0,50) + '</td></tr>';
+    }
+
+    // 2. Маркетинговые доходы из блокчейна
+    var mktBody = document.getElementById('marketing-tbody');
+    try {
+        var earnings = await GwadContract.getMarketingEarnings();
+        document.getElementById('mkt-total').textContent = '$' + earnings.total.toFixed(2);
+
+        var levels = ['20%','15%','10%','9%','8%','6%','5%','4%','3%'];
+        if (earnings.earnings.length > 0) {
+            var html = '';
+            // Считаем за текущий месяц
+            var monthTotal = 0;
+            var now = new Date();
+            var monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime() / 1000;
+
+            earnings.earnings.forEach(function(e) {
+                html += '<tr>';
+                html += '<td>GW' + e.gwId + '</td>';
+                html += '<td>Ур.' + e.level + ' <span style="color:var(--muted);font-size:10px">(' + (levels[e.level-1]||'') + ')</span></td>';
+                html += '<td style="color:var(--green);font-weight:600">+$' + e.amount.toFixed(2) + '</td>';
+                html += '<td><a href="' + GwadContract.ADDR.EXPLORER + '/tx/' + e.txHash + '" target="_blank" style="color:var(--gold);font-size:10px">TX↗</a></td>';
+                html += '</tr>';
+            });
+            mktBody.innerHTML = html;
+
+            // Считаем рефералов
+            var uniqueRefs = {};
+            earnings.earnings.forEach(function(e) { uniqueRefs[e.gwId] = true; });
+            document.getElementById('mkt-refs').textContent = Object.keys(uniqueRefs).length;
+        } else {
+            mktBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Пока нет маркетинговых выплат.<br><span style="font-size:11px">Пригласите партнёров — когда они оплатят рекламу, вы получите %</span></td></tr>';
+        }
+    } catch(e) {
+        console.warn('Marketing load error:', e);
+        mktBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Данные загружаются...</td></tr>';
+    }
+
+    // 3. Загружаем команду
+    loadTeamData();
+}
+
+// ═══ КОМАНДА — загрузка из API ═══
+async function loadTeamData() {
+    var tbody = document.getElementById('team-body');
+    if (!tbody) return;
+
+    try {
+        // Получаем рефералов из API
+        var h = {'Content-Type':'application/json'};
+        if (walletAddress) h['X-Wallet-Address'] = walletAddress;
+        var r = await fetch(API + '?action=my_stats&gwId=' + (gwId||''), { headers: h });
+        var d = await r.json();
+
+        // Также пробуем цепочку спонсоров для отображения
+        var chain = await GwadContract.getSponsorChain();
+
+        if (chain.length > 0) {
+            var html = '';
+            var percents = [20,15,10,9,8,6,5,4,3];
+            chain.forEach(function(s) {
+                html += '<tr>';
+                html += '<td style="color:var(--gold);font-weight:600">' + s.level + '</td>';
+                html += '<td>GW' + s.gwId + '</td>';
+                html += '<td>—</td>';
+                html += '<td>' + percents[s.level-1] + '%</td>';
+                html += '<td style="font-size:10px;font-family:monospace;color:var(--muted)">' + GwadContract.shortAddr(s.address) + '</td>';
+                html += '</tr>';
+            });
+            tbody.innerHTML = html;
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Пока нет партнёров в команде.<br><span style="font-size:11px">Поделитесь реферальной ссылкой — когда партнёр зарегистрируется, он появится здесь</span></td></tr>';
+        }
+    } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:30px">Подключите кошелёк для просмотра команды</td></tr>';
+    }
+}
+
+// ═══ КАЛЬКУЛЯТОР РАСПРЕДЕЛЕНИЯ ═══
+async function calcSplit() {
+    var amount = parseFloat(document.getElementById('calc-amount').value) || 100;
+    var el = document.getElementById('calc-result');
+    el.innerHTML = '⏳ Расчёт...';
+
+    try {
+        var split = await GwadContract.getPreviewSplit(amount);
+        if (!split) { el.innerHTML = 'Ошибка расчёта'; return; }
+
+        var levels = ['Ур.1','Ур.2','Ур.3','Ур.4','Ур.5','Ур.6','Ур.7','Ур.8','Ур.9'];
+        var html = '<div style="margin-bottom:8px"><b style="color:var(--green)">$' + split.budget.toFixed(2) + '</b> → Рекламный бюджет (80%)</div>';
+        html += '<div style="margin-bottom:8px"><b style="color:var(--orange)">$' + split.manager.toFixed(2) + '</b> → Менеджер кампании</div>';
+        html += '<div style="margin-bottom:4px;color:var(--gold);font-weight:600">Партнёрка 9 уровней:</div>';
+        for (var i = 0; i < 9; i++) {
+            if (split.levels[i] > 0) {
+                html += '<div style="padding-left:12px">' + levels[i] + ': <b style="color:var(--green)">$' + split.levels[i].toFixed(2) + '</b></div>';
+            }
+        }
+        html += '<div style="margin-top:6px;border-top:1px solid var(--border);padding-top:6px">';
+        html += 'Клуб: $' + split.club.toFixed(2) + ' · Авторские: $' + split.author.toFixed(2) + ' · GWT: $' + split.gwt.toFixed(2) + ' · CGT: $' + split.cgt.toFixed(2);
+        html += '</div>';
+        el.innerHTML = html;
+    } catch(e) {
+        el.innerHTML = '❌ ' + (e.message || 'Ошибка');
+    }
+}
+
 function showTab(name) {
     document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
     document.getElementById('p-'+name).classList.add('active');
     event.target.classList.add('active');
+    // Подгружаем данные при переключении
+    if (name === 'marketing') loadMarketingData();
+    if (name === 'team') loadTeamData();
 }
 function showM(id){document.getElementById(id).classList.add('show')}
 function closeM(id){document.getElementById(id).classList.remove('show')}
