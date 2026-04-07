@@ -136,7 +136,8 @@ textarea.inp{min-height:60px;resize:vertical}
                 <input class="inp" id="f-manager-wallet" placeholder="0x...">
             </div>
 
-            <button class="btn btn-gold" onclick="createCampaign()" style="width:100%;margin-top:16px;padding:14px;font-size:15px">🚀 Создать кампанию</button>
+            <button class="btn btn-gold" onclick="createCampaign()" id="create-btn" style="width:100%;margin-top:16px;padding:14px;font-size:15px">🚀 Создать кампанию</button>
+            <div id="create-status" style="margin-top:10px;font-size:13px;text-align:center;min-height:20px;color:#888"></div>
         </div>
     </div>
 
@@ -173,6 +174,9 @@ textarea.inp{min-height:60px;resize:vertical}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="/js/ad-pool-abi.js"></script>
+<script src="/js/addresses.js"></script>
+<script src="/js/ad-pool-contract.js"></script>
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '';
@@ -191,26 +195,36 @@ function pickColor(el) {
 // INIT
 (async function() {
     await new Promise(function(r) { setTimeout(r, 500); });
-    var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
-    if (!provider) {
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('access-denied').style.display = 'block';
-        return;
+    
+    // Подключаем через GwadContract
+    var ok = await GwadContract.silentConnect();
+    if (!ok) {
+        // Fallback
+        var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
+        if (!provider) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('access-denied').style.display = 'block';
+            return;
+        }
+        try {
+            var accounts = await provider.request({ method: 'eth_accounts' });
+            if (!accounts || !accounts.length) accounts = await provider.request({ method: 'eth_requestAccounts' });
+            walletAddress = accounts[0].toLowerCase();
+        } catch(e) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('access-denied').style.display = 'block';
+            return;
+        }
+    } else {
+        walletAddress = GwadContract.walletAddress;
     }
-    try {
-        var accounts = await provider.request({ method: 'eth_accounts' });
-        if (!accounts || !accounts.length) accounts = await provider.request({ method: 'eth_requestAccounts' });
-        walletAddress = accounts[0].toLowerCase();
-        document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
-        document.getElementById('f-budget-wallet').value = walletAddress;
-        document.getElementById('f-manager-wallet').value = walletAddress;
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('main').style.display = 'block';
-        loadMyCampaigns();
-    } catch(e) {
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('access-denied').style.display = 'block';
-    }
+
+    document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+    document.getElementById('f-budget-wallet').value = walletAddress;
+    document.getElementById('f-manager-wallet').value = walletAddress;
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    loadMyCampaigns();
 })();
 
 async function doConnect() {
@@ -241,6 +255,43 @@ async function createCampaign() {
     var mw = document.getElementById('f-manager-wallet').value.trim();
     if (!bw || !mw) { alert('Укажите кошельки для контракта'); return; }
 
+    var btn = document.getElementById('create-btn');
+    var statusEl = document.getElementById('create-status');
+    btn.disabled = true;
+    btn.textContent = '⏳ Создание...';
+
+    // 1. Создаём кампанию в КОНТРАКТЕ
+    statusEl.textContent = '🔗 Подключение к блокчейну...';
+    
+    // Подключаем кошелёк через GwadContract
+    if (!GwadContract.connected) {
+        var ok = await GwadContract.connectWallet();
+        if (!ok) {
+            statusEl.textContent = '❌ Кошелёк не подключён';
+            btn.disabled = false;
+            btn.textContent = '🚀 Создать кампанию';
+            return;
+        }
+        walletAddress = GwadContract.walletAddress;
+    }
+
+    var contractCampaignId = null;
+    try {
+        var result = await GwadContract.createCampaign(name, bw, mw, function(msg) {
+            statusEl.textContent = msg;
+        });
+
+        if (result.ok) {
+            contractCampaignId = result.campaignId;
+            statusEl.textContent = '✅ Контракт: кампания #' + contractCampaignId + ' создана! Сохраняем...';
+        } else {
+            statusEl.textContent = '⚠️ Контракт: ' + result.error + '. Сохраняем в базу...';
+        }
+    } catch(e) {
+        statusEl.textContent = '⚠️ Контракт недоступен. Сохраняем в базу...';
+    }
+
+    // 2. Сохраняем в Supabase через API
     var data = {
         name: name,
         slug: slug,
@@ -257,19 +308,25 @@ async function createCampaign() {
         manager_wallet: mw,
         leader_gw_id: walletAddress,
         target_project: 'custom',
-        channels: []
+        channels: [],
+        contract_campaign_id: contractCampaignId
     };
 
     var r = await apiFetch('save_campaign', data);
+    
+    btn.disabled = false;
+    btn.textContent = '🚀 Создать кампанию';
+
     if (r.ok) {
-        alert('✅ Кампания создана!\n\nВаш лендинг: gwad.ink/c/' + slug + '\nРотация: gwad.ink/go/' + slug);
+        statusEl.innerHTML = '✅ Кампания создана!' + 
+            (contractCampaignId ? ' (контракт #' + contractCampaignId + ')' : '') +
+            '<br><a href="/c/' + slug + '" target="_blank" style="color:#FFD700">gwad.ink/c/' + slug + '</a>';
         loadMyCampaigns();
-        // Очистить форму
         ['f-name','f-slug','f-desc','f-video','f-image','f-logo','f-features','f-tg','f-wa'].forEach(function(id) {
             document.getElementById(id).value = '';
         });
     } else {
-        alert('❌ ' + (r.error || 'Ошибка'));
+        statusEl.textContent = '❌ ' + (r.error || 'Ошибка сохранения');
     }
 }
 
