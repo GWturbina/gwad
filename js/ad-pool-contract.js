@@ -1,0 +1,397 @@
+/* ═══════════════════════════════════════════════════════════
+   GWAD.INK — AdPool Contract Service Layer v1.0
+   
+   Функции:
+   - connectWallet()      — подключение SafePal/MetaMask
+   - payForAd()           — оплата рекламы (approve → pay → record)
+   - createCampaign()     — создание кампании (для лидера)
+   - getMyStats()         — статистика партнёра
+   - getMarketingEarnings() — доходы от маркетинга
+   - getUSDTBalance()     — баланс USDT
+   - getCampaigns()       — список кампаний
+   
+   Зависимости: ethers.js, ad-pool-abi.js, addresses.js
+   ═══════════════════════════════════════════════════════════ */
+
+var GwadContract = {
+
+    provider: null,
+    signer: null,
+    walletAddress: '',
+    gwId: '',
+    gwIdNumeric: 0,
+    connected: false,
+
+    ADDR: window.GWAD_ADDRESSES || {},
+    API: (window.GWAD_API && window.GWAD_API.adPlatform) || 'https://cgift.club/api/ad-platform',
+    AD_POOL_ABI: window.AD_POOL_ABI || [],
+    USDT_ABI: window.USDT_ABI || [],
+
+    // ═══════════════════════════════════════════════════════════
+    // WALLET CONNECTION
+    // ═══════════════════════════════════════════════════════════
+
+    async connectWallet() {
+        var eth = window.ethereum || (window.safepal && window.safepal.ethereum);
+        if (!eth) {
+            this.showError('Установите SafePal или MetaMask');
+            return false;
+        }
+
+        try {
+            var accounts = await eth.request({ method: 'eth_requestAccounts' });
+            if (!accounts || !accounts.length) return false;
+
+            this.provider = new ethers.providers.Web3Provider(eth);
+            this.signer = this.provider.getSigner();
+            this.walletAddress = accounts[0].toLowerCase();
+            this.connected = true;
+
+            // Проверяем сеть (opBNB = 204)
+            var network = await this.provider.getNetwork();
+            if (network.chainId !== this.ADDR.CHAIN_ID) {
+                try {
+                    await eth.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x' + (this.ADDR.CHAIN_ID).toString(16) }]
+                    });
+                    this.provider = new ethers.providers.Web3Provider(eth);
+                    this.signer = this.provider.getSigner();
+                } catch(e) {
+                    this.showError('Переключите сеть на opBNB (Chain ID: 204)');
+                }
+            }
+
+            console.log('✅ Wallet connected:', this.walletAddress);
+            return true;
+        } catch(e) {
+            console.error('Wallet connect error:', e);
+            this.showError('Ошибка подключения: ' + (e.message || e));
+            return false;
+        }
+    },
+
+    // Тихое подключение (без popup если уже подключён)
+    async silentConnect() {
+        var eth = window.ethereum || (window.safepal && window.safepal.ethereum);
+        if (!eth) return false;
+        try {
+            var accounts = await eth.request({ method: 'eth_accounts' });
+            if (accounts && accounts.length) {
+                this.provider = new ethers.providers.Web3Provider(eth);
+                this.signer = this.provider.getSigner();
+                this.walletAddress = accounts[0].toLowerCase();
+                this.connected = true;
+                return true;
+            }
+        } catch(e) {}
+        return false;
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // CONTRACTS
+    // ═══════════════════════════════════════════════════════════
+
+    getAdPoolContract() {
+        if (!this.signer) throw new Error('Кошелёк не подключён');
+        return new ethers.Contract(this.ADDR.AdPoolContract, this.AD_POOL_ABI, this.signer);
+    },
+
+    getAdPoolRead() {
+        var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+        return new ethers.Contract(this.ADDR.AdPoolContract, this.AD_POOL_ABI, rpc);
+    },
+
+    getUSDTContract() {
+        if (!this.signer) throw new Error('Кошелёк не подключён');
+        return new ethers.Contract(this.ADDR.USDT, this.USDT_ABI, this.signer);
+    },
+
+    getUSDTRead() {
+        var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+        return new ethers.Contract(this.ADDR.USDT, this.USDT_ABI, rpc);
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // PAY FOR AD — Главная функция оплаты
+    // ═══════════════════════════════════════════════════════════
+
+    /**
+     * Полный цикл оплаты рекламы:
+     * 1. Проверка баланса USDT
+     * 2. Approve USDT → AdPoolContract
+     * 3. payForAd() в контракте
+     * 4. Запись в Supabase через API
+     * 
+     * @param {number} campaignId — ID кампании в контракте (1, 2, 3...)
+     * @param {number} amountUSD — сумма в долларах ($5, $10, $50...)
+     * @param {function} onStatus — callback для обновления UI
+     * @returns {object} {ok, txHash, error}
+     */
+    async payForAd(campaignId, amountUSD, onStatus) {
+        if (!this.connected) { return { ok: false, error: 'Кошелёк не подключён' }; }
+        if (!this.gwIdNumeric) { return { ok: false, error: 'Нет GW ID' }; }
+        if (amountUSD < 5) { return { ok: false, error: 'Минимум $5' }; }
+
+        var status = onStatus || function() {};
+
+        try {
+            // opBNB USDT = 18 decimals (не 6!)
+            var amount = ethers.utils.parseEther(amountUSD.toString());
+            var usdt = this.getUSDTContract();
+            var adPool = this.getAdPoolContract();
+
+            // 1. Проверяем баланс
+            status('Проверка баланса...');
+            var balance = await usdt.balanceOf(this.walletAddress);
+            if (balance.lt(amount)) {
+                return { ok: false, error: 'Недостаточно USDT. Баланс: $' + ethers.utils.formatEther(balance) };
+            }
+
+            // 2. Проверяем allowance
+            status('Проверка разрешения...');
+            var allowance = await usdt.allowance(this.walletAddress, this.ADDR.AdPoolContract);
+
+            if (allowance.lt(amount)) {
+                // Approve
+                status('🔐 Подтвердите разрешение в кошельке...');
+                var approveTx = await usdt.approve(this.ADDR.AdPoolContract, ethers.constants.MaxUint256, { gasLimit: 100000 });
+                status('⏳ Ожидание подтверждения approve...');
+                await approveTx.wait();
+                console.log('✅ Approve TX:', approveTx.hash);
+            }
+
+            // 3. payForAd
+            status('💳 Подтвердите оплату в кошельке...');
+            var payTx = await adPool.payForAd(campaignId, this.gwIdNumeric, amount, { gasLimit: 3500000 });
+            status('⏳ Ожидание подтверждения оплаты...');
+            var receipt = await payTx.wait();
+            console.log('✅ PayForAd TX:', payTx.hash);
+
+            // 4. Записываем в Supabase
+            status('📝 Сохранение...');
+            try {
+                await this.apiPost('submit_order', {
+                    gw_id: this.gwId,
+                    wallet_address: this.walletAddress,
+                    campaign_id: campaignId,
+                    amount_usdt: amountUSD,
+                    tx_hash: payTx.hash,
+                    days_total: Math.max(7, Math.floor(amountUSD / 5) * 7),
+                    weight: amountUSD,
+                });
+            } catch(e) { console.warn('Supabase record failed:', e); }
+
+            status('✅ Оплата прошла!');
+            return { ok: true, txHash: payTx.hash };
+
+        } catch(e) {
+            console.error('PayForAd error:', e);
+            var msg = e.reason || e.message || 'Неизвестная ошибка';
+            if (msg.includes('user rejected')) msg = 'Вы отменили транзакцию';
+            if (msg.includes('Not registered')) msg = 'Кошелёк не зарегистрирован в GlobalWay';
+            if (msg.includes('insufficient')) msg = 'Недостаточно средств (USDT или BNB на газ)';
+            status('❌ ' + msg);
+            return { ok: false, error: msg };
+        }
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // CREATE CAMPAIGN — Для лидеров
+    // ═══════════════════════════════════════════════════════════
+
+    async createCampaign(name, budgetWallet, managerWallet, onStatus) {
+        if (!this.connected) return { ok: false, error: 'Кошелёк не подключён' };
+        var status = onStatus || function() {};
+
+        try {
+            var adPool = this.getAdPoolContract();
+            status('📝 Подтвердите создание кампании...');
+            var tx = await adPool.createCampaign(name, budgetWallet, managerWallet, { gasLimit: 500000 });
+            status('⏳ Ожидание...');
+            var receipt = await tx.wait();
+
+            // Ищем событие CampaignCreated
+            var campId = null;
+            if (receipt.events) {
+                for (var i = 0; i < receipt.events.length; i++) {
+                    if (receipt.events[i].event === 'CampaignCreated') {
+                        campId = receipt.events[i].args.campaignId.toNumber();
+                        break;
+                    }
+                }
+            }
+
+            status('✅ Кампания создана! ID: ' + campId);
+            return { ok: true, txHash: tx.hash, campaignId: campId };
+        } catch(e) {
+            var msg = e.reason || e.message || 'Ошибка';
+            if (msg.includes('Not registered')) msg = 'Зарегистрируйтесь в GlobalWay';
+            status('❌ ' + msg);
+            return { ok: false, error: msg };
+        }
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // READ — Чтение данных из контракта
+    // ═══════════════════════════════════════════════════════════
+
+    async getUSDTBalance(address) {
+        try {
+            var usdt = this.getUSDTRead();
+            var bal = await usdt.balanceOf(address || this.walletAddress);
+            return parseFloat(ethers.utils.formatEther(bal));  // 18 decimals!
+        } catch(e) { return 0; }
+    },
+
+    async getMyContractStats() {
+        try {
+            if (!this.gwIdNumeric) return { totalPaid: 0, totalOrders: 0 };
+            var pool = this.getAdPoolRead();
+            var stats = await pool.getUserStats(this.gwIdNumeric);
+            return {
+                totalPaid: parseFloat(ethers.utils.formatEther(stats[0])),
+                totalOrders: stats[1].toNumber()
+            };
+        } catch(e) { return { totalPaid: 0, totalOrders: 0 }; }
+    },
+
+    async getCampaignInfo(campaignId) {
+        try {
+            var pool = this.getAdPoolRead();
+            var c = await pool.getCampaign(campaignId);
+            return {
+                id: c[0].toNumber(),
+                budgetWallet: c[1],
+                managerWallet: c[2],
+                name: c[3],
+                active: c[4],
+                totalPaid: parseFloat(ethers.utils.formatEther(c[5])),
+                totalOrders: c[6].toNumber()
+            };
+        } catch(e) { return null; }
+    },
+
+    async getSponsorChain() {
+        try {
+            if (!this.gwIdNumeric) return [];
+            var pool = this.getAdPoolRead();
+            var result = await pool.getSponsorChain(this.gwIdNumeric);
+            var chain = [];
+            for (var i = 0; i < 9; i++) {
+                if (result[0][i] !== ethers.constants.AddressZero) {
+                    chain.push({
+                        level: i + 1,
+                        address: result[0][i],
+                        gwId: result[1][i].toNumber()
+                    });
+                }
+            }
+            return chain;
+        } catch(e) { return []; }
+    },
+
+    async getPreviewSplit(amountUSD) {
+        try {
+            var pool = this.getAdPoolRead();
+            var amount = ethers.utils.parseEther(amountUSD.toString());
+            var s = await pool.previewSplit(amount);
+            return {
+                budget: parseFloat(ethers.utils.formatEther(s[0])),
+                manager: parseFloat(ethers.utils.formatEther(s[1])),
+                levels: s[2].map(function(v) { return parseFloat(ethers.utils.formatEther(v)); }),
+                club: parseFloat(ethers.utils.formatEther(s[3])),
+                author: parseFloat(ethers.utils.formatEther(s[4])),
+                gwt: parseFloat(ethers.utils.formatEther(s[5])),
+                cgt: parseFloat(ethers.utils.formatEther(s[6])),
+                total: parseFloat(ethers.utils.formatEther(s[7]))
+            };
+        } catch(e) { return null; }
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // MARKETING EARNINGS — Читаем события из блокчейна
+    // ═══════════════════════════════════════════════════════════
+
+    async getMarketingEarnings(address) {
+        try {
+            var pool = this.getAdPoolRead();
+            // Фильтр: MarketingPaid events где recipient = наш адрес
+            var filter = pool.filters.MarketingPaid(null, address || this.walletAddress);
+            // Последние 10000 блоков (~1 день на opBNB)
+            var currentBlock = await pool.provider.getBlockNumber();
+            var fromBlock = Math.max(0, currentBlock - 100000);  // ~3 дня
+            var events = await pool.queryFilter(filter, fromBlock);
+
+            var total = 0;
+            var earnings = [];
+            for (var i = 0; i < events.length; i++) {
+                var e = events[i];
+                var amt = parseFloat(ethers.utils.formatEther(e.args.amount));
+                total += amt;
+                earnings.push({
+                    gwId: e.args.gwId.toNumber(),
+                    amount: amt,
+                    level: e.args.level,
+                    txHash: e.transactionHash,
+                    blockNumber: e.blockNumber
+                });
+            }
+
+            return { total: total, earnings: earnings };
+        } catch(e) {
+            console.warn('getMarketingEarnings error:', e);
+            return { total: 0, earnings: [] };
+        }
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // API — Supabase через CardGift API
+    // ═══════════════════════════════════════════════════════════
+
+    async apiGet(action) {
+        try {
+            var h = { 'Content-Type': 'application/json' };
+            if (this.walletAddress) h['X-Wallet-Address'] = this.walletAddress;
+            var r = await fetch(this.API + '?action=' + action, { headers: h });
+            return await r.json();
+        } catch(e) { return { ok: false, error: e.message }; }
+    },
+
+    async apiPost(action, body) {
+        try {
+            var h = { 'Content-Type': 'application/json' };
+            if (this.walletAddress) h['X-Wallet-Address'] = this.walletAddress;
+            var r = await fetch(this.API, {
+                method: 'POST',
+                headers: h,
+                body: JSON.stringify(Object.assign({ action: action }, body || {}))
+            });
+            return await r.json();
+        } catch(e) { return { ok: false, error: e.message }; }
+    },
+
+    async getCampaigns() {
+        return await this.apiGet('campaigns');
+    },
+
+    // ═══════════════════════════════════════════════════════════
+    // HELPERS
+    // ═══════════════════════════════════════════════════════════
+
+    showError(msg) {
+        if (typeof showToast === 'function') showToast(msg, 'error');
+        else alert(msg);
+    },
+
+    formatUSD(n) {
+        return '$' + (parseFloat(n) || 0).toFixed(2);
+    },
+
+    shortAddr(addr) {
+        if (!addr) return '—';
+        return addr.slice(0, 6) + '...' + addr.slice(-4);
+    }
+};
+
+console.log('📢 GwadContract service loaded');
