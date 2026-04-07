@@ -43,23 +43,22 @@ textarea.inp{min-height:60px;resize:vertical}
 .access-denied{text-align:center;padding:60px 20px}
 .access-denied h2{color:var(--red);margin-bottom:10px}
 .loading{text-align:center;padding:40px;color:var(--muted)}
-.lang-sw{position:fixed;top:12px;right:16px;z-index:150;display:flex;gap:3px;background:#141428;border:1px solid var(--border);border-radius:8px;padding:3px}
-.lang-btn{padding:5px 10px;border:none;border-radius:6px;background:transparent;color:#888;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn{padding:3px 8px;border:none;border-radius:5px;background:transparent;color:#555;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:0.5px}
 .lang-btn:hover{color:#fff}
 .lang-btn.active{background:var(--gold);color:#000}
 </style>
 </head>
 <body>
 
-<div class="lang-sw">
-    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
-    <button class="lang-btn" onclick="setLang('ua')">UA</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-</div>
-
 <div class="topbar">
     <h1>🎯 <span data-i18n="clTopTitle">Кабинет лидера</span><span data-i18n="clTopSub">Создание и управление кампаниями</span></h1>
-    <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
+    <div style="display:flex;align-items:center;gap:8px">
+        <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('ua')">UA</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <span style="color:#333">│</span>
+        <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
+    </div>
 </div>
 
 <div class="wrap">
@@ -187,61 +186,11 @@ textarea.inp{min-height:60px;resize:vertical}
 <script src="/js/ad-pool-abi.js"></script>
 <script src="/js/addresses.js"></script>
 <script src="/js/ad-pool-contract.js"></script>
+<script src="/js/i18n.js"></script>
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '';
 var selectedColor = '#FFD700';
-var currentLang = 'ru';
-
-var T = {
-ru: {
-    clTopTitle:'Кабинет лидера', clTopSub:'Создание и управление кампаниями',
-    clLoading:'Подключение кошелька...', clAccessTitle:'🔗 Подключите кошелёк', clAccessDesc:'Нужна регистрация в GlobalWay', clAccessBtn:'Подключить кошелёк',
-    clCreateTitle:'➕ Создать кампанию', clCreateSub:'Заполните форму — лендинг создастся автоматически',
-    clCreateTip:'💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.',
-    clName:'Название кампании *', clSlug:'Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span>',
-    clCreateBtn:'🚀 Создать кампанию', clMyCamps:'📋 Мои кампании', clDomains:'🌐 Варианты размещения лендинга',
-},
-ua: {
-    clTopTitle:'Кабінет лідера', clTopSub:'Створення та управління кампаніями',
-    clLoading:'Підключення гаманця...', clAccessTitle:'🔗 Підключіть гаманець', clAccessDesc:'Потрібна реєстрація в GlobalWay', clAccessBtn:'Підключити гаманець',
-    clCreateTitle:'➕ Створити кампанію', clCreateSub:'Заповніть форму — лендінг створится автоматично',
-    clCreateTip:'💡 <b>Підказка:</b> Після створення кампанії з\'явиться лендінг gwad.ink/c/ваш-slug. Партнери зможуть оплачувати рекламу та отримувати рефералів.',
-    clName:'Назва кампанії *', clSlug:'Slug (для URL) * <span style="color:var(--muted)">— лише латиниця, цифри, дефіс</span>',
-    clCreateBtn:'🚀 Створити кампанію', clMyCamps:'📋 Мої кампанії', clDomains:'🌐 Варіанти розміщення лендінгу',
-},
-en: {
-    clTopTitle:'Leader Dashboard', clTopSub:'Create and manage campaigns',
-    clLoading:'Connecting wallet...', clAccessTitle:'🔗 Connect Wallet', clAccessDesc:'GlobalWay registration required', clAccessBtn:'Connect Wallet',
-    clCreateTitle:'➕ Create Campaign', clCreateSub:'Fill the form — landing page will be created automatically',
-    clCreateTip:'💡 <b>Tip:</b> After creating a campaign, a landing page gwad.ink/c/your-slug will appear. Partners can pay for ads and get referrals.',
-    clName:'Campaign Name *', clSlug:'Slug (for URL) * <span style="color:var(--muted)">— latin letters, digits, hyphens only</span>',
-    clCreateBtn:'🚀 Create Campaign', clMyCamps:'📋 My Campaigns', clDomains:'🌐 Landing Page Options',
-}
-};
-
-function setLang(lang) {
-    if (!T[lang]) return;
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
-    var activeBtn = document.querySelector('.lang-btn[onclick*="\''+lang+'\'"]');
-    if (activeBtn) activeBtn.classList.add('active');
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-        var key = el.getAttribute('data-i18n');
-        if (T[lang][key]) el.innerHTML = T[lang][key];
-    });
-    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
-    localStorage.setItem('gwad-lang', lang);
-}
-
-(function(){
-    var saved = localStorage.getItem('gwad-lang');
-    if (saved && T[saved]) { setLang(saved); return; }
-    var nav = (navigator.language || '').toLowerCase();
-    if (nav.startsWith('uk')) setLang('ua');
-    else if (nav.startsWith('en')) setLang('en');
-    else setLang('ru');
-})();
 
 document.getElementById('f-slug').addEventListener('input', function() {
     document.getElementById('slug-preview').textContent = this.value || '...';
