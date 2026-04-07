@@ -230,8 +230,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
         <div class="card-hdr" style="color:var(--gold)">💳 Оплатить рекламу (USDT)</div>
         <div class="card-body">
             <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block">Сумма (USDT): мин. <span style="color:var(--orange)">$5</span></label><input class="inp" type="number" value="50" id="pay-amount"></div>
-            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block">Кампания:</label><select class="inp" id="pay-campaign"><option value="diamond">💎 Diamond Club</option><option value="metr">🏠 Метр²</option></select></div>
-            <button class="btn-pay">🚀 Оплатить рекламу</button>
+            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block">Кампания:</label><select class="inp" id="pay-campaign"><option value="1">💎 Diamond Club</option><option value="2">🏠 Метр²</option><option value="3">🎁 CardGift</option></select></div>
+            <button class="btn-pay" id="pay-btn" onclick="doPayForAd()">🚀 Оплатить рекламу</button>
+            <div id="pay-status" style="margin-top:10px;font-size:13px;color:var(--muted);text-align:center;min-height:20px"></div>
             <div class="pay-note">Оплата в USDT через смарт-контракт на opBNB.<br>80% → рекламный бюджет · 20% → партнёрская программа 9 уровней.</div>
         </div>
     </div>
@@ -327,9 +328,95 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 </div>
 </div>
 
+<!-- Contract Integration -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="/js/ad-pool-abi.js"></script>
+<script src="/js/addresses.js"></script>
+<script src="/js/ad-pool-contract.js"></script>
+
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '', gwId = '', currentRole = 'partner';
+
+// ═══ ОПЛАТА РЕКЛАМЫ ═══
+async function doPayForAd() {
+    var btn = document.getElementById('pay-btn');
+    var statusEl = document.getElementById('pay-status');
+    var amount = parseFloat(document.getElementById('pay-amount').value) || 0;
+    var campaignId = parseInt(document.getElementById('pay-campaign').value) || 1;
+
+    if (amount < 5) { statusEl.textContent = '❌ Минимум $5'; return; }
+
+    // Подключаем кошелёк если ещё не подключён
+    if (!GwadContract.connected) {
+        statusEl.textContent = '🔗 Подключение кошелька...';
+        var ok = await GwadContract.connectWallet();
+        if (!ok) { statusEl.textContent = '❌ Кошелёк не подключён'; return; }
+        walletAddress = GwadContract.walletAddress;
+    }
+
+    // GW ID
+    GwadContract.gwId = gwId || localStorage.getItem('gwad-user-id') || '';
+    GwadContract.gwIdNumeric = parseInt(GwadContract.gwId.replace(/^GW/i, '')) || 0;
+
+    if (!GwadContract.gwIdNumeric) {
+        statusEl.textContent = '❌ Нет GW ID. Зарегистрируйтесь в системе.';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Обработка...';
+
+    var result = await GwadContract.payForAd(campaignId, amount, function(msg) {
+        statusEl.textContent = msg;
+    });
+
+    btn.disabled = false;
+    btn.textContent = '🚀 Оплатить рекламу';
+
+    if (result.ok) {
+        statusEl.innerHTML = '✅ Оплата прошла! <a href="' + GwadContract.ADDR.EXPLORER + '/tx/' + result.txHash + '" target="_blank" style="color:var(--gold)">TX</a>';
+        // Обновляем статистику
+        loadContractData();
+    }
+}
+
+// ═══ ЗАГРУЗКА ДАННЫХ ИЗ КОНТРАКТА ═══
+async function loadContractData() {
+    if (!GwadContract.connected) return;
+
+    // USDT баланс
+    try {
+        var bal = await GwadContract.getUSDTBalance();
+        var balEl = document.getElementById('bal-usdt');
+        if (balEl) balEl.textContent = '$' + bal.toFixed(2);
+    } catch(e) {}
+
+    // Маркетинговые доходы
+    try {
+        var earnings = await GwadContract.getMarketingEarnings();
+        var mktEl = document.getElementById('bal-marketing');
+        if (mktEl) mktEl.textContent = '$' + earnings.total.toFixed(2);
+        
+        // Заполняем таблицу доходов если есть
+        var tbody = document.getElementById('marketing-tbody');
+        if (tbody && earnings.earnings.length > 0) {
+            var html = '';
+            var levels = ['20%','15%','10%','9%','8%','6%','5%','4%','3%'];
+            earnings.earnings.forEach(function(e) {
+                html += '<tr><td>GW' + e.gwId + '</td><td>Ур.' + e.level + ' (' + (levels[e.level-1]||'') + ')</td><td style="color:var(--green)">+$' + e.amount.toFixed(2) + '</td><td><a href="' + GwadContract.ADDR.EXPLORER + '/tx/' + e.txHash + '" target="_blank" style="color:var(--gold);font-size:10px">TX</a></td></tr>';
+            });
+            tbody.innerHTML = html;
+        }
+    } catch(e) { console.warn('Marketing earnings load error:', e); }
+
+    // Контрактная статистика
+    try {
+        var stats = await GwadContract.getMyContractStats();
+        var spentEl = document.getElementById('d-spent');
+        if (spentEl && stats.totalPaid > 0) spentEl.textContent = '$' + stats.totalPaid.toFixed(2);
+    } catch(e) {}
+}
 
 function showTab(name) {
     document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
@@ -385,10 +472,22 @@ function sendMsg() {
 
 // INIT
 (async function(){
-    var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
-    if(provider){try{var acc=await provider.request({method:'eth_accounts'});if(acc&&acc.length)walletAddress=acc[0].toLowerCase()}catch(e){}}
+    // 1. Подключаем кошелёк тихо
+    await GwadContract.silentConnect();
+    walletAddress = GwadContract.walletAddress;
+    
+    // Fallback если GwadContract не подключился
+    if (!walletAddress) {
+        var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
+        if(provider){try{var acc=await provider.request({method:'eth_accounts'});if(acc&&acc.length)walletAddress=acc[0].toLowerCase()}catch(e){}}
+    }
+
     gwId = localStorage.getItem('gwad-user-id') || '';
     var shortId = gwId.replace(/^GW/i,'') || walletAddress.slice(2,9) || '0000000';
+
+    // GwadContract gwId
+    GwadContract.gwId = gwId;
+    GwadContract.gwIdNumeric = parseInt(shortId) || 0;
 
     document.getElementById('wallet-tag').textContent = walletAddress ? walletAddress.slice(0,6)+'...'+walletAddress.slice(-4) : '...';
     document.getElementById('set-gwid').value = 'GW' + shortId;
@@ -407,7 +506,7 @@ function sendMsg() {
     // First visit — show role modal
     if(!localStorage.getItem('gwad-role-selected')) setTimeout(function(){showM('modal-role')},600);
 
-    // Load stats
+    // Load stats from API
     if(gwId||walletAddress){
         try{
             var h={'Content-Type':'application/json'};if(walletAddress)h['X-Wallet-Address']=walletAddress;
@@ -420,6 +519,11 @@ function sendMsg() {
                 if(d.clicks&&d.registrations)document.getElementById('d-conv').textContent=((d.registrations/d.clicks)*100).toFixed(1)+'%';
             }
         }catch(e){}
+    }
+
+    // Load contract data (balances, marketing earnings)
+    if(GwadContract.connected) {
+        loadContractData();
     }
 })();
 </script>
