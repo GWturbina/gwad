@@ -105,6 +105,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 .wi-full{grid-column:1/-1}
 .btn-next-level{display:inline-block;padding:10px 20px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);border-radius:10px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
 .btn-next-level:hover{background:rgba(255,215,0,0.2)}
+.lang-sw{position:fixed;top:12px;right:16px;z-index:150;display:flex;gap:3px;background:#141428;border:1px solid var(--border);border-radius:8px;padding:3px}
+.lang-btn{padding:5px 10px;border:none;border-radius:6px;background:transparent;color:#888;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:var(--gold);color:#000}
 .balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .bal{padding:14px;background:#1a1a35;border-radius:10px}
 .bal-val{font-size:22px;font-weight:700}
@@ -148,8 +152,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 </head>
 <body>
 
+<div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
 <div class="topbar">
-    <h1>📢 AdPlatform<span>Мой кабинет</span></h1>
+    <h1>📢 AdPlatform<span data-i18n="topTitle">Мой кабинет</span></h1>
     <div class="topbar-right">
         <button class="help-btn" onclick="showM('modal-guide')">?</button>
         <span class="badge" id="msg-badge" style="display:none">0 💬</span>
@@ -161,10 +171,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <div class="wallet-block" id="wallet-block-connect" style="display:none">
     <div class="wallet-connect-card">
         <div style="font-size:36px;margin-bottom:8px">🔗</div>
-        <h2>Подключите кошелёк SafePal</h2>
-        <p>Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.</p>
-        <button class="btn-connect" onclick="doConnectWallet()">🔗 Подключить кошелёк</button>
-        <div class="wallet-links">
+        <h2 data-i18n="wcTitle">Подключите кошелёк SafePal</h2>
+        <p data-i18n="wcDesc">Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.</p>
+        <button class="btn-connect" onclick="doConnectWallet()" data-i18n="wcBtn">🔗 Подключить кошелёк</button>
+        <div class="wallet-links" data-i18n="wcLinks">
             💡 Ещё нет SafePal?
             <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a>
             <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>
@@ -176,19 +186,19 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <div class="wallet-block" id="wallet-block-info" style="display:none">
     <div class="wallet-info-card">
         <div>
-            <div class="wi-label">✅ Кошелёк</div>
+            <div class="wi-label" data-i18n="wiWallet">✅ Кошелёк</div>
             <div class="wi-value" id="wi-address" style="color:#fff;font-size:13px;font-family:monospace">—</div>
         </div>
         <div>
-            <div class="wi-label">💰 Баланс USDT</div>
+            <div class="wi-label" data-i18n="wiUsdt">💰 Баланс USDT</div>
             <div class="wi-value" style="color:var(--green)" id="wi-usdt">$0.00</div>
         </div>
         <div>
-            <div class="wi-label">⛽ Баланс BNB</div>
+            <div class="wi-label" data-i18n="wiBnb">⛽ Баланс BNB</div>
             <div class="wi-value" style="color:var(--orange)" id="wi-bnb">0.000</div>
         </div>
         <div>
-            <div class="wi-label">📊 Уровень | GW ID</div>
+            <div class="wi-label" data-i18n="wiLevel">📊 Уровень | GW ID</div>
             <div class="wi-value" style="color:var(--gold)" id="wi-level-id">— | —</div>
         </div>
         <div class="wi-full" id="wi-next-level-row" style="display:none;text-align:center;padding-top:4px">
@@ -198,12 +208,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 </div>
 
 <div class="tabs">
-    <button class="tab active" onclick="showTab('dashboard')">📊 Дашборд</button>
-    <button class="tab" onclick="showTab('pool')">📢 Рекламный пул</button>
-    <button class="tab" onclick="showTab('marketing')" id="tab-marketing">💰 Маркетинг</button>
-    <button class="tab" onclick="showTab('team')" id="tab-team">👥 Команда</button>
-    <button class="tab" onclick="showTab('chat')">💬 Чат</button>
-    <button class="tab" onclick="showTab('settings')">⚙️ Настройки</button>
+    <button class="tab active" onclick="showTab('dashboard')" data-i18n="tabDash">📊 Дашборд</button>
+    <button class="tab" onclick="showTab('pool')" data-i18n="tabPool">📢 Рекламный пул</button>
+    <button class="tab" onclick="showTab('marketing')" id="tab-marketing" data-i18n="tabMkt">💰 Маркетинг</button>
+    <button class="tab" onclick="showTab('team')" id="tab-team" data-i18n="tabTeam">👥 Команда</button>
+    <button class="tab" onclick="showTab('chat')" data-i18n="tabChat">💬 Чат</button>
+    <button class="tab" onclick="showTab('settings')" data-i18n="tabSet">⚙️ Настройки</button>
 </div>
 
 <div class="content">
@@ -211,21 +221,21 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ DASHBOARD ═══ -->
 <div class="panel active fade" id="p-dashboard">
     <div class="stats">
-        <div class="stat"><div class="num" style="color:var(--gold)" id="d-spent">$0</div><div class="lbl">Вложено</div></div>
-        <div class="stat"><div class="num" style="color:var(--green)" id="d-active">0</div><div class="lbl">Активных</div></div>
-        <div class="stat"><div class="num" style="color:var(--blue)" id="d-clicks">0</div><div class="lbl">Кликов</div></div>
-        <div class="stat"><div class="num" style="color:var(--purple)" id="d-regs">0</div><div class="lbl">Регистраций</div></div>
-        <div class="stat"><div class="num" style="color:var(--orange)" id="d-conv">0%</div><div class="lbl">Конверсия</div></div>
-        <div class="stat"><div class="num" style="color:var(--green)" id="d-team">0</div><div class="lbl">В команде</div></div>
+        <div class="stat"><div class="num" style="color:var(--gold)" id="d-spent">$0</div><div class="lbl" data-i18n="lblSpent">Вложено</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="d-active">0</div><div class="lbl" data-i18n="lblActive">Активных</div></div>
+        <div class="stat"><div class="num" style="color:var(--blue)" id="d-clicks">0</div><div class="lbl" data-i18n="lblClicks">Кликов</div></div>
+        <div class="stat"><div class="num" style="color:var(--purple)" id="d-regs">0</div><div class="lbl" data-i18n="lblRegs">Регистраций</div></div>
+        <div class="stat"><div class="num" style="color:var(--orange)" id="d-conv">0%</div><div class="lbl" data-i18n="lblConv">Конверсия</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="d-team">0</div><div class="lbl" data-i18n="lblTeam">В команде</div></div>
     </div>
 
     <!-- Balance -->
     <div class="card">
-        <div class="card-hdr">💰 Баланс</div>
+        <div class="card-hdr" data-i18n="hdrBalance">💰 Баланс</div>
         <div class="card-body">
             <div class="balance-grid">
-                <div class="bal"><div class="bal-val" style="color:var(--gold)" id="bal-usdt">$0.00</div><div class="bal-lbl">USDT (маркетинг)</div><div class="bal-sub">Доход от рекламной программы</div></div>
-                <div class="bal"><div class="bal-val" style="color:var(--green)" id="bal-acad">$0.00</div><div class="bal-lbl">Академия CardGift</div><div class="bal-sub">За обучение + рост команды</div></div>
+                <div class="bal"><div class="bal-val" style="color:var(--gold)" id="bal-usdt">$0.00</div><div class="bal-lbl" data-i18n="balUsdt">USDT (маркетинг)</div><div class="bal-sub" data-i18n="balUsdtSub">Доход от рекламной программы</div></div>
+                <div class="bal"><div class="bal-val" style="color:var(--green)" id="bal-acad">$0.00</div><div class="bal-lbl" data-i18n="balAcad">Академия CardGift</div><div class="bal-sub" data-i18n="balAcadSub">За обучение + рост команды</div></div>
             </div>
         </div>
     </div>
@@ -234,14 +244,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
     <a class="tg-bot" href="https://t.me/CardGiftBot" target="_blank">
         <div style="font-size:28px">🤖</div>
         <div style="flex:1">
-            <div style="font-size:13px;font-weight:700;color:#fff">Активируй образовательный бот</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5">Ежедневное обучение — как управлять системой и выйти на доход от нескольких тысяч $ в месяц</div>
+            <div style="font-size:13px;font-weight:700;color:#fff" data-i18n="tgBotTitle">Активируй образовательный бот</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5" data-i18n="tgBotDesc">Ежедневное обучение — как управлять системой и выйти на доход от нескольких тысяч $ в месяц</div>
         </div>
     </a>
 
     <!-- Role / What I do -->
     <div class="card">
-        <div class="card-hdr">🎯 Мой выбор <button class="btn btn-ghost btn-sm" onclick="showM('modal-role')">Изменить</button></div>
+        <div class="card-hdr"><span data-i18n="hdrRole">🎯 Мой выбор</span> <button class="btn btn-ghost btn-sm" onclick="showM('modal-role')" data-i18n="btnChange">Изменить</button></div>
         <div class="card-body">
             <div id="my-role-display" style="font-size:13px;color:#ccc;line-height:1.7">Загрузка...</div>
         </div>
@@ -249,7 +259,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
     <!-- Campaign stats -->
     <div class="card">
-        <div class="card-hdr">📈 Статистика кампаний</div>
+        <div class="card-hdr" data-i18n="hdrCampStats">📈 Статистика кампаний</div>
         <div class="card-body" id="camp-stats">
             <div style="display:flex;gap:12px;flex-wrap:wrap">
                 <div style="flex:1;min-width:140px;background:#1a1a35;border-radius:10px;padding:14px">
@@ -268,8 +278,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
     <!-- CardGift link -->
     <div class="card" style="cursor:pointer" onclick="openCardGift()">
-        <div class="card-hdr">🎁 Перейти в CardGift</div>
-        <div class="card-body"><div style="font-size:12px;color:var(--muted)">Генератор, CRM, блог, AI Studio, опросы, рассылки — все инструменты экосистемы</div></div>
+        <div class="card-hdr" data-i18n="hdrCardGift">🎁 Перейти в CardGift</div>
+        <div class="card-body"><div style="font-size:12px;color:var(--muted)" data-i18n="cgiftDesc">Генератор, CRM, блог, AI Studio, опросы, рассылки — все инструменты экосистемы</div></div>
     </div>
 </div>
 
@@ -277,7 +287,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <div class="panel fade" id="p-pool">
     <!-- Links -->
     <div class="card">
-        <div class="card-hdr" style="color:#fff">🔗 Мои ссылки</div>
+        <div class="card-hdr" style="color:#fff" data-i18n="hdrLinks">🔗 Мои ссылки</div>
         <div class="card-body">
             <div class="link-row"><div class="link-icon">🎁</div><div class="link-input"><input id="lnk-r" value="gwad.ink/r/..." readonly style="border-color:var(--green);color:var(--green)"><button onclick="copyL('lnk-r')">📋</button></div></div>
             <div class="link-row"><div class="link-icon">💎</div><div class="link-input"><input id="lnk-d" value="gwad.ink/d/..." readonly style="border-color:var(--blue);color:var(--blue)"><button onclick="copyL('lnk-d')">📋</button></div></div>
@@ -287,18 +297,18 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
     </div>
     <!-- Pay -->
     <div class="card pay-card">
-        <div class="card-hdr" style="color:var(--gold)">💳 Оплатить рекламу (USDT)</div>
+        <div class="card-hdr" style="color:var(--gold)" data-i18n="hdrPay">💳 Оплатить рекламу (USDT)</div>
         <div class="card-body">
-            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block">Сумма (USDT): мин. <span style="color:var(--orange)">$5</span></label><input class="inp" type="number" value="50" id="pay-amount"></div>
-            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block">Кампания:</label><select class="inp" id="pay-campaign"><option value="1">💎 Diamond Club</option><option value="2">🏠 Метр²</option><option value="3">🎁 CardGift</option></select></div>
-            <button class="btn-pay" id="pay-btn" onclick="doPayForAd()">🚀 Оплатить рекламу</button>
+            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block" data-i18n="lblPayAmount">Сумма (USDT): мин. <span style="color:var(--orange)">$5</span></label><input class="inp" type="number" value="50" id="pay-amount"></div>
+            <div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);margin-bottom:4px;display:block" data-i18n="lblCampaign">Кампания:</label><select class="inp" id="pay-campaign"><option value="1">💎 Diamond Club</option><option value="2">🏠 Метр²</option><option value="3">🎁 CardGift</option></select></div>
+            <button class="btn-pay" id="pay-btn" onclick="doPayForAd()" data-i18n="btnPay">🚀 Оплатить рекламу</button>
             <div id="pay-status" style="margin-top:10px;font-size:13px;color:var(--muted);text-align:center;min-height:20px"></div>
             <div class="pay-note">Оплата в USDT через смарт-контракт на opBNB.<br>80% → рекламный бюджет · 20% → партнёрская программа 9 уровней.</div>
         </div>
     </div>
     <!-- Orders -->
     <div class="card">
-        <div class="card-hdr" style="color:#fff">📋 Мои заказы</div>
+        <div class="card-hdr" style="color:#fff" data-i18n="hdrOrders">📋 Мои заказы</div>
         <div id="orders-block"><div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">Нет заказов. Оплатите рекламу — контакты начнут приходить.</div></div>
     </div>
 </div>
@@ -309,9 +319,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
     <!-- Общий доход -->
     <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
-        <div class="stat"><div class="num" style="color:var(--green)" id="mkt-total">$0.00</div><div class="lbl">Общий доход</div></div>
-        <div class="stat"><div class="num" style="color:var(--gold)" id="mkt-month">$0.00</div><div class="lbl">За месяц</div></div>
-        <div class="stat"><div class="num" style="color:var(--blue)" id="mkt-refs">0</div><div class="lbl">Рефералов в пуле</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="mkt-total">$0.00</div><div class="lbl" data-i18n="mktTotal">Общий доход</div></div>
+        <div class="stat"><div class="num" style="color:var(--gold)" id="mkt-month">$0.00</div><div class="lbl" data-i18n="mktMonth">За месяц</div></div>
+        <div class="stat"><div class="num" style="color:var(--blue)" id="mkt-refs">0</div><div class="lbl" data-i18n="mktRefs">Рефералов в пуле</div></div>
     </div>
 
     <!-- Как работает -->
@@ -377,7 +387,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ КОМАНДА ═══ -->
 <div class="panel fade" id="p-team">
     <div class="card">
-        <div class="card-hdr">👥 Партнёрская программа <span style="font-size:11px;color:var(--muted);font-weight:400">9 уровней GlobalWay</span></div>
+        <div class="card-hdr"><span data-i18n="hdrTeam">👥 Партнёрская программа</span> <span style="font-size:11px;color:var(--muted);font-weight:400" data-i18n="hdrTeamSub">9 уровней GlobalWay</span></div>
         <div class="card-body" style="overflow-x:auto;padding:0">
             <table class="tbl" id="team-table">
                 <thead><tr><th>Линия</th><th>ID Партнёра</th><th>ID Спонсора</th><th>Уровень</th><th>Кошелёк</th></tr></thead>
@@ -392,7 +402,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ ЧАТ ═══ -->
 <div class="panel fade" id="p-chat">
     <div class="card">
-        <div class="card-hdr">💬 Чат с менеджером</div>
+        <div class="card-hdr" data-i18n="hdrChat">💬 Чат с менеджером</div>
         <div class="card-body">
             <div class="chat-box" id="chat-box" style="min-height:200px">
                 <div class="msg admin"><div class="bubble">Добро пожаловать! Я ваш менеджер. Если есть вопросы — пишите.</div><div class="msg-meta">Менеджер</div></div>
@@ -408,10 +418,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ НАСТРОЙКИ ═══ -->
 <div class="panel fade" id="p-settings">
     <div class="card">
-        <div class="card-hdr">⚙️ Настройки профиля</div>
+        <div class="card-hdr" data-i18n="hdrSettings">⚙️ Настройки профиля</div>
         <div class="card-body">
-            <div class="settings-row"><div class="settings-group"><label>GW ID</label><input class="inp" id="set-gwid" readonly></div><div class="settings-group"><label>Адрес кошелька</label><input class="inp" id="set-wallet" readonly></div></div>
-            <div class="settings-row"><div class="settings-group"><label>Роль</label><input class="inp" id="set-role" readonly></div><div class="settings-group"><label>Уровень доступа</label><input class="inp" id="set-level" readonly value="—"></div></div>
+            <div class="settings-row"><div class="settings-group"><label data-i18n="setGwId">GW ID</label><input class="inp" id="set-gwid" readonly></div><div class="settings-group"><label data-i18n="setWallet">Адрес кошелька</label><input class="inp" id="set-wallet" readonly></div></div>
+            <div class="settings-row"><div class="settings-group"><label data-i18n="setRoleLbl">Роль</label><input class="inp" id="set-role" readonly></div><div class="settings-group"><label data-i18n="setLevelLbl">Уровень доступа</label><input class="inp" id="set-level" readonly value="—"></div></div>
         </div>
     </div>
 </div>
@@ -421,8 +431,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ ROLE MODAL ═══ -->
 <div class="modal-bg" id="modal-role">
 <div class="modal">
-<h2>🎯 Кто вы?</h2>
-<div class="msub">Выберите — это определит доступные инструменты. Можно изменить позже.</div>
+<h2 data-i18n="roleWho">🎯 Кто вы?</h2>
+<div class="msub" data-i18n="roleSub">Выберите — это определит доступные инструменты. Можно изменить позже.</div>
 <div class="role-card" onclick="selectRole('client')"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="font-size:20px">👁️</span><b style="color:#fff;font-size:14px">Клиент</b><span style="margin-left:auto;color:var(--green);font-size:12px;font-weight:700">$0</span></div><div style="font-size:11px;color:var(--muted);line-height:1.6">Хочу посмотреть. Ознакомиться с товарами и услугами. Ничего покупать не планирую.</div></div>
 <div class="role-card" onclick="selectRole('partner')"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="font-size:20px">⚡</span><b style="color:#fff;font-size:14px">Партнёр</b><span style="margin-left:auto;color:var(--gold);font-size:12px;font-weight:700">от $25</span></div><div style="font-size:11px;color:var(--muted);line-height:1.6">Нужны деньги. 4 уровня + реклама от $5. Контакты приходят автоматически.</div></div>
 <div class="role-card" onclick="selectRole('leader')"><div style="display:flex;align-items:center;gap:10px;margin-bottom:4px"><span style="font-size:20px">🚀</span><b style="color:#fff;font-size:14px">Лидер</b><span style="margin-left:auto;color:var(--gold);font-size:12px;font-weight:700">~$120</span></div><div style="font-size:11px;color:var(--muted);line-height:1.6">Полный доступ (7 уровней) + Академия платит за обучение. Первая $1,000 за 21 день.</div></div>
@@ -433,14 +443,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ GUIDE MODAL ═══ -->
 <div class="modal-bg" id="modal-guide">
 <div class="modal">
-<h2>📖 Руководство</h2>
-<div class="guide-item"><div class="guide-title">📊 Дашборд</div><div class="guide-text">Статистика, баланс, кампании. Переключайте вкладки для разных разделов.</div></div>
-<div class="guide-item"><div class="guide-title">📢 Рекламный пул</div><div class="guide-text">Ваши ссылки, оплата рекламы, заказы. Оплатите от $5 — контакты начнут приходить.</div></div>
-<div class="guide-item"><div class="guide-title">👥 Команда</div><div class="guide-text">Партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, кошелёк.</div></div>
-<div class="guide-item"><div class="guide-title">💬 Чат</div><div class="guide-text">Связь с менеджером. Задавайте вопросы — поможем настроить всё.</div></div>
-<div class="guide-item"><div class="guide-title">🤖 Telegram бот</div><div class="guide-text">Ежедневное обучение. Первый месяц — выход на доход от нескольких тысяч $.</div></div>
-<div class="guide-item"><div class="guide-title">🎁 CardGift</div><div class="guide-text">Центральная платформа — генератор, CRM, блог, AI Studio, опросы, академия.</div></div>
-<button class="modal-close" onclick="closeM('modal-guide')">Закрыть</button>
+<h2 data-i18n="guideTitle">📖 Руководство</h2>
+<div class="guide-item"><div class="guide-title" data-i18n="g1t">📊 Дашборд</div><div class="guide-text" data-i18n="g1d">Статистика, баланс, кампании. Переключайте вкладки для разных разделов.</div></div>
+<div class="guide-item"><div class="guide-title" data-i18n="g2t">📢 Рекламный пул</div><div class="guide-text" data-i18n="g2d">Ваши ссылки, оплата рекламы, заказы. Оплатите от $5 — контакты начнут приходить.</div></div>
+<div class="guide-item"><div class="guide-title" data-i18n="g3t">👥 Команда</div><div class="guide-text" data-i18n="g3d">Партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, кошелёк.</div></div>
+<div class="guide-item"><div class="guide-title" data-i18n="g4t">💬 Чат</div><div class="guide-text" data-i18n="g4d">Связь с менеджером. Задавайте вопросы — поможем настроить всё.</div></div>
+<div class="guide-item"><div class="guide-title" data-i18n="g5t">🤖 Telegram бот</div><div class="guide-text" data-i18n="g5d">Ежедневное обучение. Первый месяц — выход на доход от нескольких тысяч $.</div></div>
+<div class="guide-item"><div class="guide-title" data-i18n="g6t">🎁 CardGift</div><div class="guide-text" data-i18n="g6d">Центральная платформа — генератор, CRM, блог, AI Studio, опросы, академия.</div></div>
+<button class="modal-close" onclick="closeM('modal-guide')" data-i18n="guideClose">Закрыть</button>
 </div>
 </div>
 
@@ -465,8 +475,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <div class="modal-bg" id="modal-register">
 <div class="modal" style="border-color:rgba(255,215,0,0.3)">
 <div style="text-align:center;font-size:40px;margin-bottom:6px">🌐</div>
-<h2>Регистрация в GlobalWay</h2>
-<div class="msub">Бесплатная регистрация привязывает кошелёк к экосистеме.<br>Оплачивается только газ (~0.001 BNB).</div>
+<h2 data-i18n="regTitle">Регистрация в GlobalWay</h2>
+<div class="msub" data-i18n="regSub">Бесплатная регистрация привязывает кошелёк к экосистеме.<br>Оплачивается только газ (~0.001 BNB).</div>
 
 <!-- Кошелёк -->
 <div style="padding:10px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:14px">
@@ -505,9 +515,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 </div>
 
 <!-- Кнопки -->
-<button class="btn-pay" id="reg-btn" onclick="doRegisterGW()" style="margin-top:0">✅ Зарегистрироваться бесплатно</button>
+<button class="btn-pay" id="reg-btn" onclick="doRegisterGW()" style="margin-top:0" data-i18n="regBtn">✅ Зарегистрироваться бесплатно</button>
 <div id="reg-status" style="margin-top:10px;font-size:12px;color:var(--muted);text-align:center;min-height:20px"></div>
-<button class="modal-close" onclick="closeM('modal-register')">Позже</button>
+<button class="modal-close" onclick="closeM('modal-register')" data-i18n="regLater">Позже</button>
 </div>
 </div>
 
@@ -516,15 +526,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <!-- ═══ LEVELS MODAL ═══ -->
 <div class="modal-bg" id="modal-levels">
 <div class="modal" style="max-width:480px">
-<h2>📊 Мои уровни</h2>
-<div class="msub">Покупка уровней открывает доступ к партнёрской программе.<br>Оплата в BNB через смарт-контракт NSSPlatform.</div>
+<h2 data-i18n="levTitle">📊 Мои уровни</h2>
+<div class="msub" data-i18n="levSub">Покупка уровней открывает доступ к партнёрской программе.<br>Оплата в BNB через смарт-контракт NSSPlatform.</div>
 
 <div id="levels-list" style="margin-bottom:12px">
     <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">⏳ Загрузка уровней...</div>
 </div>
 
 <div id="levels-status" style="font-size:12px;color:var(--muted);text-align:center;min-height:20px;margin-bottom:8px"></div>
-<button class="modal-close" onclick="closeM('modal-levels')">Закрыть</button>
+<button class="modal-close" onclick="closeM('modal-levels')" data-i18n="levClose">Закрыть</button>
 </div>
 </div>
 
@@ -537,6 +547,153 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '', gwId = '', currentRole = 'partner';
+var currentLang = 'ru';
+
+// ═══ МУЛЬТИЯЗЫЧНОСТЬ ═══
+var T = {
+ru: {
+    topTitle:'Мой кабинет',
+    tabDash:'📊 Дашборд', tabPool:'📢 Рекламный пул', tabMkt:'💰 Маркетинг', tabTeam:'👥 Команда', tabChat:'💬 Чат', tabSet:'⚙️ Настройки',
+    lblSpent:'Вложено', lblActive:'Активных', lblClicks:'Кликов', lblRegs:'Регистраций', lblConv:'Конверсия', lblTeam:'В команде',
+    hdrBalance:'💰 Баланс', balUsdt:'USDT (маркетинг)', balUsdtSub:'Доход от рекламной программы', balAcad:'Академия CardGift', balAcadSub:'За обучение + рост команды',
+    tgBotTitle:'Активируй образовательный бот', tgBotDesc:'Ежедневное обучение — как управлять системой и выйти на доход от нескольких тысяч $ в месяц',
+    hdrRole:'🎯 Мой выбор', btnChange:'Изменить',
+    hdrCampStats:'📈 Статистика кампаний', hdrCardGift:'🎁 Перейти в CardGift', cgiftDesc:'Генератор, CRM, блог, AI Studio, опросы, рассылки — все инструменты экосистемы',
+    hdrLinks:'🔗 Мои ссылки', hdrPay:'💳 Оплатить рекламу (USDT)', lblPayAmount:'Сумма (USDT): мин. <span style="color:var(--orange)">$5</span>', lblCampaign:'Кампания:', btnPay:'🚀 Оплатить рекламу',
+    hdrOrders:'📋 Мои заказы',
+    mktTotal:'Общий доход', mktMonth:'За месяц', mktRefs:'Рефералов в пуле',
+    hdrTeam:'👥 Партнёрская программа', hdrTeamSub:'9 уровней GlobalWay',
+    hdrChat:'💬 Чат с менеджером', hdrSettings:'⚙️ Настройки профиля',
+    setGwId:'GW ID', setWallet:'Адрес кошелька', setRoleLbl:'Роль', setLevelLbl:'Уровень доступа',
+    wcTitle:'Подключите кошелёк SafePal', wcDesc:'Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.',
+    wcBtn:'🔗 Подключить кошелёк', wcLinks:'💡 Ещё нет SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
+    wiWallet:'✅ Кошелёк', wiUsdt:'💰 Баланс USDT', wiBnb:'⛽ Баланс BNB', wiLevel:'📊 Уровень | GW ID',
+    // Роли
+    roleWho:'🎯 Кто вы?', roleSub:'Выберите — это определит доступные инструменты. Можно изменить позже.',
+    rClient:'Клиент', rClientD:'Хочу посмотреть. Ознакомиться с товарами и услугами. Ничего покупать не планирую.',
+    rPartner:'Партнёр', rPartnerD:'Нужны деньги. 4 уровня + реклама от $5. Контакты приходят автоматически.',
+    rLeader:'Лидер', rLeaderD:'Полный доступ (7 уровней) + Академия платит за обучение. Первая $1,000 за 21 день.',
+    rBusiness:'Предприниматель', rBusinessD:'У меня есть товар/услуга. Свой лендинг + CRM + рассылки. Система приводит клиентов.',
+    // Гид
+    guideTitle:'📖 Руководство',
+    g1t:'📊 Дашборд', g1d:'Статистика, баланс, кампании. Переключайте вкладки для разных разделов.',
+    g2t:'📢 Рекламный пул', g2d:'Ваши ссылки, оплата рекламы, заказы. Оплатите от $5 — контакты начнут приходить.',
+    g3t:'👥 Команда', g3d:'Партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, кошелёк.',
+    g4t:'💬 Чат', g4d:'Связь с менеджером. Задавайте вопросы — поможем настроить всё.',
+    g5t:'🤖 Telegram бот', g5d:'Ежедневное обучение. Первый месяц — выход на доход от нескольких тысяч $.',
+    g6t:'🎁 CardGift', g6d:'Центральная платформа — генератор, CRM, блог, AI Studio, опросы, академия.',
+    guideClose:'Закрыть',
+    // Уровни
+    levTitle:'📊 Мои уровни', levSub:'Покупка уровней открывает доступ к партнёрской программе.<br>Оплата в BNB через смарт-контракт NSSPlatform.', levClose:'Закрыть',
+    levActive:'Активен', levBuy:'Купить', levLocked:'Заблокирован', levLevel:'Уровень',
+    // Регистрация
+    regTitle:'Регистрация в GlobalWay', regSub:'Бесплатная регистрация привязывает кошелёк к экосистеме.<br>Оплачивается только газ (~0.001 BNB).',
+    regConnected:'Кошелёк подключён', regSponsorLabel:'ID того, кто вас пригласил:', regSponsorFixed:'Привязан из реферальной ссылки',
+    regSponsorHint:'💡 Спросите у того, кто дал вам ссылку', regBtn:'✅ Зарегистрироваться бесплатно', regLater:'Позже',
+    regBenefits:'Что даёт регистрация:',
+    regB1:'⚡ Участие в рекламном пуле AdPlatform', regB2:'💰 9 уровней партнёрской программы', regB3:'👥 Своя команда и реферальные ссылки', regB4:'🎁 Доступ ко всем продуктам экосистемы',
+},
+ua: {
+    topTitle:'Мій кабінет',
+    tabDash:'📊 Дашборд', tabPool:'📢 Рекламний пул', tabMkt:'💰 Маркетинг', tabTeam:'👥 Команда', tabChat:'💬 Чат', tabSet:'⚙️ Налаштування',
+    lblSpent:'Вкладено', lblActive:'Активних', lblClicks:'Кліків', lblRegs:'Реєстрацій', lblConv:'Конверсія', lblTeam:'В команді',
+    hdrBalance:'💰 Баланс', balUsdt:'USDT (маркетинг)', balUsdtSub:'Дохід від рекламної програми', balAcad:'Академія CardGift', balAcadSub:'За навчання + зростання команди',
+    tgBotTitle:'Активуй освітнього бота', tgBotDesc:'Щоденне навчання — як керувати системою і вийти на дохід від кількох тисяч $ на місяць',
+    hdrRole:'🎯 Мій вибір', btnChange:'Змінити',
+    hdrCampStats:'📈 Статистика кампаній', hdrCardGift:'🎁 Перейти в CardGift', cgiftDesc:'Генератор, CRM, блог, AI Studio, опитування, розсилки — усі інструменти екосистеми',
+    hdrLinks:'🔗 Мої посилання', hdrPay:'💳 Оплатити рекламу (USDT)', lblPayAmount:'Сума (USDT): мін. <span style="color:var(--orange)">$5</span>', lblCampaign:'Кампанія:', btnPay:'🚀 Оплатити рекламу',
+    hdrOrders:'📋 Мої замовлення',
+    mktTotal:'Загальний дохід', mktMonth:'За місяць', mktRefs:'Рефералів у пулі',
+    hdrTeam:'👥 Партнерська програма', hdrTeamSub:'9 рівнів GlobalWay',
+    hdrChat:'💬 Чат з менеджером', hdrSettings:'⚙️ Налаштування профілю',
+    setGwId:'GW ID', setWallet:'Адреса гаманця', setRoleLbl:'Роль', setLevelLbl:'Рівень доступу',
+    wcTitle:'Підключіть гаманець SafePal', wcDesc:'Для роботи з рекламною платформою потрібен гаманець.<br>Відкрийте цю сторінку в SafePal → Dapp браузер.',
+    wcBtn:'🔗 Підключити гаманець', wcLinks:'💡 Ще немає SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
+    wiWallet:'✅ Гаманець', wiUsdt:'💰 Баланс USDT', wiBnb:'⛽ Баланс BNB', wiLevel:'📊 Рівень | GW ID',
+    roleWho:'🎯 Хто ви?', roleSub:'Оберіть — це визначить доступні інструменти. Можна змінити пізніше.',
+    rClient:'Клієнт', rClientD:'Хочу подивитися. Ознайомитися з товарами та послугами.',
+    rPartner:'Партнер', rPartnerD:'Потрібні гроші. 4 рівні + реклама від $5. Контакти надходять автоматично.',
+    rLeader:'Лідер', rLeaderD:'Повний доступ (7 рівнів) + Академія платить за навчання. Перші $1,000 за 21 день.',
+    rBusiness:'Підприємець', rBusinessD:'У мене є товар/послуга. Свій лендінг + CRM + розсилки. Система приводить клієнтів.',
+    guideTitle:'📖 Посібник',
+    g1t:'📊 Дашборд', g1d:'Статистика, баланс, кампанії. Перемикайте вкладки для різних розділів.',
+    g2t:'📢 Рекламний пул', g2d:'Ваші посилання, оплата реклами, замовлення. Оплатіть від $5 — контакти почнуть надходити.',
+    g3t:'👥 Команда', g3d:'Партнери по GlobalWay (9 рівнів). ID, спонсор, рівень доступу, гаманець.',
+    g4t:'💬 Чат', g4d:'Зв\'язок з менеджером. Задавайте питання — допоможемо налаштувати все.',
+    g5t:'🤖 Telegram бот', g5d:'Щоденне навчання. Перший місяць — вихід на дохід від кількох тисяч $.',
+    g6t:'🎁 CardGift', g6d:'Центральна платформа — генератор, CRM, блог, AI Studio, опитування, академія.',
+    guideClose:'Закрити',
+    levTitle:'📊 Мої рівні', levSub:'Купівля рівнів відкриває доступ до партнерської програми.<br>Оплата в BNB через смарт-контракт NSSPlatform.', levClose:'Закрити',
+    levActive:'Активний', levBuy:'Купити', levLocked:'Заблоковано', levLevel:'Рівень',
+    regTitle:'Реєстрація в GlobalWay', regSub:'Безкоштовна реєстрація прив\'язує гаманець до екосистеми.<br>Оплачується лише газ (~0.001 BNB).',
+    regConnected:'Гаманець підключено', regSponsorLabel:'ID того, хто вас запросив:', regSponsorFixed:'Прив\'язано з реферального посилання',
+    regSponsorHint:'💡 Запитайте у того, хто дав вам посилання', regBtn:'✅ Зареєструватися безкоштовно', regLater:'Пізніше',
+    regBenefits:'Що дає реєстрація:',
+    regB1:'⚡ Участь у рекламному пулі AdPlatform', regB2:'💰 9 рівнів партнерської програми', regB3:'👥 Своя команда та реферальні посилання', regB4:'🎁 Доступ до всіх продуктів екосистеми',
+},
+en: {
+    topTitle:'My Dashboard',
+    tabDash:'📊 Dashboard', tabPool:'📢 Ad Pool', tabMkt:'💰 Marketing', tabTeam:'👥 Team', tabChat:'💬 Chat', tabSet:'⚙️ Settings',
+    lblSpent:'Invested', lblActive:'Active', lblClicks:'Clicks', lblRegs:'Registrations', lblConv:'Conversion', lblTeam:'In Team',
+    hdrBalance:'💰 Balance', balUsdt:'USDT (marketing)', balUsdtSub:'Income from ad program', balAcad:'CardGift Academy', balAcadSub:'For training + team growth',
+    tgBotTitle:'Activate educational bot', tgBotDesc:'Daily training — how to manage the system and reach income of several thousand $ per month',
+    hdrRole:'🎯 My Choice', btnChange:'Change',
+    hdrCampStats:'📈 Campaign Stats', hdrCardGift:'🎁 Go to CardGift', cgiftDesc:'Generator, CRM, blog, AI Studio, surveys, mailings — all ecosystem tools',
+    hdrLinks:'🔗 My Links', hdrPay:'💳 Pay for Ads (USDT)', lblPayAmount:'Amount (USDT): min. <span style="color:var(--orange)">$5</span>', lblCampaign:'Campaign:', btnPay:'🚀 Pay for Ads',
+    hdrOrders:'📋 My Orders',
+    mktTotal:'Total Income', mktMonth:'This Month', mktRefs:'Referrals in Pool',
+    hdrTeam:'👥 Partner Program', hdrTeamSub:'9 levels GlobalWay',
+    hdrChat:'💬 Chat with Manager', hdrSettings:'⚙️ Profile Settings',
+    setGwId:'GW ID', setWallet:'Wallet Address', setRoleLbl:'Role', setLevelLbl:'Access Level',
+    wcTitle:'Connect SafePal Wallet', wcDesc:'A wallet is required to use the ad platform.<br>Open this page in SafePal → Dapp browser.',
+    wcBtn:'🔗 Connect Wallet', wcLinks:'💡 Don\'t have SafePal yet? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
+    wiWallet:'✅ Wallet', wiUsdt:'💰 USDT Balance', wiBnb:'⛽ BNB Balance', wiLevel:'📊 Level | GW ID',
+    roleWho:'🎯 Who are you?', roleSub:'Choose — this determines available tools. Can be changed later.',
+    rClient:'Client', rClientD:'Just looking. Browsing products and services.',
+    rPartner:'Partner', rPartnerD:'Need money. 4 levels + ads from $5. Contacts come automatically.',
+    rLeader:'Leader', rLeaderD:'Full access (7 levels) + Academy pays for training. First $1,000 in 21 days.',
+    rBusiness:'Entrepreneur', rBusinessD:'I have a product/service. Own landing + CRM + mailings. System brings clients.',
+    guideTitle:'📖 Guide',
+    g1t:'📊 Dashboard', g1d:'Stats, balance, campaigns. Switch tabs for different sections.',
+    g2t:'📢 Ad Pool', g2d:'Your links, ad payments, orders. Pay from $5 — contacts will start coming.',
+    g3t:'👥 Team', g3d:'GlobalWay partners (9 levels). ID, sponsor, access level, wallet.',
+    g4t:'💬 Chat', g4d:'Contact your manager. Ask questions — we\'ll help set up everything.',
+    g5t:'🤖 Telegram Bot', g5d:'Daily training. First month — reaching income of several thousand $.',
+    g6t:'🎁 CardGift', g6d:'Central platform — generator, CRM, blog, AI Studio, surveys, academy.',
+    guideClose:'Close',
+    levTitle:'📊 My Levels', levSub:'Buying levels unlocks access to the partner program.<br>Payment in BNB via NSSPlatform smart contract.', levClose:'Close',
+    levActive:'Active', levBuy:'Buy', levLocked:'Locked', levLevel:'Level',
+    regTitle:'Register in GlobalWay', regSub:'Free registration links your wallet to the ecosystem.<br>Only gas is paid (~0.001 BNB).',
+    regConnected:'Wallet connected', regSponsorLabel:'ID of the person who invited you:', regSponsorFixed:'Linked from referral link',
+    regSponsorHint:'💡 Ask the person who gave you the link', regBtn:'✅ Register for Free', regLater:'Later',
+    regBenefits:'What registration gives:',
+    regB1:'⚡ Participation in AdPlatform ad pool', regB2:'💰 9-level partner program', regB3:'👥 Your own team and referral links', regB4:'🎁 Access to all ecosystem products',
+}
+};
+
+function setLang(lang) {
+    if (!T[lang]) return;
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    var activeBtn = document.querySelector('.lang-btn[onclick*="\''+lang+'\'"]');
+    if (activeBtn) activeBtn.classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    localStorage.setItem('gwad-lang', lang);
+}
+
+// Auto-detect language
+(function(){
+    var saved = localStorage.getItem('gwad-lang');
+    if (saved && T[saved]) { setLang(saved); return; }
+    var nav = (navigator.language || '').toLowerCase();
+    if (nav.startsWith('uk')) setLang('ua');
+    else if (nav.startsWith('en')) setLang('en');
+    else setLang('ru');
+})();
 
 // ═══ ОПЛАТА РЕКЛАМЫ ═══
 async function doPayForAd() {
@@ -929,17 +1086,17 @@ async function loadLevelsUI() {
 
             // Инфо
             html += '<div style="flex:1">';
-            html += '<div style="font-size:14px;font-weight:700;color:' + (isActive ? 'var(--green)' : '#fff') + '">Уровень ' + lvl + '</div>';
+            html += '<div style="font-size:14px;font-weight:700;color:' + (isActive ? 'var(--green)' : '#fff') + '">' + (T[currentLang].levLevel||'Уровень') + ' ' + lvl + '</div>';
             html += '<div style="font-size:11px;color:var(--muted)">' + p.priceBNB.toFixed(4) + ' BNB</div>';
             html += '</div>';
 
             // Кнопка / Статус
             if (isActive) {
-                html += '<div style="font-size:11px;color:var(--green);font-weight:600">Активен</div>';
+                html += '<div style="font-size:11px;color:var(--green);font-weight:600">' + (T[currentLang].levActive||'Активен') + '</div>';
             } else if (isNext) {
-                html += '<button class="btn btn-gold btn-sm" onclick="doBuyLevel(' + lvl + ')" id="buy-lvl-btn-' + lvl + '">Купить</button>';
+                html += '<button class="btn btn-gold btn-sm" onclick="doBuyLevel(' + lvl + ')" id="buy-lvl-btn-' + lvl + '">' + (T[currentLang].levBuy||'Купить') + '</button>';
             } else {
-                html += '<div style="font-size:11px;color:var(--muted)">Заблокирован</div>';
+                html += '<div style="font-size:11px;color:var(--muted)">' + (T[currentLang].levLocked||'Заблокирован') + '</div>';
             }
 
             html += '</div>';
