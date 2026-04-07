@@ -192,7 +192,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
             <div class="wi-value" style="color:var(--gold)" id="wi-level-id">— | —</div>
         </div>
         <div class="wi-full" id="wi-next-level-row" style="display:none;text-align:center;padding-top:4px">
-            <button class="btn-next-level" id="wi-next-level-btn" onclick="alert('Покупка уровней — в разработке')">🔒 Купить уровень <span id="wi-next-level-num">?</span></button>
+            <button class="btn-next-level" id="wi-next-level-btn" onclick="openLevelsModal()">🔒 Купить уровень <span id="wi-next-level-num">?</span></button>
         </div>
     </div>
 </div>
@@ -508,6 +508,23 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <button class="btn-pay" id="reg-btn" onclick="doRegisterGW()" style="margin-top:0">✅ Зарегистрироваться бесплатно</button>
 <div id="reg-status" style="margin-top:10px;font-size:12px;color:var(--muted);text-align:center;min-height:20px"></div>
 <button class="modal-close" onclick="closeM('modal-register')">Позже</button>
+</div>
+</div>
+
+<!-- Contract Integration -->
+
+<!-- ═══ LEVELS MODAL ═══ -->
+<div class="modal-bg" id="modal-levels">
+<div class="modal" style="max-width:480px">
+<h2>📊 Мои уровни</h2>
+<div class="msub">Покупка уровней открывает доступ к партнёрской программе.<br>Оплата в BNB через смарт-контракт NSSPlatform.</div>
+
+<div id="levels-list" style="margin-bottom:12px">
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">⏳ Загрузка уровней...</div>
+</div>
+
+<div id="levels-status" style="font-size:12px;color:var(--muted);text-align:center;min-height:20px;margin-bottom:8px"></div>
+<button class="modal-close" onclick="closeM('modal-levels')">Закрыть</button>
 </div>
 </div>
 
@@ -852,6 +869,108 @@ async function doRegisterGW() {
         errorEl.textContent = '❌ ' + result.error;
         errorEl.style.display = '';
         statusEl.textContent = '';
+    }
+}
+
+// ═══ УРОВНИ — модал ═══
+var _levelsLoaded = false;
+var _currentUserLevel = 0;
+var _activeLevels = [];
+
+async function openLevelsModal() {
+    showM('modal-levels');
+    if (!_levelsLoaded) await loadLevelsUI();
+}
+
+async function loadLevelsUI() {
+    var container = document.getElementById('levels-list');
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">⏳ Загрузка цен из контракта...</div>';
+
+    try {
+        // Параллельно: цены + статус пользователя
+        var results = await Promise.all([
+            GwadContract.getAllLevelPrices(),
+            GwadContract.getGWUserStatus(walletAddress)
+        ]);
+
+        var prices = results[0];
+        var gwStatus = results[1];
+
+        if (!prices.length) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--red);font-size:12px">❌ Не удалось загрузить цены</div>';
+            return;
+        }
+
+        _currentUserLevel = gwStatus ? gwStatus.maxPackage : 0;
+        _activeLevels = gwStatus ? gwStatus.activeLevels : [];
+
+        var html = '';
+        for (var i = 0; i < prices.length; i++) {
+            var p = prices[i];
+            var lvl = p.level;
+            var isActive = _activeLevels[lvl] === true || lvl <= _currentUserLevel;
+            var isNext = lvl === _currentUserLevel + 1;
+            var isLocked = lvl > _currentUserLevel + 1;
+
+            var borderColor = isActive ? 'rgba(16,185,129,0.3)' : isNext ? 'rgba(255,215,0,0.3)' : 'var(--border)';
+            var bgColor = isActive ? 'rgba(16,185,129,0.04)' : isNext ? 'rgba(255,215,0,0.04)' : 'var(--card)';
+            var opacity = isLocked ? '0.45' : '1';
+
+            html += '<div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid ' + borderColor + ';background:' + bgColor + ';border-radius:12px;margin-bottom:8px;opacity:' + opacity + '">';
+
+            // Иконка
+            if (isActive) {
+                html += '<div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">✅</div>';
+            } else if (isNext) {
+                html += '<div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3)">⚡</div>';
+            } else {
+                html += '<div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border)">🔒</div>';
+            }
+
+            // Инфо
+            html += '<div style="flex:1">';
+            html += '<div style="font-size:14px;font-weight:700;color:' + (isActive ? 'var(--green)' : '#fff') + '">Уровень ' + lvl + '</div>';
+            html += '<div style="font-size:11px;color:var(--muted)">' + p.priceBNB.toFixed(4) + ' BNB</div>';
+            html += '</div>';
+
+            // Кнопка / Статус
+            if (isActive) {
+                html += '<div style="font-size:11px;color:var(--green);font-weight:600">Активен</div>';
+            } else if (isNext) {
+                html += '<button class="btn btn-gold btn-sm" onclick="doBuyLevel(' + lvl + ')" id="buy-lvl-btn-' + lvl + '">Купить</button>';
+            } else {
+                html += '<div style="font-size:11px;color:var(--muted)">Заблокирован</div>';
+            }
+
+            html += '</div>';
+        }
+
+        container.innerHTML = html;
+        _levelsLoaded = true;
+    } catch(e) {
+        console.warn('loadLevelsUI error:', e);
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--red);font-size:12px">❌ Ошибка: ' + (e.message || '').slice(0,60) + '</div>';
+    }
+}
+
+async function doBuyLevel(level) {
+    var btn = document.getElementById('buy-lvl-btn-' + level);
+    var statusEl = document.getElementById('levels-status');
+
+    if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
+
+    var result = await GwadContract.buyLevelGW(level, function(msg) {
+        if (statusEl) statusEl.textContent = msg;
+    });
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Купить'; }
+
+    if (result.ok) {
+        if (statusEl) statusEl.innerHTML = '✅ Уровень ' + level + ' активирован! <a href="' + GwadContract.ADDR.EXPLORER + '/tx/' + result.txHash + '" target="_blank" style="color:var(--gold)">TX</a>';
+        // Перезагружаем уровни и wallet info
+        _levelsLoaded = false;
+        await loadLevelsUI();
+        await initWalletUI();
     }
 }
 
