@@ -474,6 +474,45 @@ var GwadContract = {
         } catch(e) { return null; }
     },
 
+    /**
+     * Регистрация в GlobalWay через NSSPlatform
+     * @param {number} sponsorId — GW ID спонсора (числовой)
+     * @param {function} onStatus — callback
+     * @returns {object} {ok, error}
+     */
+    async registerGW(sponsorId, onStatus) {
+        if (!this.connected) return { ok: false, error: 'Кошелёк не подключён' };
+        var status = onStatus || function(){};
+
+        try {
+            status('⏳ Подтвердите регистрацию в кошельке...');
+            var nss = this.getNSSContract();
+            var tx = await nss.register(sponsorId, { gasLimit: 3500000 });
+            status('⏳ Ожидание подтверждения...');
+            await tx.wait();
+            console.log('✅ Register TX:', tx.hash);
+
+            // Ждём появления в блокчейне
+            status('⏳ Проверка регистрации...');
+            for (var i = 0; i < 5; i++) {
+                await new Promise(function(r){ setTimeout(r, 3000); });
+                var reg = await this.isRegistered(this.walletAddress);
+                if (reg) break;
+            }
+
+            status('✅ Регистрация прошла!');
+            return { ok: true, txHash: tx.hash };
+        } catch(e) {
+            var msg = e.reason || e.message || 'Ошибка';
+            if (msg.includes('Already registered')) return { ok: true, error: 'Уже зарегистрирован' };
+            if (msg.includes('user rejected')) msg = 'Транзакция отклонена';
+            if (msg.includes('Sponsor not found') || msg.includes('Invalid sponsor')) msg = 'Спонсор не найден. Проверьте ID.';
+            if (msg.includes('insufficient funds')) msg = 'Недостаточно BNB для газа (~0.001 BNB)';
+            status('❌ ' + msg);
+            return { ok: false, error: msg };
+        }
+    },
+
     // ═══════════════════════════════════════════════════════════
     // HELPERS
     // ═══════════════════════════════════════════════════════════
