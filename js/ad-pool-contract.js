@@ -577,6 +577,76 @@ var GwadContract = {
         }
     },
 
+    GLOBALWAY_ABI: [
+        'function getDirectReferrals(address user) view returns (address[])',
+    ],
+
+    getGlobalWayRead() {
+        var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+        return new ethers.Contract(this.ADDR.GlobalWay, this.GLOBALWAY_ABI, rpc);
+    },
+
+    /**
+     * Прямые рефералы (линия 1) из GlobalWay
+     */
+    async getDirectReferrals(address) {
+        try {
+            var gw = this.getGlobalWayRead();
+            var refs = await gw.getDirectReferrals(address || this.walletAddress);
+            return Array.from(refs);
+        } catch(e) { console.warn('getDirectReferrals error:', e); return []; }
+    },
+
+    /**
+     * Детали партнёра через Bridge.getUserStatus
+     */
+    async getPartnerDetails(address) {
+        try {
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return { address: address, odixId: 0, maxPackage: 0, rank: 0, quarterlyActive: false };
+            var s = await bridge.getUserStatus(address);
+            return {
+                address: address,
+                odixId: s.odixId.toNumber ? s.odixId.toNumber() : Number(s.odixId),
+                maxPackage: Number(s.maxPackage),
+                rank: Number(s.rank),
+                quarterlyActive: s.quarterlyActive,
+            };
+        } catch(e) { return { address: address, odixId: 0, maxPackage: 0, rank: 0, quarterlyActive: false }; }
+    },
+
+    /**
+     * Загрузить детали для массива адресов (параллельно, batch по 5)
+     */
+    async loadLineDetails(addresses) {
+        if (!addresses || !addresses.length) return [];
+        var self = this;
+        var results = [];
+        var batchSize = 5;
+        for (var i = 0; i < addresses.length; i += batchSize) {
+            var batch = addresses.slice(i, i + batchSize);
+            var batchResults = await Promise.all(batch.map(function(addr) {
+                return self.getPartnerDetails(addr);
+            }));
+            results = results.concat(batchResults);
+        }
+        return results;
+    },
+
+    /**
+     * Рефералы следующей линии (по массиву адресов предыдущей линии)
+     */
+    async getNextLineAddresses(prevLineAddresses) {
+        if (!prevLineAddresses || !prevLineAddresses.length) return [];
+        var self = this;
+        var all = [];
+        for (var i = 0; i < prevLineAddresses.length; i++) {
+            var refs = await self.getDirectReferrals(prevLineAddresses[i]);
+            all = all.concat(refs);
+        }
+        return all;
+    },
+
     // ═══════════════════════════════════════════════════════════
     // HELPERS
     // ═══════════════════════════════════════════════════════════
