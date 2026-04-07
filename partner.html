@@ -86,6 +86,25 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 /* Extra: partner-specific */
 .help-btn{width:28px;height:28px;border-radius:50%;border:2px solid var(--gold);background:transparent;color:var(--gold);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .help-btn:hover{background:rgba(255,215,0,0.15)}
+
+/* Wallet connection block */
+.wallet-block{margin:16px;max-width:1100px;margin-left:auto;margin-right:auto}
+.wallet-connect-card{background:linear-gradient(135deg,rgba(255,215,0,0.06),rgba(255,165,0,0.02));border:1px solid rgba(255,215,0,0.25);border-radius:16px;padding:24px;text-align:center}
+.wallet-connect-card h2{color:var(--gold);font-size:18px;margin-bottom:8px}
+.wallet-connect-card p{color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:16px}
+.btn-connect{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:12px;font-size:16px;font-weight:700;color:#000;cursor:pointer;transition:.2s}
+.btn-connect:hover{opacity:.9;transform:translateY(-1px)}
+.wallet-links{margin-top:14px;font-size:12px;color:var(--muted)}
+.wallet-links a{color:var(--gold);text-decoration:none;margin:0 6px}
+.wallet-links a:hover{text-decoration:underline}
+
+.wallet-info-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wallet-info-card .wi-row{display:flex;align-items:center;gap:8px;font-size:13px}
+.wallet-info-card .wi-label{color:var(--muted);font-size:11px}
+.wallet-info-card .wi-value{font-weight:700;font-size:15px}
+.wi-full{grid-column:1/-1}
+.btn-next-level{display:inline-block;padding:10px 20px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);border-radius:10px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-next-level:hover{background:rgba(255,215,0,0.2)}
 .balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .bal{padding:14px;background:#1a1a35;border-radius:10px}
 .bal-val{font-size:22px;font-weight:700}
@@ -135,6 +154,46 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
         <button class="help-btn" onclick="showM('modal-guide')">?</button>
         <span class="badge" id="msg-badge" style="display:none">0 💬</span>
         <span class="wallet-tag" id="wallet-tag">...</span>
+    </div>
+</div>
+
+<!-- ═══ WALLET CONNECTION BLOCK ═══ -->
+<div class="wallet-block" id="wallet-block-connect" style="display:none">
+    <div class="wallet-connect-card">
+        <div style="font-size:36px;margin-bottom:8px">🔗</div>
+        <h2>Подключите кошелёк SafePal</h2>
+        <p>Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.</p>
+        <button class="btn-connect" onclick="doConnectWallet()">🔗 Подключить кошелёк</button>
+        <div class="wallet-links">
+            💡 Ещё нет SafePal?
+            <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a>
+            <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ WALLET INFO BLOCK ═══ -->
+<div class="wallet-block" id="wallet-block-info" style="display:none">
+    <div class="wallet-info-card">
+        <div>
+            <div class="wi-label">✅ Кошелёк</div>
+            <div class="wi-value" id="wi-address" style="color:#fff;font-size:13px;font-family:monospace">—</div>
+        </div>
+        <div>
+            <div class="wi-label">💰 Баланс USDT</div>
+            <div class="wi-value" style="color:var(--green)" id="wi-usdt">$0.00</div>
+        </div>
+        <div>
+            <div class="wi-label">⛽ Баланс BNB</div>
+            <div class="wi-value" style="color:var(--orange)" id="wi-bnb">0.000</div>
+        </div>
+        <div>
+            <div class="wi-label">📊 Уровень | GW ID</div>
+            <div class="wi-value" style="color:var(--gold)" id="wi-level-id">— | —</div>
+        </div>
+        <div class="wi-full" id="wi-next-level-row" style="display:none;text-align:center;padding-top:4px">
+            <button class="btn-next-level" id="wi-next-level-btn" onclick="alert('Покупка уровней — в разработке')">🔒 Купить уровень <span id="wi-next-level-num">?</span></button>
+        </div>
     </div>
 </div>
 
@@ -675,35 +734,116 @@ function sendMsg() {
     box.scrollTop = box.scrollHeight;
 }
 
+// ═══ ПОДКЛЮЧЕНИЕ КОШЕЛЬКА (кнопка) ═══
+async function doConnectWallet() {
+    var btn = document.querySelector('.btn-connect');
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Подключение...'; }
+
+    var ok = await GwadContract.connectWallet();
+    if (!ok) {
+        if (btn) { btn.disabled = false; btn.textContent = '🔗 Подключить кошелёк'; }
+        return;
+    }
+
+    walletAddress = GwadContract.walletAddress;
+    await initWalletUI();
+}
+
+// ═══ ИНИЦИАЛИЗАЦИЯ UI КОШЕЛЬКА ═══
+async function initWalletUI() {
+    if (!walletAddress) {
+        document.getElementById('wallet-block-connect').style.display = '';
+        document.getElementById('wallet-block-info').style.display = 'none';
+        return;
+    }
+
+    // Скрываем кнопку подключения, показываем инфо
+    document.getElementById('wallet-block-connect').style.display = 'none';
+    document.getElementById('wallet-block-info').style.display = '';
+
+    // Адрес
+    document.getElementById('wi-address').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+    document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+
+    // Балансы (параллельно)
+    var balPromises = [
+        GwadContract.getUSDTBalance(walletAddress),
+        GwadContract.getBNBBalance(walletAddress),
+        GwadContract.getGWUserStatus(walletAddress),
+    ];
+
+    try {
+        var results = await Promise.all(balPromises);
+        var usdtBal = results[0];
+        var bnbBal = results[1];
+        var gwStatus = results[2];
+
+        document.getElementById('wi-usdt').textContent = '$' + usdtBal.toFixed(2);
+        document.getElementById('wi-bnb').textContent = bnbBal.toFixed(4) + ' BNB';
+
+        if (gwStatus && gwStatus.isRegistered) {
+            var gwIdNum = gwStatus.odixId;
+            var level = gwStatus.maxPackage;
+
+            document.getElementById('wi-level-id').textContent = level + ' | GW' + gwIdNum;
+
+            // Сохраняем gwId
+            gwId = 'GW' + gwIdNum;
+            localStorage.setItem('gwad-user-id', gwId);
+            GwadContract.gwId = gwId;
+            GwadContract.gwIdNumeric = gwIdNum;
+
+            // Обновляем настройки
+            document.getElementById('set-gwid').value = gwId;
+            document.getElementById('set-level').value = 'Уровень ' + level;
+
+            // Ссылки
+            document.getElementById('lnk-r').value = 'gwad.ink/r/' + gwIdNum;
+            document.getElementById('lnk-d').value = 'gwad.ink/d/' + gwIdNum;
+            document.getElementById('lnk-m').value = 'gwad.ink/m/' + gwIdNum;
+
+            // Кнопка «Купить следующий уровень»
+            if (level < 9) {
+                document.getElementById('wi-next-level-row').style.display = '';
+                document.getElementById('wi-next-level-num').textContent = (level + 1);
+            }
+        } else {
+            document.getElementById('wi-level-id').textContent = '— | Не зарегистрирован';
+            // Fallback — пробуем из localStorage
+            var storedId = localStorage.getItem('gwad-user-id') || '';
+            if (storedId) {
+                gwId = storedId;
+                GwadContract.gwId = gwId;
+                GwadContract.gwIdNumeric = parseInt(gwId.replace(/^GW/i,'')) || 0;
+            }
+        }
+
+        document.getElementById('set-wallet').value = walletAddress;
+
+        // Баланс на дашборде
+        var balEl = document.getElementById('bal-usdt');
+        if (balEl) balEl.textContent = '$' + usdtBal.toFixed(2);
+    } catch(e) {
+        console.warn('initWalletUI error:', e);
+    }
+}
+
 // INIT
 (async function(){
     // 1. Подключаем кошелёк тихо
     await GwadContract.silentConnect();
     walletAddress = GwadContract.walletAddress;
-    
+
     // Fallback если GwadContract не подключился
     if (!walletAddress) {
         var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
-        if(provider){try{var acc=await provider.request({method:'eth_accounts'});if(acc&&acc.length)walletAddress=acc[0].toLowerCase()}catch(e){}}
+        if(provider){try{var acc=await provider.request({method:'eth_accounts'});if(acc&&acc.length){walletAddress=acc[0].toLowerCase();GwadContract.walletAddress=walletAddress;GwadContract.connected=true}}catch(e){}}
     }
 
-    gwId = localStorage.getItem('gwad-user-id') || '';
-    var shortId = gwId.replace(/^GW/i,'') || walletAddress.slice(2,9) || '0000000';
+    // 2. Показываем нужный блок кошелька
+    await initWalletUI();
 
-    // GwadContract gwId
-    GwadContract.gwId = gwId;
-    GwadContract.gwIdNumeric = parseInt(shortId) || 0;
-
-    document.getElementById('wallet-tag').textContent = walletAddress ? walletAddress.slice(0,6)+'...'+walletAddress.slice(-4) : '...';
-    document.getElementById('set-gwid').value = 'GW' + shortId;
-    document.getElementById('set-wallet').value = walletAddress || '—';
-
-    // Links
-    document.getElementById('lnk-r').value = 'gwad.ink/r/' + shortId;
-    document.getElementById('lnk-d').value = 'gwad.ink/d/' + shortId;
-    document.getElementById('lnk-m').value = 'gwad.ink/m/' + shortId;
-
-    // Role
+    // 3. Role
     currentRole = localStorage.getItem('gwad-role') || 'partner';
     updateRoleDisplay();
     if(currentRole==='client') document.getElementById('tab-team').style.display='none';
@@ -711,7 +851,7 @@ function sendMsg() {
     // First visit — show role modal
     if(!localStorage.getItem('gwad-role-selected')) setTimeout(function(){showM('modal-role')},600);
 
-    // Load stats from API
+    // 4. Load stats from API
     if(gwId||walletAddress){
         try{
             var h={'Content-Type':'application/json'};if(walletAddress)h['X-Wallet-Address']=walletAddress;
@@ -726,7 +866,7 @@ function sendMsg() {
         }catch(e){}
     }
 
-    // Load contract data (balances, marketing earnings)
+    // 5. Load contract data (marketing earnings etc)
     if(GwadContract.connected) {
         loadContractData();
     }
