@@ -320,7 +320,7 @@ var GwadContract = {
             var filter = pool.filters.MarketingPaid(null, address || this.walletAddress);
             // Последние 10000 блоков (~1 день на opBNB)
             var currentBlock = await pool.provider.getBlockNumber();
-            var fromBlock = Math.max(0, currentBlock - 100000);  // ~3 дня
+            var fromBlock = Math.max(0, currentBlock - 5000);  // opBNB RPC limit: 50000 max
             var events = await pool.queryFilter(filter, fromBlock);
 
             var total = 0;
