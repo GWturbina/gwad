@@ -70,7 +70,7 @@ T.ru = {
     roleSub:'Выберите — это определит доступные инструменты. Можно изменить позже.',
     rClient:'Клиент', rClientD:'Хочу посмотреть. Ознакомиться с товарами и услугами. Ничего покупать не планирую.',
     rPartner:'Партнёр', rPartnerD:'Нужны деньги. 4 уровня + реклама от $5. Контакты приходят автоматически.',
-    rLeader:'Лидер', rLeaderD:'Полный доступ (7 уровней) + Академия платит за обучение. Первая $1,000 за 21 день.',
+    rLeader:'Приватный', rLeaderD:'Полный доступ (7 уровней) + управление видимостью кампаний. Первая $1,000 за 21 день.',
     rBusiness:'Предприниматель', rBusinessD:'У меня есть товар/услуга. Свой лендинг + CRM + рассылки. Система приводит клиентов.',
 
     // Guide modal
@@ -102,6 +102,17 @@ T.ru = {
     regB2:'💰 9 уровней партнёрской программы',
     regB3:'👥 Своя команда и реферальные ссылки',
     regB4:'🎁 Доступ ко всем продуктам экосистемы',
+
+    // Team
+    teamDirect:'Прямых партнёров', teamTotal:'Всего в структуре',
+    teamLine:'Линия', teamPeople:'чел.', teamEmpty:'Пусто', teamLoading:'Подключите кошелёк для просмотра команды',
+
+    // Visibility settings
+    hdrVisibility:'👁️ Видимость кампаний для команды',
+    visDesc:'Скрытые кампании не будут видны партнёрам, которые регистрируются по вашей реферальной ссылке. Параметр <code>?show=</code> добавляется к ссылкам автоматически.',
+    visDiamond:'Diamond Club', visMetr:'Метр²', visCardgift:'CardGift',
+    visShow:'показывать', visHide:'скрыто',
+    visTip:'💡 Пример: если вы ведёте Diamond Club и не хотите показывать Метр² своей команде — снимите галочку. Ссылки обновятся автоматически.',
 
     // Cabinet-leader
     clTopTitle:'Кабинет лидера', clTopSub:'Создание и управление кампаниями',
@@ -148,7 +159,7 @@ T.ua = {
     roleWho:'🎯 Хто ви?', roleSub:'Оберіть — це визначить доступні інструменти. Можна змінити пізніше.',
     rClient:'Клієнт', rClientD:'Хочу подивитися. Ознайомитися з товарами та послугами.',
     rPartner:'Партнер', rPartnerD:'Потрібні гроші. 4 рівні + реклама від $5. Контакти надходять автоматично.',
-    rLeader:'Лідер', rLeaderD:'Повний доступ (7 рівнів) + Академія платить за навчання. Перші $1,000 за 21 день.',
+    rLeader:'Приватний', rLeaderD:'Повний доступ (7 рівнів) + управління видимістю кампаній. Перші $1,000 за 21 день.',
     rBusiness:'Підприємець', rBusinessD:'У мене є товар/послуга. Свій лендінг + CRM + розсилки. Система приводить клієнтів.',
     guideTitle:'📖 Посібник',
     g1t:'📊 Дашборд', g1d:'Статистика, баланс, кампанії. Перемикайте вкладки для різних розділів.',
@@ -173,6 +184,13 @@ T.ua = {
     regB2:'💰 9 рівнів партнерської програми',
     regB3:'👥 Своя команда та реферальні посилання',
     regB4:'🎁 Доступ до всіх продуктів екосистеми',
+    teamDirect:'Прямих партнерів', teamTotal:'Всього в структурі',
+    teamLine:'Лінія', teamPeople:'осіб', teamEmpty:'Порожньо', teamLoading:'Підключіть гаманець для перегляду команди',
+    hdrVisibility:'👁️ Видимість кампаній для команди',
+    visDesc:'Приховані кампанії не будуть видні партнерам, які реєструються за вашим реферальним посиланням. Параметр <code>?show=</code> додається до посилань автоматично.',
+    visDiamond:'Diamond Club', visMetr:'Метр²', visCardgift:'CardGift',
+    visShow:'показувати', visHide:'приховано',
+    visTip:'💡 Приклад: якщо ви ведете Diamond Club і не хочете показувати Метр² своїй команді — зніміть галочку. Посилання оновляться автоматично.',
     clTopTitle:'Кабінет лідера', clTopSub:'Створення та управління кампаніями',
     clLoading:'Підключення гаманця...',
     clAccessTitle:'🔗 Підключіть гаманець', clAccessDesc:'Потрібна реєстрація в GlobalWay', clAccessBtn:'Підключити гаманець',
@@ -217,7 +235,7 @@ T.en = {
     roleWho:'🎯 Who are you?', roleSub:'Choose — this determines available tools. Can be changed later.',
     rClient:'Client', rClientD:'Just looking. Browsing products and services.',
     rPartner:'Partner', rPartnerD:'Need money. 4 levels + ads from $5. Contacts come automatically.',
-    rLeader:'Leader', rLeaderD:'Full access (7 levels) + Academy pays for training. First $1,000 in 21 days.',
+    rLeader:'Private', rLeaderD:'Full access (7 levels) + campaign visibility management. First $1,000 in 21 days.',
     rBusiness:'Entrepreneur', rBusinessD:'I have a product/service. Own landing + CRM + mailings. System brings clients.',
     guideTitle:'📖 Guide',
     g1t:'📊 Dashboard', g1d:'Stats, balance, campaigns. Switch tabs for different sections.',
@@ -242,6 +260,13 @@ T.en = {
     regB2:'💰 9-level partner program',
     regB3:'👥 Your own team and referral links',
     regB4:'🎁 Access to all ecosystem products',
+    teamDirect:'Direct Partners', teamTotal:'Total in Structure',
+    teamLine:'Line', teamPeople:'ppl', teamEmpty:'Empty', teamLoading:'Connect wallet to view team',
+    hdrVisibility:'👁️ Campaign Visibility for Team',
+    visDesc:'Hidden campaigns won\'t be visible to partners who register through your referral link. The <code>?show=</code> parameter is added to links automatically.',
+    visDiamond:'Diamond Club', visMetr:'Metr²', visCardgift:'CardGift',
+    visShow:'visible', visHide:'hidden',
+    visTip:'💡 Example: if you run Diamond Club and don\'t want to show Metr² to your team — uncheck it. Links will update automatically.',
     clTopTitle:'Leader Dashboard', clTopSub:'Create and manage campaigns',
     clLoading:'Connecting wallet...',
     clAccessTitle:'🔗 Connect Wallet', clAccessDesc:'GlobalWay registration required', clAccessBtn:'Connect Wallet',
