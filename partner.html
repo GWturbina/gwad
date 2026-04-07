@@ -573,6 +573,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <script src="/js/addresses.js"></script>
 <script src="/js/ad-pool-contract.js"></script>
 <script src="/js/i18n.js"></script>
+<script>
+// Fallback если i18n.js не загрузился
+if (typeof T === 'undefined') { window.T = { ru:{}, ua:{}, en:{} }; }
+if (typeof currentLang === 'undefined') { window.currentLang = 'ru'; }
+if (typeof setLang === 'undefined') { window.setLang = function(l){ currentLang = l; document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')}); var a=document.querySelector('.lang-btn[onclick*="\''+l+'\'"]');if(a)a.classList.add('active'); localStorage.setItem('gwad-lang',l); }; }
+</script>
 
 <script>
 var API = 'https://cgift.club/api/ad-platform';
@@ -1017,8 +1023,9 @@ function loadVisibility() {
 }
 
 function updateVisibilityTags() {
-    var show = T[currentLang].visShow || 'показывать';
-    var hide = T[currentLang].visHide || 'скрыто';
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'ru';
+    var show = (T[lang] && T[lang].visShow) || 'показывать';
+    var hide = (T[lang] && T[lang].visHide) || 'скрыто';
     ['diamond','metr','cardgift'].forEach(function(key) {
         var checked = document.getElementById('vis-' + key).checked;
         var tag = document.getElementById('vis-' + key + '-tag');
