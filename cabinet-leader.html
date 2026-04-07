@@ -43,22 +43,32 @@ textarea.inp{min-height:60px;resize:vertical}
 .access-denied{text-align:center;padding:60px 20px}
 .access-denied h2{color:var(--red);margin-bottom:10px}
 .loading{text-align:center;padding:40px;color:var(--muted)}
+.lang-sw{position:fixed;top:12px;right:16px;z-index:150;display:flex;gap:3px;background:#141428;border:1px solid var(--border);border-radius:8px;padding:3px}
+.lang-btn{padding:5px 10px;border:none;border-radius:6px;background:transparent;color:#888;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:var(--gold);color:#000}
 </style>
 </head>
 <body>
 
+<div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
 <div class="topbar">
-    <h1>🎯 Кабинет лидера<span>Создание и управление кампаниями</span></h1>
+    <h1>🎯 <span data-i18n="clTopTitle">Кабинет лидера</span><span data-i18n="clTopSub">Создание и управление кампаниями</span></h1>
     <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
 </div>
 
 <div class="wrap">
 
-<div id="loading-screen" class="loading">Подключение кошелька...</div>
+<div id="loading-screen" class="loading" data-i18n="clLoading">Подключение кошелька...</div>
 <div id="access-denied" class="access-denied" style="display:none">
-    <h2>🔗 Подключите кошелёк</h2>
-    <p style="color:var(--muted)">Нужна регистрация в GlobalWay</p>
-    <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px">Подключить кошелёк</button>
+    <h2 data-i18n="clAccessTitle">🔗 Подключите кошелёк</h2>
+    <p style="color:var(--muted)" data-i18n="clAccessDesc">Нужна регистрация в GlobalWay</p>
+    <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px" data-i18n="clAccessBtn">Подключить кошелёк</button>
 </div>
 
 <div id="main" style="display:none">
@@ -66,16 +76,16 @@ textarea.inp{min-height:60px;resize:vertical}
     <!-- СОЗДАТЬ КАМПАНИЮ -->
     <div class="card">
         <div class="card-hdr">
-            ➕ Создать кампанию
-            <span style="font-size:11px;color:var(--muted);font-weight:400">Заполните форму — лендинг создастся автоматически</span>
+            <span data-i18n="clCreateTitle">➕ Создать кампанию</span>
+            <span style="font-size:11px;color:var(--muted);font-weight:400" data-i18n="clCreateSub">Заполните форму — лендинг создастся автоматически</span>
         </div>
         <div class="card-body">
-            <div class="tip">💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.</div>
+            <div class="tip" data-i18n="clCreateTip">💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.</div>
 
-            <label>Название кампании *</label>
+            <label data-i18n="clName">Название кампании *</label>
             <input class="inp" id="f-name" placeholder="Например: ЭкоБАДы Натура">
 
-            <label>Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span></label>
+            <label data-i18n="clSlug">Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span></label>
             <input class="inp" id="f-slug" placeholder="eco-bady" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
             <div style="font-size:11px;color:var(--blue);margin-top:4px">Ваш лендинг: gwad.ink/c/<span id="slug-preview">...</span></div>
 
@@ -136,14 +146,14 @@ textarea.inp{min-height:60px;resize:vertical}
                 <input class="inp" id="f-manager-wallet" placeholder="0x...">
             </div>
 
-            <button class="btn btn-gold" onclick="createCampaign()" id="create-btn" style="width:100%;margin-top:16px;padding:14px;font-size:15px">🚀 Создать кампанию</button>
+            <button class="btn btn-gold" onclick="createCampaign()" id="create-btn" style="width:100%;margin-top:16px;padding:14px;font-size:15px" data-i18n="clCreateBtn">🚀 Создать кампанию</button>
             <div id="create-status" style="margin-top:10px;font-size:13px;text-align:center;min-height:20px;color:#888"></div>
         </div>
     </div>
 
     <!-- МОИ КАМПАНИИ -->
     <div class="card">
-        <div class="card-hdr">📋 Мои кампании <button class="btn btn-ghost" onclick="loadMyCampaigns()" style="padding:5px 12px;font-size:11px">🔄</button></div>
+        <div class="card-hdr"><span data-i18n="clMyCamps">📋 Мои кампании</span> <button class="btn btn-ghost" onclick="loadMyCampaigns()" style="padding:5px 12px;font-size:11px">🔄</button></div>
         <div id="my-campaigns">
             <div class="empty"><div>📢</div>У вас ещё нет кампаний</div>
         </div>
@@ -151,7 +161,7 @@ textarea.inp{min-height:60px;resize:vertical}
 
     <!-- ВАРИАНТЫ ДОМЕНА -->
     <div class="card">
-        <div class="card-hdr">🌐 Варианты размещения лендинга</div>
+        <div class="card-hdr" data-i18n="clDomains">🌐 Варианты размещения лендинга</div>
         <div class="card-body">
             <div style="display:grid;gap:12px">
                 <div style="padding:14px;background:rgba(16,185,129,0.05);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
@@ -181,6 +191,57 @@ textarea.inp{min-height:60px;resize:vertical}
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '';
 var selectedColor = '#FFD700';
+var currentLang = 'ru';
+
+var T = {
+ru: {
+    clTopTitle:'Кабинет лидера', clTopSub:'Создание и управление кампаниями',
+    clLoading:'Подключение кошелька...', clAccessTitle:'🔗 Подключите кошелёк', clAccessDesc:'Нужна регистрация в GlobalWay', clAccessBtn:'Подключить кошелёк',
+    clCreateTitle:'➕ Создать кампанию', clCreateSub:'Заполните форму — лендинг создастся автоматически',
+    clCreateTip:'💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.',
+    clName:'Название кампании *', clSlug:'Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span>',
+    clCreateBtn:'🚀 Создать кампанию', clMyCamps:'📋 Мои кампании', clDomains:'🌐 Варианты размещения лендинга',
+},
+ua: {
+    clTopTitle:'Кабінет лідера', clTopSub:'Створення та управління кампаніями',
+    clLoading:'Підключення гаманця...', clAccessTitle:'🔗 Підключіть гаманець', clAccessDesc:'Потрібна реєстрація в GlobalWay', clAccessBtn:'Підключити гаманець',
+    clCreateTitle:'➕ Створити кампанію', clCreateSub:'Заповніть форму — лендінг створится автоматично',
+    clCreateTip:'💡 <b>Підказка:</b> Після створення кампанії з\'явиться лендінг gwad.ink/c/ваш-slug. Партнери зможуть оплачувати рекламу та отримувати рефералів.',
+    clName:'Назва кампанії *', clSlug:'Slug (для URL) * <span style="color:var(--muted)">— лише латиниця, цифри, дефіс</span>',
+    clCreateBtn:'🚀 Створити кампанію', clMyCamps:'📋 Мої кампанії', clDomains:'🌐 Варіанти розміщення лендінгу',
+},
+en: {
+    clTopTitle:'Leader Dashboard', clTopSub:'Create and manage campaigns',
+    clLoading:'Connecting wallet...', clAccessTitle:'🔗 Connect Wallet', clAccessDesc:'GlobalWay registration required', clAccessBtn:'Connect Wallet',
+    clCreateTitle:'➕ Create Campaign', clCreateSub:'Fill the form — landing page will be created automatically',
+    clCreateTip:'💡 <b>Tip:</b> After creating a campaign, a landing page gwad.ink/c/your-slug will appear. Partners can pay for ads and get referrals.',
+    clName:'Campaign Name *', clSlug:'Slug (for URL) * <span style="color:var(--muted)">— latin letters, digits, hyphens only</span>',
+    clCreateBtn:'🚀 Create Campaign', clMyCamps:'📋 My Campaigns', clDomains:'🌐 Landing Page Options',
+}
+};
+
+function setLang(lang) {
+    if (!T[lang]) return;
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    var activeBtn = document.querySelector('.lang-btn[onclick*="\''+lang+'\'"]');
+    if (activeBtn) activeBtn.classList.add('active');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var key = el.getAttribute('data-i18n');
+        if (T[lang][key]) el.innerHTML = T[lang][key];
+    });
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    localStorage.setItem('gwad-lang', lang);
+}
+
+(function(){
+    var saved = localStorage.getItem('gwad-lang');
+    if (saved && T[saved]) { setLang(saved); return; }
+    var nav = (navigator.language || '').toLowerCase();
+    if (nav.startsWith('uk')) setLang('ua');
+    else if (nav.startsWith('en')) setLang('en');
+    else setLang('ru');
+})();
 
 document.getElementById('f-slug').addEventListener('input', function() {
     document.getElementById('slug-preview').textContent = this.value || '...';
