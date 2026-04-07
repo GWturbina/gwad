@@ -376,6 +376,105 @@ var GwadContract = {
     },
 
     // ═══════════════════════════════════════════════════════════
+    // GLOBALWAY BRIDGE — Регистрация, уровни, статус
+    // ═══════════════════════════════════════════════════════════
+
+    BRIDGE_ABI: [
+        'function isUserRegistered(address user) external view returns (bool)',
+        'function getUserStatus(address user) external view returns (tuple(bool isRegistered, uint256 odixId, uint8 maxPackage, uint8 rank, bool quarterlyActive, address sponsor, bool[12] activeLevels))',
+        'function getUserOdixId(address user) external view returns (uint256)',
+        'function getLevelPrice(uint8 level) external view returns (uint256)',
+        'function getMultipleLevelsPrice(address user, uint8 fromLevel, uint8 toLevel) external view returns (uint256)',
+    ],
+
+    NSS_ABI: [
+        'function bridge() external view returns (address)',
+        'function register(uint256 sponsorId) external',
+        'function buyLevel(uint8 level) external payable',
+        'function buyMultipleLevels(uint8 fromLevel, uint8 toLevel) external payable',
+        'function isNSSUser(address user) external view returns (bool)',
+    ],
+
+    _bridgeAddr: null,
+
+    async getBridgeAddress() {
+        if (this._bridgeAddr) return this._bridgeAddr;
+        try {
+            var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+            var nss = new ethers.Contract(this.ADDR.NSSPlatform, this.NSS_ABI, rpc);
+            this._bridgeAddr = await nss.bridge();
+            return this._bridgeAddr;
+        } catch(e) { console.warn('getBridgeAddress error:', e); return null; }
+    },
+
+    async getBridgeRead() {
+        var addr = await this.getBridgeAddress();
+        if (!addr) return null;
+        var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+        return new ethers.Contract(addr, this.BRIDGE_ABI, rpc);
+    },
+
+    getNSSContract() {
+        if (!this.signer) throw new Error('Кошелёк не подключён');
+        return new ethers.Contract(this.ADDR.NSSPlatform, this.NSS_ABI, this.signer);
+    },
+
+    /**
+     * Полный статус пользователя в GlobalWay
+     * @returns {object|null} { isRegistered, odixId, maxPackage, rank, quarterlyActive, sponsor, activeLevels }
+     */
+    async getGWUserStatus(address) {
+        try {
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return null;
+            var s = await bridge.getUserStatus(address || this.walletAddress);
+            return {
+                isRegistered: s.isRegistered,
+                odixId: s.odixId.toNumber ? s.odixId.toNumber() : Number(s.odixId),
+                maxPackage: Number(s.maxPackage),
+                rank: Number(s.rank),
+                quarterlyActive: s.quarterlyActive,
+                sponsor: s.sponsor,
+                activeLevels: Array.from(s.activeLevels),
+            };
+        } catch(e) { console.warn('getGWUserStatus error:', e); return null; }
+    },
+
+    async isRegistered(address) {
+        try {
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return false;
+            return await bridge.isUserRegistered(address || this.walletAddress);
+        } catch(e) { return false; }
+    },
+
+    async getUserLevel(address) {
+        var status = await this.getGWUserStatus(address);
+        return status ? status.maxPackage : 0;
+    },
+
+    async getGwId(address) {
+        var status = await this.getGWUserStatus(address);
+        return status ? status.odixId : 0;
+    },
+
+    async getBNBBalance(address) {
+        try {
+            var rpc = new ethers.providers.JsonRpcProvider(this.ADDR.RPC_URL);
+            var bal = await rpc.getBalance(address || this.walletAddress);
+            return parseFloat(ethers.utils.formatEther(bal));
+        } catch(e) { return 0; }
+    },
+
+    async getLevelPrice(level) {
+        try {
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return null;
+            return await bridge.getLevelPrice(level);
+        } catch(e) { return null; }
+    },
+
+    // ═══════════════════════════════════════════════════════════
     // HELPERS
     // ═══════════════════════════════════════════════════════════
 
