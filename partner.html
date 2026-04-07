@@ -105,8 +105,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 .wi-full{grid-column:1/-1}
 .btn-next-level{display:inline-block;padding:10px 20px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);border-radius:10px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
 .btn-next-level:hover{background:rgba(255,215,0,0.2)}
-.lang-sw{position:fixed;top:12px;right:16px;z-index:150;display:flex;gap:3px;background:#141428;border:1px solid var(--border);border-radius:8px;padding:3px}
-.lang-btn{padding:5px 10px;border:none;border-radius:6px;background:transparent;color:#888;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn{padding:3px 8px;border:none;border-radius:5px;background:transparent;color:#555;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:0.5px}
 .lang-btn:hover{color:#fff}
 .lang-btn.active{background:var(--gold);color:#000}
 .balance-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -152,15 +151,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 </head>
 <body>
 
-<div class="lang-sw">
-    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
-    <button class="lang-btn" onclick="setLang('ua')">UA</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-</div>
-
 <div class="topbar">
     <h1>📢 AdPlatform<span data-i18n="topTitle">Мой кабинет</span></h1>
     <div class="topbar-right">
+        <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('ua')">UA</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <span style="color:#333">│</span>
         <button class="help-btn" onclick="showM('modal-guide')">?</button>
         <span class="badge" id="msg-badge" style="display:none">0 💬</span>
         <span class="wallet-tag" id="wallet-tag">...</span>
@@ -543,157 +540,11 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 <script src="/js/ad-pool-abi.js"></script>
 <script src="/js/addresses.js"></script>
 <script src="/js/ad-pool-contract.js"></script>
+<script src="/js/i18n.js"></script>
 
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '', gwId = '', currentRole = 'partner';
-var currentLang = 'ru';
-
-// ═══ МУЛЬТИЯЗЫЧНОСТЬ ═══
-var T = {
-ru: {
-    topTitle:'Мой кабинет',
-    tabDash:'📊 Дашборд', tabPool:'📢 Рекламный пул', tabMkt:'💰 Маркетинг', tabTeam:'👥 Команда', tabChat:'💬 Чат', tabSet:'⚙️ Настройки',
-    lblSpent:'Вложено', lblActive:'Активных', lblClicks:'Кликов', lblRegs:'Регистраций', lblConv:'Конверсия', lblTeam:'В команде',
-    hdrBalance:'💰 Баланс', balUsdt:'USDT (маркетинг)', balUsdtSub:'Доход от рекламной программы', balAcad:'Академия CardGift', balAcadSub:'За обучение + рост команды',
-    tgBotTitle:'Активируй образовательный бот', tgBotDesc:'Ежедневное обучение — как управлять системой и выйти на доход от нескольких тысяч $ в месяц',
-    hdrRole:'🎯 Мой выбор', btnChange:'Изменить',
-    hdrCampStats:'📈 Статистика кампаний', hdrCardGift:'🎁 Перейти в CardGift', cgiftDesc:'Генератор, CRM, блог, AI Studio, опросы, рассылки — все инструменты экосистемы',
-    hdrLinks:'🔗 Мои ссылки', hdrPay:'💳 Оплатить рекламу (USDT)', lblPayAmount:'Сумма (USDT): мин. <span style="color:var(--orange)">$5</span>', lblCampaign:'Кампания:', btnPay:'🚀 Оплатить рекламу',
-    hdrOrders:'📋 Мои заказы',
-    mktTotal:'Общий доход', mktMonth:'За месяц', mktRefs:'Рефералов в пуле',
-    hdrTeam:'👥 Партнёрская программа', hdrTeamSub:'9 уровней GlobalWay',
-    hdrChat:'💬 Чат с менеджером', hdrSettings:'⚙️ Настройки профиля',
-    setGwId:'GW ID', setWallet:'Адрес кошелька', setRoleLbl:'Роль', setLevelLbl:'Уровень доступа',
-    wcTitle:'Подключите кошелёк SafePal', wcDesc:'Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.',
-    wcBtn:'🔗 Подключить кошелёк', wcLinks:'💡 Ещё нет SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
-    wiWallet:'✅ Кошелёк', wiUsdt:'💰 Баланс USDT', wiBnb:'⛽ Баланс BNB', wiLevel:'📊 Уровень | GW ID',
-    // Роли
-    roleWho:'🎯 Кто вы?', roleSub:'Выберите — это определит доступные инструменты. Можно изменить позже.',
-    rClient:'Клиент', rClientD:'Хочу посмотреть. Ознакомиться с товарами и услугами. Ничего покупать не планирую.',
-    rPartner:'Партнёр', rPartnerD:'Нужны деньги. 4 уровня + реклама от $5. Контакты приходят автоматически.',
-    rLeader:'Лидер', rLeaderD:'Полный доступ (7 уровней) + Академия платит за обучение. Первая $1,000 за 21 день.',
-    rBusiness:'Предприниматель', rBusinessD:'У меня есть товар/услуга. Свой лендинг + CRM + рассылки. Система приводит клиентов.',
-    // Гид
-    guideTitle:'📖 Руководство',
-    g1t:'📊 Дашборд', g1d:'Статистика, баланс, кампании. Переключайте вкладки для разных разделов.',
-    g2t:'📢 Рекламный пул', g2d:'Ваши ссылки, оплата рекламы, заказы. Оплатите от $5 — контакты начнут приходить.',
-    g3t:'👥 Команда', g3d:'Партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, кошелёк.',
-    g4t:'💬 Чат', g4d:'Связь с менеджером. Задавайте вопросы — поможем настроить всё.',
-    g5t:'🤖 Telegram бот', g5d:'Ежедневное обучение. Первый месяц — выход на доход от нескольких тысяч $.',
-    g6t:'🎁 CardGift', g6d:'Центральная платформа — генератор, CRM, блог, AI Studio, опросы, академия.',
-    guideClose:'Закрыть',
-    // Уровни
-    levTitle:'📊 Мои уровни', levSub:'Покупка уровней открывает доступ к партнёрской программе.<br>Оплата в BNB через смарт-контракт NSSPlatform.', levClose:'Закрыть',
-    levActive:'Активен', levBuy:'Купить', levLocked:'Заблокирован', levLevel:'Уровень',
-    // Регистрация
-    regTitle:'Регистрация в GlobalWay', regSub:'Бесплатная регистрация привязывает кошелёк к экосистеме.<br>Оплачивается только газ (~0.001 BNB).',
-    regConnected:'Кошелёк подключён', regSponsorLabel:'ID того, кто вас пригласил:', regSponsorFixed:'Привязан из реферальной ссылки',
-    regSponsorHint:'💡 Спросите у того, кто дал вам ссылку', regBtn:'✅ Зарегистрироваться бесплатно', regLater:'Позже',
-    regBenefits:'Что даёт регистрация:',
-    regB1:'⚡ Участие в рекламном пуле AdPlatform', regB2:'💰 9 уровней партнёрской программы', regB3:'👥 Своя команда и реферальные ссылки', regB4:'🎁 Доступ ко всем продуктам экосистемы',
-},
-ua: {
-    topTitle:'Мій кабінет',
-    tabDash:'📊 Дашборд', tabPool:'📢 Рекламний пул', tabMkt:'💰 Маркетинг', tabTeam:'👥 Команда', tabChat:'💬 Чат', tabSet:'⚙️ Налаштування',
-    lblSpent:'Вкладено', lblActive:'Активних', lblClicks:'Кліків', lblRegs:'Реєстрацій', lblConv:'Конверсія', lblTeam:'В команді',
-    hdrBalance:'💰 Баланс', balUsdt:'USDT (маркетинг)', balUsdtSub:'Дохід від рекламної програми', balAcad:'Академія CardGift', balAcadSub:'За навчання + зростання команди',
-    tgBotTitle:'Активуй освітнього бота', tgBotDesc:'Щоденне навчання — як керувати системою і вийти на дохід від кількох тисяч $ на місяць',
-    hdrRole:'🎯 Мій вибір', btnChange:'Змінити',
-    hdrCampStats:'📈 Статистика кампаній', hdrCardGift:'🎁 Перейти в CardGift', cgiftDesc:'Генератор, CRM, блог, AI Studio, опитування, розсилки — усі інструменти екосистеми',
-    hdrLinks:'🔗 Мої посилання', hdrPay:'💳 Оплатити рекламу (USDT)', lblPayAmount:'Сума (USDT): мін. <span style="color:var(--orange)">$5</span>', lblCampaign:'Кампанія:', btnPay:'🚀 Оплатити рекламу',
-    hdrOrders:'📋 Мої замовлення',
-    mktTotal:'Загальний дохід', mktMonth:'За місяць', mktRefs:'Рефералів у пулі',
-    hdrTeam:'👥 Партнерська програма', hdrTeamSub:'9 рівнів GlobalWay',
-    hdrChat:'💬 Чат з менеджером', hdrSettings:'⚙️ Налаштування профілю',
-    setGwId:'GW ID', setWallet:'Адреса гаманця', setRoleLbl:'Роль', setLevelLbl:'Рівень доступу',
-    wcTitle:'Підключіть гаманець SafePal', wcDesc:'Для роботи з рекламною платформою потрібен гаманець.<br>Відкрийте цю сторінку в SafePal → Dapp браузер.',
-    wcBtn:'🔗 Підключити гаманець', wcLinks:'💡 Ще немає SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
-    wiWallet:'✅ Гаманець', wiUsdt:'💰 Баланс USDT', wiBnb:'⛽ Баланс BNB', wiLevel:'📊 Рівень | GW ID',
-    roleWho:'🎯 Хто ви?', roleSub:'Оберіть — це визначить доступні інструменти. Можна змінити пізніше.',
-    rClient:'Клієнт', rClientD:'Хочу подивитися. Ознайомитися з товарами та послугами.',
-    rPartner:'Партнер', rPartnerD:'Потрібні гроші. 4 рівні + реклама від $5. Контакти надходять автоматично.',
-    rLeader:'Лідер', rLeaderD:'Повний доступ (7 рівнів) + Академія платить за навчання. Перші $1,000 за 21 день.',
-    rBusiness:'Підприємець', rBusinessD:'У мене є товар/послуга. Свій лендінг + CRM + розсилки. Система приводить клієнтів.',
-    guideTitle:'📖 Посібник',
-    g1t:'📊 Дашборд', g1d:'Статистика, баланс, кампанії. Перемикайте вкладки для різних розділів.',
-    g2t:'📢 Рекламний пул', g2d:'Ваші посилання, оплата реклами, замовлення. Оплатіть від $5 — контакти почнуть надходити.',
-    g3t:'👥 Команда', g3d:'Партнери по GlobalWay (9 рівнів). ID, спонсор, рівень доступу, гаманець.',
-    g4t:'💬 Чат', g4d:'Зв\'язок з менеджером. Задавайте питання — допоможемо налаштувати все.',
-    g5t:'🤖 Telegram бот', g5d:'Щоденне навчання. Перший місяць — вихід на дохід від кількох тисяч $.',
-    g6t:'🎁 CardGift', g6d:'Центральна платформа — генератор, CRM, блог, AI Studio, опитування, академія.',
-    guideClose:'Закрити',
-    levTitle:'📊 Мої рівні', levSub:'Купівля рівнів відкриває доступ до партнерської програми.<br>Оплата в BNB через смарт-контракт NSSPlatform.', levClose:'Закрити',
-    levActive:'Активний', levBuy:'Купити', levLocked:'Заблоковано', levLevel:'Рівень',
-    regTitle:'Реєстрація в GlobalWay', regSub:'Безкоштовна реєстрація прив\'язує гаманець до екосистеми.<br>Оплачується лише газ (~0.001 BNB).',
-    regConnected:'Гаманець підключено', regSponsorLabel:'ID того, хто вас запросив:', regSponsorFixed:'Прив\'язано з реферального посилання',
-    regSponsorHint:'💡 Запитайте у того, хто дав вам посилання', regBtn:'✅ Зареєструватися безкоштовно', regLater:'Пізніше',
-    regBenefits:'Що дає реєстрація:',
-    regB1:'⚡ Участь у рекламному пулі AdPlatform', regB2:'💰 9 рівнів партнерської програми', regB3:'👥 Своя команда та реферальні посилання', regB4:'🎁 Доступ до всіх продуктів екосистеми',
-},
-en: {
-    topTitle:'My Dashboard',
-    tabDash:'📊 Dashboard', tabPool:'📢 Ad Pool', tabMkt:'💰 Marketing', tabTeam:'👥 Team', tabChat:'💬 Chat', tabSet:'⚙️ Settings',
-    lblSpent:'Invested', lblActive:'Active', lblClicks:'Clicks', lblRegs:'Registrations', lblConv:'Conversion', lblTeam:'In Team',
-    hdrBalance:'💰 Balance', balUsdt:'USDT (marketing)', balUsdtSub:'Income from ad program', balAcad:'CardGift Academy', balAcadSub:'For training + team growth',
-    tgBotTitle:'Activate educational bot', tgBotDesc:'Daily training — how to manage the system and reach income of several thousand $ per month',
-    hdrRole:'🎯 My Choice', btnChange:'Change',
-    hdrCampStats:'📈 Campaign Stats', hdrCardGift:'🎁 Go to CardGift', cgiftDesc:'Generator, CRM, blog, AI Studio, surveys, mailings — all ecosystem tools',
-    hdrLinks:'🔗 My Links', hdrPay:'💳 Pay for Ads (USDT)', lblPayAmount:'Amount (USDT): min. <span style="color:var(--orange)">$5</span>', lblCampaign:'Campaign:', btnPay:'🚀 Pay for Ads',
-    hdrOrders:'📋 My Orders',
-    mktTotal:'Total Income', mktMonth:'This Month', mktRefs:'Referrals in Pool',
-    hdrTeam:'👥 Partner Program', hdrTeamSub:'9 levels GlobalWay',
-    hdrChat:'💬 Chat with Manager', hdrSettings:'⚙️ Profile Settings',
-    setGwId:'GW ID', setWallet:'Wallet Address', setRoleLbl:'Role', setLevelLbl:'Access Level',
-    wcTitle:'Connect SafePal Wallet', wcDesc:'A wallet is required to use the ad platform.<br>Open this page in SafePal → Dapp browser.',
-    wcBtn:'🔗 Connect Wallet', wcLinks:'💡 Don\'t have SafePal yet? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
-    wiWallet:'✅ Wallet', wiUsdt:'💰 USDT Balance', wiBnb:'⛽ BNB Balance', wiLevel:'📊 Level | GW ID',
-    roleWho:'🎯 Who are you?', roleSub:'Choose — this determines available tools. Can be changed later.',
-    rClient:'Client', rClientD:'Just looking. Browsing products and services.',
-    rPartner:'Partner', rPartnerD:'Need money. 4 levels + ads from $5. Contacts come automatically.',
-    rLeader:'Leader', rLeaderD:'Full access (7 levels) + Academy pays for training. First $1,000 in 21 days.',
-    rBusiness:'Entrepreneur', rBusinessD:'I have a product/service. Own landing + CRM + mailings. System brings clients.',
-    guideTitle:'📖 Guide',
-    g1t:'📊 Dashboard', g1d:'Stats, balance, campaigns. Switch tabs for different sections.',
-    g2t:'📢 Ad Pool', g2d:'Your links, ad payments, orders. Pay from $5 — contacts will start coming.',
-    g3t:'👥 Team', g3d:'GlobalWay partners (9 levels). ID, sponsor, access level, wallet.',
-    g4t:'💬 Chat', g4d:'Contact your manager. Ask questions — we\'ll help set up everything.',
-    g5t:'🤖 Telegram Bot', g5d:'Daily training. First month — reaching income of several thousand $.',
-    g6t:'🎁 CardGift', g6d:'Central platform — generator, CRM, blog, AI Studio, surveys, academy.',
-    guideClose:'Close',
-    levTitle:'📊 My Levels', levSub:'Buying levels unlocks access to the partner program.<br>Payment in BNB via NSSPlatform smart contract.', levClose:'Close',
-    levActive:'Active', levBuy:'Buy', levLocked:'Locked', levLevel:'Level',
-    regTitle:'Register in GlobalWay', regSub:'Free registration links your wallet to the ecosystem.<br>Only gas is paid (~0.001 BNB).',
-    regConnected:'Wallet connected', regSponsorLabel:'ID of the person who invited you:', regSponsorFixed:'Linked from referral link',
-    regSponsorHint:'💡 Ask the person who gave you the link', regBtn:'✅ Register for Free', regLater:'Later',
-    regBenefits:'What registration gives:',
-    regB1:'⚡ Participation in AdPlatform ad pool', regB2:'💰 9-level partner program', regB3:'👥 Your own team and referral links', regB4:'🎁 Access to all ecosystem products',
-}
-};
-
-function setLang(lang) {
-    if (!T[lang]) return;
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
-    var activeBtn = document.querySelector('.lang-btn[onclick*="\''+lang+'\'"]');
-    if (activeBtn) activeBtn.classList.add('active');
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-        var key = el.getAttribute('data-i18n');
-        if (T[lang][key]) el.innerHTML = T[lang][key];
-    });
-    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
-    localStorage.setItem('gwad-lang', lang);
-}
-
-// Auto-detect language
-(function(){
-    var saved = localStorage.getItem('gwad-lang');
-    if (saved && T[saved]) { setLang(saved); return; }
-    var nav = (navigator.language || '').toLowerCase();
-    if (nav.startsWith('uk')) setLang('ua');
-    else if (nav.startsWith('en')) setLang('en');
-    else setLang('ru');
-})();
 
 // ═══ ОПЛАТА РЕКЛАМЫ ═══
 async function doPayForAd() {
