@@ -475,6 +475,70 @@ var GwadContract = {
     },
 
     /**
+     * Покупка уровня в GlobalWay через NSSPlatform
+     * @param {number} level — номер уровня (1-9)
+     * @param {function} onStatus — callback
+     * @returns {object} {ok, txHash, error}
+     */
+    async buyLevelGW(level, onStatus) {
+        if (!this.connected) return { ok: false, error: 'Кошелёк не подключён' };
+        var status = onStatus || function(){};
+
+        try {
+            // 1. Получаем цену уровня из Bridge
+            status('⏳ Получение цены уровня ' + level + '...');
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return { ok: false, error: 'Bridge контракт недоступен' };
+            var price = await bridge.getLevelPrice(level);
+
+            // 2. Покупаем
+            status('💳 Подтвердите покупку в кошельке...');
+            var nss = this.getNSSContract();
+            var tx = await nss.buyLevel(level, { value: price, gasLimit: 3500000 });
+            status('⏳ Ожидание подтверждения...');
+            await tx.wait();
+            console.log('✅ BuyLevel TX:', tx.hash);
+
+            status('✅ Уровень ' + level + ' активирован!');
+            return { ok: true, txHash: tx.hash };
+        } catch(e) {
+            var msg = e.reason || e.message || 'Ошибка';
+            if (msg.includes('user rejected')) msg = 'Транзакция отклонена';
+            if (msg.includes('Not registered')) msg = 'Сначала зарегистрируйтесь в GlobalWay';
+            if (msg.includes('insufficient funds') || msg.includes('INSUFFICIENT')) msg = 'Недостаточно BNB';
+            if (msg.includes('Already bought') || msg.includes('already active')) msg = 'Этот уровень уже активирован';
+            if (msg.includes('Buy previous')) msg = 'Сначала купите предыдущий уровень';
+            status('❌ ' + msg);
+            return { ok: false, error: msg };
+        }
+    },
+
+    /**
+     * Получить цены всех уровней 1-9
+     * @returns {Array} [{level, priceBN, priceBNB}]
+     */
+    async getAllLevelPrices() {
+        try {
+            var bridge = await this.getBridgeRead();
+            if (!bridge) return [];
+            var promises = [];
+            for (var i = 1; i <= 9; i++) {
+                promises.push(bridge.getLevelPrice(i));
+            }
+            var prices = await Promise.all(promises);
+            var result = [];
+            for (var i = 0; i < 9; i++) {
+                result.push({
+                    level: i + 1,
+                    priceBN: prices[i],
+                    priceBNB: parseFloat(ethers.utils.formatEther(prices[i]))
+                });
+            }
+            return result;
+        } catch(e) { console.warn('getAllLevelPrices error:', e); return []; }
+    },
+
+    /**
      * Регистрация в GlobalWay через NSSPlatform
      * @param {number} sponsorId — GW ID спонсора (числовой)
      * @param {function} onStatus — callback
