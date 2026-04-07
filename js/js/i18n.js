@@ -58,8 +58,8 @@ T.ru = {
 
     // Wallet connect
     wcTitle:'Подключите кошелёк SafePal',
-    wcDesc:'Для работы с рекламной платформой нужен кошелёк.<br>Откройте эту страницу в SafePal → Dapp браузер.',
-    wcBtn:'🔗 Подключить кошелёк',
+    wcDescShort:'Откройте в SafePal → Dapp браузер',
+    wcBtn:'🔗 Подключить',
     wcLinks:'💡 Ещё нет SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
 
     // Wallet info
@@ -152,8 +152,8 @@ T.ua = {
     hdrChat:'💬 Чат з менеджером', hdrSettings:'⚙️ Налаштування профілю',
     setGwId:'GW ID', setWallet:'Адреса гаманця', setRoleLbl:'Роль', setLevelLbl:'Рівень доступу',
     wcTitle:'Підключіть гаманець SafePal',
-    wcDesc:'Для роботи з рекламною платформою потрібен гаманець.<br>Відкрийте цю сторінку в SafePal → Dapp браузер.',
-    wcBtn:'🔗 Підключити гаманець',
+    wcDescShort:'Відкрийте в SafePal → Dapp браузер',
+    wcBtn:'🔗 Підключити',
     wcLinks:'💡 Ще немає SafePal? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
     wiWallet:'✅ Гаманець', wiUsdt:'💰 Баланс USDT', wiBnb:'⛽ Баланс BNB', wiLevel:'📊 Рівень | GW ID',
     roleWho:'🎯 Хто ви?', roleSub:'Оберіть — це визначить доступні інструменти. Можна змінити пізніше.',
@@ -228,8 +228,8 @@ T.en = {
     hdrChat:'💬 Chat with Manager', hdrSettings:'⚙️ Profile Settings',
     setGwId:'GW ID', setWallet:'Wallet Address', setRoleLbl:'Role', setLevelLbl:'Access Level',
     wcTitle:'Connect SafePal Wallet',
-    wcDesc:'A wallet is required to use the ad platform.<br>Open this page in SafePal → Dapp browser.',
-    wcBtn:'🔗 Connect Wallet',
+    wcDescShort:'Open in SafePal → Dapp browser',
+    wcBtn:'🔗 Connect',
     wcLinks:'💡 Don\'t have SafePal yet? <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank">📱 iOS</a> <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank">📱 Android</a>',
     wiWallet:'✅ Wallet', wiUsdt:'💰 USDT Balance', wiBnb:'⛽ BNB Balance', wiLevel:'📊 Level | GW ID',
     roleWho:'🎯 Who are you?', roleSub:'Choose — this determines available tools. Can be changed later.',
