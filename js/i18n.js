@@ -38,6 +38,8 @@ T.ru = {
     hdrCampStats:'📈 Статистика кампаний',
     hdrCardGift:'🎁 Перейти в CardGift',
     cgiftDesc:'Генератор, CRM, блог, AI Studio, опросы, рассылки — все инструменты экосистемы',
+    hdrLeaderCab:'🎯 Кабинет лидера — Создать кампанию',
+    leaderCabDesc:'Создавайте лендинги, настраивайте рекламные кампании, управляйте бюджетами и контрактами',
 
     // Pool tab
     hdrLinks:'🔗 Мои ссылки',
@@ -145,6 +147,8 @@ T.ua = {
     hdrCampStats:'📈 Статистика кампаній',
     hdrCardGift:'🎁 Перейти в CardGift',
     cgiftDesc:'Генератор, CRM, блог, AI Studio, опитування, розсилки — усі інструменти екосистеми',
+    hdrLeaderCab:'🎯 Кабінет лідера — Створити кампанію',
+    leaderCabDesc:'Створюйте лендінги, налаштовуйте рекламні кампанії, керуйте бюджетами та контрактами',
     hdrLinks:'🔗 Мої посилання',
     hdrPay:'💳 Оплатити рекламу (USDT)',
     lblPayAmount:'Сума (USDT): мін. <span style="color:var(--orange)">$5</span>',
@@ -224,6 +228,8 @@ T.en = {
     hdrCampStats:'📈 Campaign Stats',
     hdrCardGift:'🎁 Go to CardGift',
     cgiftDesc:'Generator, CRM, blog, AI Studio, surveys, mailings — all ecosystem tools',
+    hdrLeaderCab:'🎯 Leader Dashboard — Create Campaign',
+    leaderCabDesc:'Create landing pages, set up ad campaigns, manage budgets and contracts',
     hdrLinks:'🔗 My Links',
     hdrPay:'💳 Pay for Ads (USDT)',
     lblPayAmount:'Amount (USDT): min. <span style="color:var(--orange)">$5</span>',
