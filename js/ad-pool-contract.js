@@ -134,69 +134,51 @@ var GwadContract = {
         if (amountUSD < 5) { return { ok: false, error: 'Минимум $5' }; }
 
         var status = onStatus || function() {};
+        console.log('📢 payForAd:', { campaignId: campaignId, amount: amountUSD, gwId: this.gwIdNumeric, wallet: this.walletAddress });
 
         try {
-            // opBNB USDT = 18 decimals (не 6!)
             var amount = ethers.utils.parseEther(amountUSD.toString());
-            var usdtRead = this.getUSDTRead();
-            var usdtWrite = this.getUSDTContract();
+            var usdt = this.getUSDTContract();
             var adPool = this.getAdPoolContract();
 
-            // 1. Проверяем баланс (через RPC, быстрее чем через кошелёк)
+            // 1. Баланс
             status('💰 Проверка баланса...');
-            var balance;
-            try {
-                balance = await Promise.race([
-                    usdtRead.balanceOf(this.walletAddress),
-                    new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 10000); })
-                ]);
-            } catch(e) {
-                console.warn('Balance check via RPC failed, trying signer:', e.message);
-                status('💰 Проверка баланса (попытка 2)...');
-                balance = await usdtWrite.balanceOf(this.walletAddress);
-            }
-
+            console.log('📢 balanceOf...');
+            var balance = await usdt.balanceOf(this.walletAddress);
+            console.log('📢 Balance:', ethers.utils.formatEther(balance));
             if (balance.lt(amount)) {
                 return { ok: false, error: 'Недостаточно USDT. Баланс: $' + ethers.utils.formatEther(balance) };
             }
-            status('✅ Баланс: $' + parseFloat(ethers.utils.formatEther(balance)).toFixed(2));
 
-            // 2. Проверяем allowance (через RPC)
-            var allowance;
-            try {
-                allowance = await usdtRead.allowance(this.walletAddress, this.ADDR.AdPoolContract);
-            } catch(e) {
-                allowance = await usdtWrite.allowance(this.walletAddress, this.ADDR.AdPoolContract);
-            }
-
+            // 2. Allowance
+            console.log('📢 allowance...');
+            var allowance = await usdt.allowance(this.walletAddress, this.ADDR.AdPoolContract);
+            console.log('📢 Allowance:', ethers.utils.formatEther(allowance));
             if (allowance.lt(amount)) {
-                status('🔐 Подтвердите разрешение в кошельке...');
-                var approveTx = await usdtWrite.approve(this.ADDR.AdPoolContract, ethers.constants.MaxUint256, { gasLimit: 100000 });
-                status('⏳ Ожидание подтверждения approve...');
+                status('🔐 Подтвердите APPROVE в кошельке...');
+                var approveTx = await usdt.approve(this.ADDR.AdPoolContract, ethers.constants.MaxUint256, { gasLimit: 100000 });
+                status('⏳ Ожидание approve...');
                 await approveTx.wait();
                 console.log('✅ Approve TX:', approveTx.hash);
             }
 
             // 3. payForAd
-            status('💳 Подтвердите оплату в кошельке...');
+            status('💳 Подтвердите ОПЛАТУ в кошельке...');
+            console.log('📢 payForAd tx...');
             var payTx = await adPool.payForAd(campaignId, this.gwIdNumeric, amount, { gasLimit: 3500000 });
-            status('⏳ Ожидание подтверждения оплаты...');
-            var receipt = await payTx.wait();
+            status('⏳ Ожидание подтверждения...');
+            await payTx.wait();
             console.log('✅ PayForAd TX:', payTx.hash);
 
-            // 4. Записываем в Supabase
+            // 4. Supabase
             status('📝 Сохранение...');
             try {
                 await this.apiPost('record_payment', {
-                    gw_id: this.gwId,
-                    gwId: this.gwIdNumeric,
+                    gw_id: this.gwId, gwId: this.gwIdNumeric,
                     wallet_address: this.walletAddress,
-                    campaign_id: campaignId,
-                    campaignId: campaignId,
-                    amount_usdt: amountUSD,
-                    amount: amountUSD,
-                    tx_hash: payTx.hash,
-                    txHash: payTx.hash,
+                    campaign_id: campaignId, campaignId: campaignId,
+                    amount_usdt: amountUSD, amount: amountUSD,
+                    tx_hash: payTx.hash, txHash: payTx.hash,
                     days_total: Math.max(7, Math.floor(amountUSD / 5) * 7),
                     weight: amountUSD,
                 });
@@ -206,12 +188,11 @@ var GwadContract = {
             return { ok: true, txHash: payTx.hash };
 
         } catch(e) {
-            console.error('PayForAd error:', e);
+            console.error('❌ PayForAd error:', e);
             var msg = e.reason || e.message || 'Неизвестная ошибка';
             if (msg.includes('user rejected')) msg = 'Вы отменили транзакцию';
             if (msg.includes('Not registered')) msg = 'Кошелёк не зарегистрирован в GlobalWay';
             if (msg.includes('insufficient')) msg = 'Недостаточно средств (USDT или BNB на газ)';
-            if (msg.includes('timeout')) msg = 'Таймаут сети. Попробуйте ещё раз.';
             status('❌ ' + msg);
             return { ok: false, error: msg };
         }
