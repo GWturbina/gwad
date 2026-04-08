@@ -4,6 +4,7 @@
     { "source": "/cabinet", "destination": "/cabinet.html" },
     { "source": "/partner", "destination": "/partner.html" },
     { "source": "/cabinet-leader", "destination": "/cabinet-leader.html" },
+    { "source": "/quiz", "destination": "/quiz.html" },
     { "source": "/c/:slug", "destination": "/campaign.html" },
     { "source": "/go/:slug", "destination": "/api/go?slug=:slug" },
     { "source": "/r/:id", "destination": "/api/go?type=ref&project=cardgift&id=:id" },
