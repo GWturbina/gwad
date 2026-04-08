@@ -317,15 +317,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
         <div class="card-body">
             <div class="link-row" id="link-row-r">
                 <div class="link-top"><span class="link-icon">🎁</span><input id="lnk-r" value="gwad.ink/r/..." readonly style="border-color:var(--green);color:var(--green)"><button class="copy-btn" onclick="copyL('lnk-r')">📋</button></div>
-                <div class="link-share"><a class="sh-tg" id="sh-r-tg" href="#" target="_blank">📱 TG</a><a class="sh-wa" id="sh-r-wa" href="#" target="_blank">💬 WA</a><a class="sh-vb" id="sh-r-vb" href="#" target="_blank">📞 VB</a></div>
+                <div class="link-share"><a class="sh-tg" id="sh-r-tg" href="javascript:void(0)" target="_blank">📱 TG</a><a class="sh-wa" id="sh-r-wa" href="javascript:void(0)" target="_blank">💬 WA</a><a class="sh-vb" id="sh-r-vb" href="javascript:void(0)" target="_blank">📞 VB</a></div>
             </div>
             <div class="link-row" id="link-row-d">
                 <div class="link-top"><span class="link-icon">💎</span><input id="lnk-d" value="gwad.ink/d/..." readonly style="border-color:var(--blue);color:var(--blue)"><button class="copy-btn" onclick="copyL('lnk-d')">📋</button></div>
-                <div class="link-share"><a class="sh-tg" id="sh-d-tg" href="#" target="_blank">📱 TG</a><a class="sh-wa" id="sh-d-wa" href="#" target="_blank">💬 WA</a><a class="sh-vb" id="sh-d-vb" href="#" target="_blank">📞 VB</a></div>
+                <div class="link-share"><a class="sh-tg" id="sh-d-tg" href="javascript:void(0)" target="_blank">📱 TG</a><a class="sh-wa" id="sh-d-wa" href="javascript:void(0)" target="_blank">💬 WA</a><a class="sh-vb" id="sh-d-vb" href="javascript:void(0)" target="_blank">📞 VB</a></div>
             </div>
             <div class="link-row" id="link-row-m">
                 <div class="link-top"><span class="link-icon">🏠</span><input id="lnk-m" value="gwad.ink/m/..." readonly style="border-color:var(--orange);color:var(--orange)"><button class="copy-btn" onclick="copyL('lnk-m')">📋</button></div>
-                <div class="link-share"><a class="sh-tg" id="sh-m-tg" href="#" target="_blank">📱 TG</a><a class="sh-wa" id="sh-m-wa" href="#" target="_blank">💬 WA</a><a class="sh-vb" id="sh-m-vb" href="#" target="_blank">📞 VB</a></div>
+                <div class="link-share"><a class="sh-tg" id="sh-m-tg" href="javascript:void(0)" target="_blank">📱 TG</a><a class="sh-wa" id="sh-m-wa" href="javascript:void(0)" target="_blank">💬 WA</a><a class="sh-vb" id="sh-m-vb" href="javascript:void(0)" target="_blank">📞 VB</a></div>
             </div>
             <div style="font-size:11px;color:#555;margin-top:8px;text-align:center">Скопируйте и отправьте куда угодно. Вирусная система подключена.</div>
         </div>
@@ -1415,6 +1415,7 @@ async function initWalletUI() {
     updateRoleDisplay();
     if(currentRole==='client') document.getElementById('tab-team').style.display='none';
     loadVisibility();
+    updateShareLinks();
 
     // First visit — show role modal
     if(!localStorage.getItem('gwad-role-selected')) setTimeout(function(){showM('modal-role')},600);
