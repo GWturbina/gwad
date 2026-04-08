@@ -66,8 +66,9 @@ textarea.inp{min-height:60px;resize:vertical}
 <div id="loading-screen" class="loading" data-i18n="clLoading">Подключение кошелька...</div>
 <div id="access-denied" class="access-denied" style="display:none">
     <h2 data-i18n="clAccessTitle">🔗 Подключите кошелёк</h2>
-    <p style="color:var(--muted)" data-i18n="clAccessDesc">Нужна регистрация в GlobalWay</p>
+    <p style="color:var(--muted)" data-i18n="clAccessDesc">Откройте страницу внутри SafePal → Dapp</p>
     <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px" data-i18n="clAccessBtn">Подключить кошелёк</button>
+    <div style="margin-top:12px"><a href="/partner" style="color:var(--gold);font-size:13px;text-decoration:none">← Вернуться в кабинет</a></div>
 </div>
 
 <div id="main" style="display:none">
@@ -232,6 +233,28 @@ function pickColor(el) {
     document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
     document.getElementById('f-budget-wallet').value = walletAddress;
     document.getElementById('f-manager-wallet').value = walletAddress;
+
+    // ═══ ПРОВЕРКА УРОВНЯ 7+ ═══
+    try {
+        var gwStatus = await GwadContract.getGWUserStatus(walletAddress);
+        if (!gwStatus || !gwStatus.isRegistered) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('access-denied').style.display = 'block';
+            document.querySelector('#access-denied h2').textContent = '🌐 Зарегистрируйтесь в GlobalWay';
+            document.querySelector('#access-denied p').textContent = 'Для доступа к кабинету лидера нужна регистрация в системе';
+            return;
+        }
+        if (gwStatus.maxPackage < 7) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('access-denied').style.display = 'block';
+            document.querySelector('#access-denied h2').textContent = '🔒 Нужен уровень 7+';
+            document.querySelector('#access-denied p').innerHTML = 'Ваш текущий уровень: <b style="color:#FFD700">' + gwStatus.maxPackage + '</b>. Для создания кампаний нужен минимум <b style="color:#FFD700">7 уровень</b>.<br><br><a href="/partner" style="color:#FFD700">← Вернуться в кабинет</a> и купить уровни';
+            return;
+        }
+    } catch(e) {
+        console.warn('Level check error:', e);
+    }
+
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('main').style.display = 'block';
     loadMyCampaigns();
@@ -239,7 +262,7 @@ function pickColor(el) {
 
 async function doConnect() {
     var p = window.ethereum || (window.safepal && window.safepal.ethereum);
-    if (!p) { alert('Установите MetaMask или откройте в SafePal'); return; }
+    if (!p) { alert('Откройте страницу внутри SafePal → Dapp браузер'); return; }
     await p.request({ method: 'eth_requestAccounts' });
     location.reload();
 }
