@@ -7,11 +7,12 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
-:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
-.topbar{background:#141428;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
-.topbar h1{font-size:18px;color:var(--gold)}
-.topbar h1 span{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
-.wrap{max-width:800px;margin:0 auto;padding:20px}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--orange:#f59e0b;--purple:#a855f7;--card:#141428;--border:#2a2a4a;--muted:#888;--input:#1e1e3a}
+.topbar{background:#141428;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar h1{font-size:16px;color:var(--gold)}
+.topbar h1 span{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden}
 .card-hdr{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;color:var(--gold);font-size:14px;display:flex;align-items:center;justify-content:space-between}
 .card-body{padding:18px}
@@ -20,92 +21,186 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 .btn-gold{background:var(--gold);color:#000}
 .btn-green{background:var(--green);color:#fff}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:#ccc}
+.btn-sm{padding:5px 12px;font-size:11px}
+.btn-block{display:block;width:100%}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;margin-top:12px}
 label:first-child{margin-top:0}
-.inp{width:100%;padding:10px 12px;background:#1e1e3a;border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px}
+.inp{width:100%;padding:10px 12px;background:var(--input);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px}
 .inp:focus{outline:none;border-color:var(--gold)}
 textarea.inp{min-height:60px;resize:vertical}
+select.inp{appearance:auto}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.row{grid-template-columns:1fr}.tabs{flex-wrap:wrap}}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:#0e0e20;padding:8px 12px;border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:52px;z-index:90}
+.tab{padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;white-space:nowrap;color:var(--muted);transition:.2s;border:none;background:none}
+.tab:hover{background:rgba(255,215,0,0.08);color:#fff}
+.tab.active{background:rgba(255,215,0,0.12);color:var(--gold);font-weight:600}
+.panel{display:none}.panel.active{display:block}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat .num{font-size:24px;font-weight:700}
+.stat .lbl{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:#1a1a35;color:var(--gold);padding:8px 10px;text-align:left;font-weight:600;font-size:11px}
+.tbl td{padding:8px 10px;border-bottom:1px solid #1e1e35}
+
+/* Camp items */
+.camp-item{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid #1e1e35;cursor:pointer;transition:.2s}
+.camp-item:hover{background:rgba(255,215,0,0.02)}
+.camp-item:last-child{border-bottom:none}
+.camp-icon{font-size:28px}
+.camp-info{flex:1;min-width:0}
+.camp-name{font-size:14px;font-weight:700;color:#fff}
+.camp-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.camp-link{font-size:10px;color:var(--blue);word-break:break-all}
+
+/* Color picker */
 .color-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
 .color-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s}
 .color-dot:hover,.color-dot.active{border-color:#fff;transform:scale(1.15)}
-.camp-item{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid #1e1e35}
-.camp-item:last-child{border-bottom:none}
-.camp-icon{font-size:28px}
-.camp-info{flex:1}
-.camp-name{font-size:15px;font-weight:700;color:#fff}
-.camp-meta{font-size:11px;color:var(--muted);margin-top:3px}
-.camp-link{font-size:11px;color:var(--blue);word-break:break-all}
-.camp-stats{text-align:right;font-size:12px;color:var(--green)}
+
+/* FAQ */
+.faq-item{padding:14px;border-bottom:1px solid #1e1e35;display:flex;gap:10px;align-items:flex-start}
+.faq-item:last-child{border-bottom:none}
+.faq-num{width:24px;height:24px;border-radius:50%;background:rgba(255,215,0,0.1);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.faq-body{flex:1;min-width:0}
+.faq-q{font-size:13px;font-weight:600;color:#fff}
+.faq-a{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
+
 .tip{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;border-left:3px solid var(--gold)}
 .empty{text-align:center;padding:40px;color:var(--muted)}
 .empty div{font-size:40px;margin-bottom:10px}
+.loading{text-align:center;padding:40px;color:var(--muted)}
 .access-denied{text-align:center;padding:60px 20px}
 .access-denied h2{color:var(--red);margin-bottom:10px}
-.loading{text-align:center;padding:40px;color:var(--muted)}
-.lang-btn{padding:3px 8px;border:none;border-radius:5px;background:transparent;color:#555;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:0.5px}
+.lang-btn{padding:3px 8px;border:none;border-radius:5px;background:transparent;color:#555;font-size:11px;font-weight:700;cursor:pointer;transition:.2s}
 .lang-btn:hover{color:#fff}
 .lang-btn.active{background:var(--gold);color:#000}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .4s ease both}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-    <h1>🎯 <span data-i18n="clTopTitle">Кабинет лидера</span><span data-i18n="clTopSub">Создание и управление кампаниями</span></h1>
-    <div style="display:flex;align-items:center;gap:8px">
+    <h1>🎯 Кабинет лидера<span>Управление кампаниями</span></h1>
+    <div class="topbar-right">
+        <a href="/partner" style="color:var(--gold);font-size:12px;text-decoration:none">← Кабинет</a>
+        <span style="color:#333">│</span>
         <button class="lang-btn active" onclick="setLang('ru')">RU</button>
-        <button class="lang-btn" onclick="setLang('ua')">UA</button>
         <button class="lang-btn" onclick="setLang('en')">EN</button>
         <span style="color:#333">│</span>
         <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
     </div>
 </div>
 
+<div class="tabs">
+    <button class="tab active" onclick="showTab('stats')">📊 Статистика</button>
+    <button class="tab" onclick="showTab('campaigns')">📋 Мои кампании</button>
+    <button class="tab" onclick="showTab('create')">➕ Создать</button>
+    <button class="tab" onclick="showTab('contacts')">👥 Контакты</button>
+    <button class="tab" onclick="showTab('faq')">❓ ЧАВО</button>
+</div>
+
 <div class="wrap">
 
-<div id="loading-screen" class="loading" data-i18n="clLoading">Подключение кошелька...</div>
+<div id="loading-screen" class="loading">Подключение кошелька...</div>
+
 <div id="access-denied" class="access-denied" style="display:none">
-    <h2 data-i18n="clAccessTitle">🔗 Подключите кошелёк</h2>
-    <p style="color:var(--muted)" data-i18n="clAccessDesc">Откройте страницу внутри SafePal → Dapp</p>
-    <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px" data-i18n="clAccessBtn">Подключить кошелёк</button>
+    <h2>🔒 Нужен уровень 7+</h2>
+    <p style="color:var(--muted)" id="access-msg">Откройте страницу внутри SafePal → Dapp</p>
+    <button class="btn btn-gold" onclick="doConnect()" style="margin-top:16px">Подключить кошелёк</button>
     <div style="margin-top:12px"><a href="/partner" style="color:var(--gold);font-size:13px;text-decoration:none">← Вернуться в кабинет</a></div>
 </div>
 
 <div id="main" style="display:none">
 
-    <!-- СОЗДАТЬ КАМПАНИЮ -->
+<!-- ═══ СТАТИСТИКА ═══ -->
+<div class="panel active fade" id="p-stats">
+    <div class="stats">
+        <div class="stat"><div class="num" style="color:var(--gold)" id="st-campaigns">0</div><div class="lbl">Кампаний</div></div>
+        <div class="stat"><div class="num" style="color:var(--blue)" id="st-clicks">0</div><div class="lbl">Кликов</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="st-regs">0</div><div class="lbl">Регистраций</div></div>
+        <div class="stat"><div class="num" style="color:var(--purple)" id="st-contacts">0</div><div class="lbl">Контактов</div></div>
+        <div class="stat"><div class="num" style="color:var(--orange)" id="st-pool">$0</div><div class="lbl">В рекламе</div></div>
+    </div>
+
+    <!-- Кампании быстрый обзор -->
     <div class="card">
-        <div class="card-hdr">
-            <span data-i18n="clCreateTitle">➕ Создать кампанию</span>
-            <span style="font-size:11px;color:var(--muted);font-weight:400" data-i18n="clCreateSub">Заполните форму — лендинг создастся автоматически</span>
+        <div class="card-hdr">📈 Кампании</div>
+        <div id="stats-campaigns-list">
+            <div class="empty"><div>📢</div>Нет кампаний. Создайте первую.</div>
         </div>
+    </div>
+
+    <!-- Последние контакты -->
+    <div class="card">
+        <div class="card-hdr">👥 Последние контакты <button class="btn btn-ghost btn-sm" onclick="loadLeaderContacts()">🔄</button></div>
+        <div id="stats-contacts-preview" style="overflow-x:auto;padding:0">
+            <div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">Загрузка...</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ МОИ КАМПАНИИ ═══ -->
+<div class="panel fade" id="p-campaigns">
+    <div class="card">
+        <div class="card-hdr">📋 Мои кампании <button class="btn btn-ghost btn-sm" onclick="loadMyCampaigns()">🔄</button></div>
+        <div id="my-campaigns">
+            <div class="empty"><div>📢</div>У вас ещё нет кампаний</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-hdr">🌐 Варианты размещения</div>
         <div class="card-body">
-            <div class="tip" data-i18n="clCreateTip">💡 <b>Подсказка:</b> После создания кампании появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу и получать рефералов.</div>
-
-            <label data-i18n="clName">Название кампании *</label>
-            <input class="inp" id="f-name" placeholder="Например: ЭкоБАДы Натура">
-
-            <label data-i18n="clSlug">Slug (для URL) * <span style="color:var(--muted)">— только латиница, цифры, дефис</span></label>
-            <input class="inp" id="f-slug" placeholder="eco-bady" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
-            <div style="font-size:11px;color:var(--blue);margin-top:4px">Ваш лендинг: gwad.ink/c/<span id="slug-preview">...</span></div>
-
-            <label>Описание / текст на лендинге</label>
-            <textarea class="inp" id="f-desc" placeholder="Расскажите о продукте и возможностях..."></textarea>
-
-            <div class="row">
-                <div>
-                    <label>Ссылка на видео (YouTube / Vimeo)</label>
-                    <input class="inp" id="f-video" placeholder="https://youtube.com/watch?v=...">
-                    <div class="tip" style="margin-top:6px">📹 Видео появится на лендинге. Оставьте пустым если не нужно.</div>
+            <div style="display:grid;gap:10px">
+                <div style="padding:12px;background:rgba(16,185,129,0.05);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
+                    <div style="font-weight:600;color:var(--green);font-size:13px">Путь (бесплатно, сразу)</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:4px">gwad.ink/c/ваш-slug</div>
                 </div>
-                <div>
-                    <label>URL главной картинки</label>
-                    <input class="inp" id="f-image" placeholder="https://... (JPG/PNG)">
-                    <div class="tip" style="margin-top:6px">🖼️ Показывается если нет видео. Рекомендуем 1200x630.</div>
+                <div style="padding:12px;background:rgba(59,130,246,0.05);border-radius:10px;border:1px solid rgba(59,130,246,0.2)">
+                    <div style="font-weight:600;color:var(--blue);font-size:13px">Поддомен (бесплатно)</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:4px">ваш-slug.gwad.ink — обратитесь к администратору</div>
+                </div>
+                <div style="padding:12px;background:rgba(168,85,247,0.05);border-radius:10px;border:1px solid rgba(168,85,247,0.2)">
+                    <div style="font-weight:600;color:var(--purple);font-size:13px">Свой домен</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:4px">ваш-домен.com — купите и привяжите через администратора</div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <label>URL логотипа (квадратный)</label>
+<!-- ═══ СОЗДАТЬ КАМПАНИЮ ═══ -->
+<div class="panel fade" id="p-create">
+    <div class="card">
+        <div class="card-hdr">➕ Создать кампанию</div>
+        <div class="card-body">
+            <div class="tip" style="margin-bottom:14px">💡 После создания появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу.</div>
+
+            <label>Название *</label>
+            <input class="inp" id="f-name" placeholder="Например: ЭкоБАДы Натура">
+
+            <label>Slug (для URL) * <span style="color:var(--muted)">— латиница, цифры, дефис</span></label>
+            <input class="inp" id="f-slug" placeholder="eco-bady" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'');document.getElementById('slug-preview').textContent=this.value||'...'">
+            <div style="font-size:11px;color:var(--blue);margin-top:4px">gwad.ink/c/<span id="slug-preview">...</span></div>
+
+            <label>Описание</label>
+            <textarea class="inp" id="f-desc" placeholder="Расскажите о продукте..."></textarea>
+
+            <div class="row">
+                <div><label>Видео (YouTube/Vimeo)</label><input class="inp" id="f-video" placeholder="https://youtube.com/watch?v=..."></div>
+                <div><label>Главная картинка</label><input class="inp" id="f-image" placeholder="https://... (JPG/PNG)"></div>
+            </div>
+
+            <label>URL логотипа</label>
             <input class="inp" id="f-logo" placeholder="https://... (PNG, 200x200)">
 
             <label>Цвет темы</label>
@@ -120,269 +215,356 @@ textarea.inp{min-height:60px;resize:vertical}
                 <div class="color-dot" data-c="#06b6d4" style="background:#06b6d4" onclick="pickColor(this)"></div>
             </div>
 
-            <label>Фичи / преимущества (каждая строка = карточка, формат: emoji|текст)</label>
-            <textarea class="inp" id="f-features" placeholder="💊|Натуральные ингредиенты&#10;🌿|Без ГМО и химии&#10;💰|Доход от $500/мес&#10;👥|Готовая команда"></textarea>
+            <label>Фичи (каждая строка = карточка, формат: emoji|текст)</label>
+            <textarea class="inp" id="f-features" placeholder="💊|Натуральные ингредиенты&#10;🌿|Без ГМО&#10;💰|Доход от $500/мес"></textarea>
 
             <label>Текст кнопки CTA</label>
             <input class="inp" id="f-cta" value="Начать зарабатывать">
 
             <div class="row" style="margin-top:12px">
-                <div>
-                    <label>Telegram для связи</label>
-                    <input class="inp" id="f-tg" placeholder="@username">
-                </div>
-                <div>
-                    <label>WhatsApp для связи</label>
-                    <input class="inp" id="f-wa" placeholder="+380...">
-                </div>
+                <div><label>Telegram</label><input class="inp" id="f-tg" placeholder="@username"></div>
+                <div><label>WhatsApp</label><input class="inp" id="f-wa" placeholder="+380..."></div>
             </div>
 
             <div style="margin-top:16px;padding:14px;background:rgba(255,215,0,0.05);border-radius:10px;border:1px solid rgba(255,215,0,0.2)">
-                <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px">💰 Кошельки для смарт-контракта</div>
-                <div class="tip" style="margin-bottom:10px">Эти адреса будут записаны в контракт. 80% рекламного бюджета → Budget Wallet. 9% менеджеру → Manager Wallet.</div>
-                <label>Budget Wallet (куда 80% бюджет) *</label>
+                <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px">💰 Кошельки для контракта</div>
+                <label>Budget Wallet (80% бюджет) *</label>
                 <input class="inp" id="f-budget-wallet" placeholder="0x...">
-                <label>Manager Wallet (куда 9% менеджеру) *</label>
+                <label>Manager Wallet (9% менеджеру) *</label>
                 <input class="inp" id="f-manager-wallet" placeholder="0x...">
             </div>
 
-            <button class="btn btn-gold" onclick="createCampaign()" id="create-btn" style="width:100%;margin-top:16px;padding:14px;font-size:15px" data-i18n="clCreateBtn">🚀 Создать кампанию</button>
-            <div id="create-status" style="margin-top:10px;font-size:13px;text-align:center;min-height:20px;color:#888"></div>
+            <button class="btn btn-gold btn-block" onclick="createCampaign()" id="create-btn" style="margin-top:16px;padding:14px;font-size:15px">🚀 Создать кампанию</button>
+            <div id="create-status" style="margin-top:10px;font-size:13px;text-align:center;min-height:20px;color:var(--muted)"></div>
         </div>
     </div>
+</div>
 
-    <!-- МОИ КАМПАНИИ -->
-    <div class="card">
-        <div class="card-hdr"><span data-i18n="clMyCamps">📋 Мои кампании</span> <button class="btn btn-ghost" onclick="loadMyCampaigns()" style="padding:5px 12px;font-size:11px">🔄</button></div>
-        <div id="my-campaigns">
-            <div class="empty"><div>📢</div>У вас ещё нет кампаний</div>
-        </div>
+<!-- ═══ КОНТАКТЫ КАМПАНИИ ═══ -->
+<div class="panel fade" id="p-contacts">
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="stat"><div class="num" style="color:var(--blue)" id="lc-total">0</div><div class="lbl">Всего</div></div>
+        <div class="stat"><div class="num" style="color:var(--gold)" id="lc-new">0</div><div class="lbl">Новых</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="lc-converted">0</div><div class="lbl">Конвертировано</div></div>
     </div>
 
-    <!-- ВАРИАНТЫ ДОМЕНА -->
     <div class="card">
-        <div class="card-hdr" data-i18n="clDomains">🌐 Варианты размещения лендинга</div>
-        <div class="card-body">
-            <div style="display:grid;gap:12px">
-                <div style="padding:14px;background:rgba(16,185,129,0.05);border-radius:10px;border:1px solid rgba(16,185,129,0.2)">
-                    <div style="font-weight:600;color:var(--green)">Вариант А: Путь (бесплатно, сразу)</div>
-                    <div style="font-size:12px;color:var(--muted);margin-top:4px">gwad.ink/c/ваш-slug — создаётся автоматически при создании кампании</div>
-                </div>
-                <div style="padding:14px;background:rgba(59,130,246,0.05);border-radius:10px;border:1px solid rgba(59,130,246,0.2)">
-                    <div style="font-weight:600;color:var(--blue)">Вариант Б: Поддомен (бесплатно)</div>
-                    <div style="font-size:12px;color:var(--muted);margin-top:4px">ваш-slug.gwad.ink — обратитесь к администратору для подключения</div>
-                </div>
-                <div style="padding:14px;background:rgba(168,85,247,0.05);border-radius:10px;border:1px solid rgba(168,85,247,0.2)">
-                    <div style="font-weight:600;color:#a855f7">Вариант В: Свой домен (максимум доверия)</div>
-                    <div style="font-size:12px;color:var(--muted);margin-top:4px">eco-bady.com — купите домен и обратитесь к администратору для привязки</div>
-                </div>
+        <div class="card-hdr">👥 Все контакты кампаний <button class="btn btn-ghost btn-sm" onclick="loadLeaderContacts()">🔄</button></div>
+        <div style="overflow-x:auto;padding:0" id="leader-contacts-list">
+            <div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">Загрузка...</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ ЧАВО ═══ -->
+<div class="panel fade" id="p-faq">
+    <div class="card">
+        <div class="card-hdr">❓ ЧАВО — Вопросы и ответы <button class="btn btn-green btn-sm" onclick="showAddFaq()">+ Добавить</button></div>
+        <div class="card-body" id="faq-add-form" style="display:none;border-bottom:1px solid var(--border);margin-bottom:14px;padding-bottom:14px">
+            <label>Вопрос *</label>
+            <input class="inp" id="faq-q-input" placeholder="Часто задаваемый вопрос...">
+            <label>Ответ *</label>
+            <textarea class="inp" id="faq-a-input" placeholder="Подробный ответ..."></textarea>
+            <label>Для кампании</label>
+            <select class="inp" id="faq-campaign-select">
+                <option value="all">🌐 Все кампании (глобальный)</option>
+            </select>
+            <div style="display:flex;gap:8px;margin-top:12px">
+                <button class="btn btn-gold" onclick="saveFaq()">💾 Сохранить</button>
+                <button class="btn btn-ghost" onclick="hideFaqForm()">Отмена</button>
             </div>
         </div>
+        <div id="faq-list">
+            <div class="empty"><div>❓</div>Нет вопросов. Добавьте первый.</div>
+        </div>
     </div>
+    <div class="tip">💡 Глобальные ЧАВО видны во всех кампаниях. Приватные — только в выбранной кампании. Партнёры видят их в разделе «Чат → ЧАВО» в своём кабинете.</div>
+</div>
 
-</div>
-</div>
+</div><!-- main -->
+</div><!-- wrap -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 <script src="/js/ad-pool-abi.js"></script>
 <script src="/js/addresses.js"></script>
 <script src="/js/ad-pool-contract.js"></script>
-<script src="/js/i18n.js"></script>
 <script>
 var API = 'https://cgift.club/api/ad-platform';
 var walletAddress = '';
 var selectedColor = '#FFD700';
+var myGwId = '';
+var myLevel = 0;
+var myCampaigns = [];
 
-document.getElementById('f-slug').addEventListener('input', function() {
-    document.getElementById('slug-preview').textContent = this.value || '...';
-});
+function showTab(name) {
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    document.getElementById('p-'+name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'contacts') loadLeaderContacts();
+    if (name === 'faq') loadFaqList();
+    if (name === 'stats') loadStats();
+    if (name === 'campaigns') loadMyCampaigns();
+}
 
 function pickColor(el) {
-    document.querySelectorAll('.color-dot').forEach(function(d) { d.classList.remove('active'); });
+    document.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('active')});
     el.classList.add('active');
     selectedColor = el.dataset.c;
 }
 
-// INIT
+function setLang(l) {
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelector('.lang-btn[onclick*="\''+l+'\'"]').classList.add('active');
+}
+
+// ═══ INIT ═══
 (async function() {
-    await new Promise(function(r) { setTimeout(r, 500); });
-    
-    // Подключаем через GwadContract
+    await new Promise(function(r){setTimeout(r,500)});
+
     var ok = await GwadContract.silentConnect();
     if (!ok) {
-        // Fallback
         var provider = window.ethereum || (window.safepal && window.safepal.ethereum);
-        if (!provider) {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('access-denied').style.display = 'block';
-            return;
-        }
+        if (!provider) { showAccessDenied('Откройте страницу внутри SafePal → Dapp'); return; }
         try {
-            var accounts = await provider.request({ method: 'eth_accounts' });
-            if (!accounts || !accounts.length) accounts = await provider.request({ method: 'eth_requestAccounts' });
-            walletAddress = accounts[0].toLowerCase();
-        } catch(e) {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('access-denied').style.display = 'block';
-            return;
-        }
+            var acc = await provider.request({method:'eth_accounts'});
+            if (!acc || !acc.length) acc = await provider.request({method:'eth_requestAccounts'});
+            walletAddress = acc[0].toLowerCase();
+        } catch(e) { showAccessDenied('Кошелёк не подключён'); return; }
     } else {
         walletAddress = GwadContract.walletAddress;
     }
 
-    document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+    document.getElementById('wallet-tag').textContent = walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
     document.getElementById('f-budget-wallet').value = walletAddress;
     document.getElementById('f-manager-wallet').value = walletAddress;
 
-    // ═══ ПРОВЕРКА УРОВНЯ 7+ ═══
+    // Проверка уровня
     try {
         var gwStatus = await GwadContract.getGWUserStatus(walletAddress);
         if (!gwStatus || !gwStatus.isRegistered) {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('access-denied').style.display = 'block';
-            document.querySelector('#access-denied h2').textContent = '🌐 Зарегистрируйтесь в GlobalWay';
-            document.querySelector('#access-denied p').textContent = 'Для доступа к кабинету лидера нужна регистрация в системе';
+            showAccessDenied('Зарегистрируйтесь в GlobalWay'); return;
+        }
+        myLevel = gwStatus.maxPackage;
+        myGwId = 'GW' + gwStatus.odixId;
+        if (myLevel < 7) {
+            showAccessDenied('Ваш уровень: <b style="color:var(--gold)">' + myLevel + '</b>. Нужен минимум <b>7</b>.<br><a href="/partner" style="color:var(--gold)">← Купить уровни</a>');
             return;
         }
-        if (gwStatus.maxPackage < 7) {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('access-denied').style.display = 'block';
-            document.querySelector('#access-denied h2').textContent = '🔒 Нужен уровень 7+';
-            document.querySelector('#access-denied p').innerHTML = 'Ваш текущий уровень: <b style="color:#FFD700">' + gwStatus.maxPackage + '</b>. Для создания кампаний нужен минимум <b style="color:#FFD700">7 уровень</b>.<br><br><a href="/partner" style="color:#FFD700">← Вернуться в кабинет</a> и купить уровни';
-            return;
-        }
-    } catch(e) {
-        console.warn('Level check error:', e);
-    }
+    } catch(e) { console.warn('Level check:', e); }
 
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('main').style.display = 'block';
+    loadStats();
     loadMyCampaigns();
 })();
 
+function showAccessDenied(msg) {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('access-denied').style.display = 'block';
+    document.getElementById('access-msg').innerHTML = msg;
+}
+
 async function doConnect() {
     var p = window.ethereum || (window.safepal && window.safepal.ethereum);
-    if (!p) { alert('Откройте страницу внутри SafePal → Dapp браузер'); return; }
-    await p.request({ method: 'eth_requestAccounts' });
+    if (!p) { alert('Откройте в SafePal → Dapp браузер'); return; }
+    await p.request({method:'eth_requestAccounts'});
     location.reload();
 }
 
 async function apiFetch(action, body) {
-    var opts = { headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': walletAddress } };
+    var opts = { headers: {'Content-Type':'application/json','X-Wallet-Address':walletAddress} };
     if (body) {
         opts.method = 'POST';
-        opts.body = JSON.stringify(Object.assign({ action: action }, body));
+        opts.body = JSON.stringify(Object.assign({action:action},body));
         var r = await fetch(API, opts);
         return await r.json();
     }
-    var r = await fetch(API + '?action=' + action, opts);
+    var r = await fetch(API+'?action='+action, opts);
     return await r.json();
 }
 
-async function createCampaign() {
-    var name = document.getElementById('f-name').value.trim();
-    var slug = document.getElementById('f-slug').value.trim();
-    if (!name || !slug) { alert('Заполните название и slug'); return; }
-
-    var bw = document.getElementById('f-budget-wallet').value.trim();
-    var mw = document.getElementById('f-manager-wallet').value.trim();
-    if (!bw || !mw) { alert('Укажите кошельки для контракта'); return; }
-
-    var btn = document.getElementById('create-btn');
-    var statusEl = document.getElementById('create-status');
-    btn.disabled = true;
-    btn.textContent = '⏳ Создание...';
-
-    // 1. Создаём кампанию в КОНТРАКТЕ
-    statusEl.textContent = '🔗 Подключение к блокчейну...';
-    
-    // Подключаем кошелёк через GwadContract
-    if (!GwadContract.connected) {
-        var ok = await GwadContract.connectWallet();
-        if (!ok) {
-            statusEl.textContent = '❌ Кошелёк не подключён';
-            btn.disabled = false;
-            btn.textContent = '🚀 Создать кампанию';
-            return;
-        }
-        walletAddress = GwadContract.walletAddress;
-    }
-
-    var contractCampaignId = null;
+// ═══ СТАТИСТИКА ═══
+async function loadStats() {
     try {
-        var result = await GwadContract.createCampaign(name, bw, mw, function(msg) {
-            statusEl.textContent = msg;
-        });
-
-        if (result.ok) {
-            contractCampaignId = result.campaignId;
-            statusEl.textContent = '✅ Контракт: кампания #' + contractCampaignId + ' создана! Сохраняем...';
-        } else {
-            statusEl.textContent = '⚠️ Контракт: ' + result.error + '. Сохраняем в базу...';
+        var d = await apiFetch('campaigns');
+        if (d.ok && d.campaigns) {
+            myCampaigns = d.campaigns;
+            document.getElementById('st-campaigns').textContent = d.campaigns.length;
+            var totalClicks=0, totalRegs=0;
+            var html = '';
+            d.campaigns.forEach(function(c) {
+                totalClicks += c.total_clicks||0;
+                totalRegs += c.total_registrations||0;
+                html += '<div class="camp-item"><div class="camp-icon">' + ({diamond_club:'💎',metr:'🏠',cardgift:'🎁',custom:'🎯'}[c.target_project]||'📢') + '</div>';
+                html += '<div class="camp-info"><div class="camp-name">'+(c.name||'')+'</div><div class="camp-meta">'+c.slug+'</div></div>';
+                html += '<div style="text-align:right"><div style="font-size:16px;font-weight:700;color:var(--blue)">'+(c.total_clicks||0)+'</div><div style="font-size:10px;color:var(--muted)">кликов</div></div></div>';
+            });
+            document.getElementById('st-clicks').textContent = totalClicks;
+            document.getElementById('st-regs').textContent = totalRegs;
+            document.getElementById('stats-campaigns-list').innerHTML = html || '<div class="empty"><div>📢</div>Нет кампаний</div>';
+            // Заполняем select ЧАВО
+            var sel = document.getElementById('faq-campaign-select');
+            sel.innerHTML = '<option value="all">🌐 Все кампании</option>';
+            d.campaigns.forEach(function(c){
+                sel.innerHTML += '<option value="'+c.slug+'">'+(c.name||c.slug)+'</option>';
+            });
         }
-    } catch(e) {
-        statusEl.textContent = '⚠️ Контракт недоступен. Сохраняем в базу...';
-    }
-
-    // 2. Сохраняем в Supabase через API
-    var data = {
-        name: name,
-        slug: slug,
-        description: document.getElementById('f-desc').value,
-        logo_url: document.getElementById('f-logo').value,
-        primary_color: selectedColor,
-        video_url: document.getElementById('f-video').value,
-        hero_image_url: document.getElementById('f-image').value,
-        features: document.getElementById('f-features').value,
-        cta_text: document.getElementById('f-cta').value || 'Начать зарабатывать',
-        contact_telegram: document.getElementById('f-tg').value,
-        contact_whatsapp: document.getElementById('f-wa').value,
-        budget_wallet: bw,
-        manager_wallet: mw,
-        leader_gw_id: walletAddress,
-        target_project: 'custom',
-        channels: [],
-        contract_campaign_id: contractCampaignId
-    };
-
-    var r = await apiFetch('save_campaign', data);
-    
-    btn.disabled = false;
-    btn.textContent = '🚀 Создать кампанию';
-
-    if (r.ok) {
-        statusEl.innerHTML = '✅ Кампания создана!' + 
-            (contractCampaignId ? ' (контракт #' + contractCampaignId + ')' : '') +
-            '<br><a href="/c/' + slug + '" target="_blank" style="color:#FFD700">gwad.ink/c/' + slug + '</a>';
-        loadMyCampaigns();
-        ['f-name','f-slug','f-desc','f-video','f-image','f-logo','f-features','f-tg','f-wa'].forEach(function(id) {
-            document.getElementById(id).value = '';
-        });
-    } else {
-        statusEl.textContent = '❌ ' + (r.error || 'Ошибка сохранения');
-    }
+    } catch(e) { console.warn('Stats:', e); }
+    loadLeaderContacts();
 }
 
+// ═══ МОИ КАМПАНИИ ═══
 async function loadMyCampaigns() {
     var data = await apiFetch('campaigns');
     var el = document.getElementById('my-campaigns');
     if (!data.ok || !data.campaigns || data.campaigns.length === 0) {
-        el.innerHTML = '<div class="empty"><div>📢</div>У вас ещё нет кампаний</div>';
+        el.innerHTML = '<div class="empty"><div>📢</div>У вас нет кампаний. <a href="javascript:showTab(\'create\')" style="color:var(--gold)">Создать</a></div>';
         return;
     }
     var icons = {diamond_club:'💎',metr:'🏠',cardgift:'🎁',custom:'🎯'};
-    el.innerHTML = data.campaigns.map(function(c) {
-        return '<div class="camp-item">' +
-            '<div class="camp-icon">' + (icons[c.target_project] || '📢') + '</div>' +
-            '<div class="camp-info">' +
-            '<div class="camp-name">' + (c.name || '') + '</div>' +
-            '<div class="camp-meta">slug: ' + c.slug + ' · ' + ((c.channels||[]).join(', ')||'—') + '</div>' +
-            '<div class="camp-link">gwad.ink/c/' + c.slug + '</div>' +
-            '</div>' +
-            '<div class="camp-stats">' + (c.total_clicks||0) + ' кл. / ' + (c.total_registrations||0) + ' рег.</div>' +
-            '</div>';
+    el.innerHTML = data.campaigns.map(function(c){
+        return '<div class="camp-item" onclick="window.open(\'/c/'+c.slug+'\',\'_blank\')">'+
+            '<div class="camp-icon">'+(icons[c.target_project]||'📢')+'</div>'+
+            '<div class="camp-info"><div class="camp-name">'+(c.name||'')+'</div>'+
+            '<div class="camp-meta">slug: '+c.slug+'</div>'+
+            '<div class="camp-link">gwad.ink/c/'+c.slug+'</div></div>'+
+            '<div style="text-align:right;font-size:12px"><div style="color:var(--green)">'+(c.total_clicks||0)+' кл.</div><div style="color:var(--muted)">'+(c.total_registrations||0)+' рег.</div></div></div>';
     }).join('');
 }
+
+// ═══ СОЗДАТЬ КАМПАНИЮ ═══
+async function createCampaign() {
+    var name = document.getElementById('f-name').value.trim();
+    var slug = document.getElementById('f-slug').value.trim();
+    if (!name || !slug) { alert('Заполните название и slug'); return; }
+    var bw = document.getElementById('f-budget-wallet').value.trim();
+    var mw = document.getElementById('f-manager-wallet').value.trim();
+    if (!bw || !mw) { alert('Укажите кошельки'); return; }
+
+    var btn = document.getElementById('create-btn');
+    var statusEl = document.getElementById('create-status');
+    btn.disabled = true; btn.textContent = '⏳ Создание...';
+
+    // Контракт
+    statusEl.textContent = '🔗 Блокчейн...';
+    if (!GwadContract.connected) {
+        var ok = await GwadContract.connectWallet();
+        if (!ok) { statusEl.textContent = '❌ Кошелёк не подключён'; btn.disabled=false; btn.textContent='🚀 Создать'; return; }
+        walletAddress = GwadContract.walletAddress;
+    }
+    var contractCampaignId = null;
+    try {
+        var result = await GwadContract.createCampaign(name, bw, mw, function(m){statusEl.textContent=m});
+        if (result.ok) { contractCampaignId = result.campaignId; statusEl.textContent = '✅ Контракт #'+contractCampaignId; }
+        else statusEl.textContent = '⚠️ '+result.error+'. Сохраняем...';
+    } catch(e) { statusEl.textContent = '⚠️ Сохраняем в базу...'; }
+
+    // Supabase
+    var r = await apiFetch('save_campaign', {
+        name:name, slug:slug, description:document.getElementById('f-desc').value,
+        logo_url:document.getElementById('f-logo').value, primary_color:selectedColor,
+        video_url:document.getElementById('f-video').value, hero_image_url:document.getElementById('f-image').value,
+        features:document.getElementById('f-features').value,
+        cta_text:document.getElementById('f-cta').value||'Начать зарабатывать',
+        contact_telegram:document.getElementById('f-tg').value, contact_whatsapp:document.getElementById('f-wa').value,
+        budget_wallet:bw, manager_wallet:mw, leader_gw_id:walletAddress,
+        target_project:'custom', channels:[], contract_campaign_id:contractCampaignId
+    });
+
+    btn.disabled=false; btn.textContent='🚀 Создать кампанию';
+    if (r.ok) {
+        statusEl.innerHTML = '✅ Создана! <a href="/c/'+slug+'" target="_blank" style="color:var(--gold)">gwad.ink/c/'+slug+'</a>';
+        loadMyCampaigns(); loadStats();
+        ['f-name','f-slug','f-desc','f-video','f-image','f-logo','f-features','f-tg','f-wa'].forEach(function(id){document.getElementById(id).value=''});
+    } else statusEl.textContent = '❌ '+(r.error||'Ошибка');
+}
+
+// ═══ КОНТАКТЫ ═══
+async function loadLeaderContacts() {
+    var el = document.getElementById('leader-contacts-list') || document.getElementById('stats-contacts-preview');
+    if (!el) return;
+    if (!myGwId) { el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Подключите кошелёк</div>'; return; }
+
+    try {
+        var r = await fetch('/api/contacts?action=my_contacts&gwId='+encodeURIComponent(myGwId), {
+            headers: {'X-Wallet-Address':walletAddress}
+        });
+        var d = await r.json();
+        if (!d.ok || !d.contacts || !d.contacts.length) {
+            el.innerHTML='<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Нет контактов</div>';
+            return;
+        }
+        document.getElementById('st-contacts').textContent = d.stats.total;
+        document.getElementById('lc-total').textContent = d.stats.total;
+        document.getElementById('lc-new').textContent = d.stats.new;
+        document.getElementById('lc-converted').textContent = d.stats.converted;
+
+        var icons = {telegram:'📱',whatsapp:'💬',viber:'📞',email:'📧',instagram:'📷',facebook:'📘'};
+        var html = '<table class="tbl"><thead><tr><th></th><th>Имя</th><th>Контакт</th><th>Статус</th><th>Дата</th></tr></thead><tbody>';
+        d.contacts.slice(0,50).forEach(function(c){
+            var stColor = c.status==='new'?'var(--gold)':c.status==='active'?'var(--green)':'var(--muted)';
+            html += '<tr><td>'+(icons[c.messenger]||'👤')+'</td>';
+            html += '<td style="font-weight:600;color:#fff">'+(c.name||'—').replace(/</g,'&lt;')+'</td>';
+            html += '<td style="font-size:11px;color:var(--muted)">'+(c.contact||'—').replace(/</g,'&lt;')+'</td>';
+            html += '<td style="color:'+stColor+';font-size:11px;font-weight:600">'+c.status+'</td>';
+            html += '<td style="font-size:10px;color:var(--muted)">'+(c.created_at?new Date(c.created_at).toLocaleDateString():'—')+'</td></tr>';
+        });
+        html += '</tbody></table>';
+        el.innerHTML = html;
+    } catch(e) {
+        el.innerHTML='<div style="padding:20px;text-align:center;color:var(--red);font-size:12px">Ошибка загрузки</div>';
+    }
+}
+
+// ═══ ЧАВО ═══
+var faqItems = [];
+
+function showAddFaq() { document.getElementById('faq-add-form').style.display = ''; }
+function hideFaqForm() { document.getElementById('faq-add-form').style.display = 'none'; document.getElementById('faq-q-input').value=''; document.getElementById('faq-a-input').value=''; }
+
+async function saveFaq() {
+    var q = document.getElementById('faq-q-input').value.trim();
+    var a = document.getElementById('faq-a-input').value.trim();
+    if (!q || !a) { alert('Заполните вопрос и ответ'); return; }
+    var campaign = document.getElementById('faq-campaign-select').value;
+
+    faqItems.push({ question:q, answer:a, campaign:campaign, created_at:new Date().toISOString() });
+    localStorage.setItem('gwad-faq-'+walletAddress, JSON.stringify(faqItems));
+    hideFaqForm();
+    renderFaq();
+
+    // TODO: сохранить в Supabase через API когда таблица adp_faq будет создана
+}
+
+async function loadFaqList() {
+    try {
+        faqItems = JSON.parse(localStorage.getItem('gwad-faq-'+walletAddress) || '[]');
+    } catch(e) { faqItems = []; }
+    renderFaq();
+}
+
+function renderFaq() {
+    var el = document.getElementById('faq-list');
+    if (!faqItems.length) { el.innerHTML='<div class="empty"><div>❓</div>Нет вопросов. Добавьте первый.</div>'; return; }
+    var html = '';
+    faqItems.forEach(function(f,i) {
+        html += '<div class="faq-item"><div class="faq-num">'+(i+1)+'</div><div class="faq-body">';
+        html += '<div class="faq-q">'+f.question.replace(/</g,'&lt;')+'</div>';
+        html += '<div class="faq-a">'+f.answer.replace(/</g,'&lt;')+'</div>';
+        html += '<div style="font-size:9px;color:var(--muted);margin-top:4px">'+(f.campaign==='all'?'🌐 Все':'📋 '+f.campaign)+'</div>';
+        html += '</div><button class="btn btn-ghost btn-sm" onclick="deleteFaq('+i+')" style="color:var(--red)">✕</button></div>';
+    });
+    el.innerHTML = html;
+}
+
+function deleteFaq(idx) {
+    faqItems.splice(idx, 1);
+    localStorage.setItem('gwad-faq-'+walletAddress, JSON.stringify(faqItems));
+    renderFaq();
+}
+
+loadFaqList();
 </script>
 </body>
 </html>
