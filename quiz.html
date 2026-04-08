@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест — Какой ты предприниматель?</title>
+<meta property="og:title" content="Какой ты предприниматель? — Тест">
+<meta property="og:description" content="Пройди тест за 2 минуты — узнай свой тип и получи стратегию заработка">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+:root{--gold:#FFD700;--green:#10b981;--blue:#3b82f6;--red:#ef4444;--card:#141428;--border:#2a2a4a;--muted:#888}
+.wrap{max-width:520px;margin:0 auto;padding:20px}
+.gold-bar{height:4px;background:linear-gradient(90deg,#FFD700,#FFA000,#FFD700)}
+.hdr{text-align:center;padding:24px 0 16px}
+.hdr-icon{font-size:48px;margin-bottom:8px}
+.hdr-title{font-size:24px;font-weight:800;color:#fff}
+.hdr-sub{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.6}
+.progress{width:100%;height:4px;background:#1a1a35;border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease;width:0}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.q-text{font-size:17px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{padding:14px 16px;background:#1e1e3a;border:2px solid var(--border);border-radius:12px;cursor:pointer;font-size:14px;color:#ccc;transition:.2s;user-select:none}
+.opt:hover{border-color:rgba(255,215,0,0.3);color:#fff;background:rgba(255,215,0,0.04)}
+.opt.selected{border-color:var(--gold);background:rgba(255,215,0,0.08);color:var(--gold);font-weight:600}
+
+/* Result */
+.result{display:none}
+.result.show{display:block}
+.res-card{background:linear-gradient(135deg,rgba(255,215,0,0.06),rgba(255,165,0,0.02));border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:24px;text-align:center;margin-bottom:16px;animation:fadeUp .5s ease}
+.res-badge{display:inline-block;padding:6px 20px;border-radius:20px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);font-size:12px;color:var(--gold);font-weight:700;margin-bottom:12px}
+.res-type{font-size:28px;font-weight:800;color:#fff;margin-bottom:8px}
+.res-desc{font-size:14px;color:#bbb;line-height:1.7}
+
+/* Contact form */
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.contact-form h3{color:var(--gold);font-size:16px;margin-bottom:12px;text-align:center}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.field input,.field select{width:100%;padding:12px;background:#1e1e3a;border:1px solid var(--border);border-radius:10px;color:#fff;font-size:14px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.btn-submit{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#FFD700,#FFA000);border:none;border-radius:14px;font-size:16px;font-weight:800;color:#000;cursor:pointer;transition:.2s}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,215,0,0.3)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Share */
+.share{display:flex;gap:8px;margin-top:16px}
+.share a{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:12px;border-radius:12px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+.share a:hover{opacity:.85}
+.sh-tg{background:rgba(0,136,204,0.15);color:#0088cc;border:1px solid rgba(0,136,204,0.25)}
+.sh-wa{background:rgba(37,211,102,0.15);color:#25d366;border:1px solid rgba(37,211,102,0.25)}
+.sh-vb{background:rgba(121,72,171,0.15);color:#7360f2;border:1px solid rgba(121,72,171,0.25)}
+
+.cta-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--green),#059669);border:none;border-radius:14px;font-size:16px;font-weight:700;color:#fff;cursor:pointer;text-align:center;text-decoration:none;margin-top:12px;transition:.2s}
+.cta-btn:hover{transform:translateY(-2px)}
+.foot{text-align:center;padding:20px 0;font-size:11px;color:#444}
+</style>
+</head>
+<body>
+<div class="gold-bar"></div>
+<div class="wrap">
+
+<div class="hdr">
+    <div class="hdr-icon">🎯</div>
+    <div class="hdr-title" id="quiz-title">Какой ты предприниматель?</div>
+    <div class="hdr-sub" id="quiz-sub">Пройди тест за 2 минуты — узнай свой тип и получи стратегию</div>
+</div>
+
+<div class="progress"><div class="progress-fill" id="prog"></div></div>
+
+<!-- Questions -->
+<div id="questions-area"></div>
+
+<!-- Result -->
+<div class="result" id="result-area">
+    <div class="res-card">
+        <div class="res-badge" id="res-badge">Тип</div>
+        <div class="res-type" id="res-type">—</div>
+        <div class="res-desc" id="res-desc">—</div>
+    </div>
+
+    <div class="contact-form" id="contact-form">
+        <h3>🚀 Получи персональную стратегию</h3>
+        <div class="field"><label>Имя *</label><input id="cf-name" placeholder="Как тебя зовут?"></div>
+        <div class="field"><label>Мессенджер</label>
+            <select id="cf-messenger">
+                <option value="telegram">📱 Telegram</option>
+                <option value="whatsapp">💬 WhatsApp</option>
+                <option value="viber">📞 Viber</option>
+                <option value="email">📧 Email</option>
+            </select>
+        </div>
+        <div class="field"><label>Контакт *</label><input id="cf-contact" placeholder="@username или +номер"></div>
+        <button class="btn-submit" onclick="submitContact()" id="cf-btn">🚀 Получить стратегию</button>
+    </div>
+
+    <div id="after-contact" style="display:none">
+        <div style="text-align:center;padding:16px;color:var(--green);font-size:15px;font-weight:600">✅ Отлично! С тобой свяжутся.</div>
+
+        <a href="/register" class="cta-btn">🚀 Получить бесплатный доступ к системе</a>
+
+        <div style="text-align:center;margin-top:20px;font-size:14px;color:#ccc">📤 Поделись — пусть друзья тоже узнают свой тип!</div>
+        <div class="share" id="share-btns">
+            <a class="sh-tg" id="sh-tg" href="#" target="_blank">📱 Telegram</a>
+            <a class="sh-wa" id="sh-wa" href="#" target="_blank">💬 WhatsApp</a>
+            <a class="sh-vb" id="sh-vb" href="#" target="_blank">📞 Viber</a>
+        </div>
+    </div>
+</div>
+
+<div class="foot">gwad.ink · 2026</div>
+</div>
+
+<script>
+// ═══ QUIZ DATA ═══
+var QUIZZES = {
+    type: {
+        title: 'Какой ты предприниматель?',
+        sub: 'Пройди тест за 2 минуты — узнай свой тип и получи стратегию',
+        questions: [
+            { text: 'Какой у тебя опыт в интернете?', opts: ['🟢 Полный ноль — никогда ничего не делал', '🟡 Пробовал, но не получилось', '🟠 Есть опыт, хочу больше', '🔴 Я профи — ищу инструменты'] },
+            { text: 'Что тебе сейчас важнее всего?', opts: ['💰 Найти источник дохода', '🛡️ Защитить команду и базу', '🚀 Масштабировать бизнес', '🎓 Научиться бесплатно'] },
+            { text: 'Сколько времени готов уделять?', opts: ['⏰ 0 — хочу чтобы работало само', '🕐 30 минут в день', '🕑 1-2 часа в день', '🕘 Полный рабочий день'] },
+            { text: 'Был негативный опыт с МЛМ/онлайн?', opts: ['❌ Да, потерял деньги', '😔 Потерял время и команду', '🤷 Не пробовал', '✅ Нет, всё было нормально'] },
+            { text: 'Есть свой товар или услуга?', opts: ['🏪 Да, свой бизнес', '💇 Да, оказываю услуги', '📱 Нет, готов продвигать чужие', '🤔 Нет и не планирую'] },
+        ],
+        results: {
+            starter:  { badge:'🏷️ Стартер', title:'Стартер', desc:'Тебе подойдёт путь партнёра. Запусти рекламу от $5, пройди Академию за 21 день и получи первую $1,000. Обучение бесплатно. За каждое задание платят. Система работает даже без твоего участия — но с минимальными усилиями результат будет в разы лучше.' },
+            phoenix:  { badge:'🔥 Феникс', title:'Феникс', desc:'Ты уже через многое прошёл. Здесь всё по-другому: блокчейн, никакого человеческого фактора, твои контакты навсегда твои. Начни с 4 уровней ($25) — инструменты на $1,700 бесплатно. Риск минимальный.' },
+            architect:{ badge:'🏗️ Архитектор', title:'Архитектор', desc:'Тебе нужен приватный кабинет (уровень 7). Свой лендинг, логотип, менеджер. Веди команду в СВОЙ проект. База данных навсегда с тобой — даже если проект изменится.' },
+            mogul:    { badge:'👑 Магнат', title:'Магнат', desc:'Открой собственный клуб внутри экосистемы. Твой товар, услуга, маркетинговая система. Платёжеспособная клиентская база — строишь один раз, используешь всю жизнь.' },
+        },
+        calcResult: function(answers) {
+            var exp = answers[0], goal = answers[1], neg = answers[3], biz = answers[4];
+            if (biz <= 1) return 'mogul';
+            if (exp >= 2 && goal === 2) return 'architect';
+            if (neg <= 1 || goal === 1) return 'phoenix';
+            return 'starter';
+        }
+    },
+    income: {
+        title: 'Сколько ты сможешь зарабатывать?',
+        sub: 'Ответь на 4 вопроса — покажем потенциальный доход',
+        questions: [
+            { text: 'Сколько готов вложить в рекламу?', opts: ['$5 в месяц', '$25 в месяц', '$50 в месяц', '$100+ в месяц'] },
+            { text: 'Скольким людям можешь отправить ссылку?', opts: ['0 — нет контактов', '5-10 человек', '20-50 человек', '100+ человек'] },
+            { text: 'Готов проходить обучение (1 час/день, 21 день)?', opts: ['Да, готов', 'Может быть', 'Нет, хочу автоматику'] },
+            { text: 'Есть команда из прошлых проектов?', opts: ['Нет, с нуля', '5-20 человек', '50+ человек', '200+ человек'] },
+        ],
+        results: {
+            low:    { badge:'💰 $100-300/мес', title:'$100 — $300', desc:'С минимальным бюджетом и без команды — система принесёт первые $100-300 в месяц через рекламный пул и Академию. Это только начало!' },
+            medium: { badge:'💰 $500-1500/мес', title:'$500 — $1,500', desc:'С бюджетом $25+ и 10+ контактами — за 2-3 месяца выходишь на $500-1500. Партнёрка 9 уровней начинает работать на полную.' },
+            high:   { badge:'💰 $2000-5000/мес', title:'$2,000 — $5,000', desc:'С командой 50+ человек и бюджетом $50+ — серьёзные цифры уже в первые месяцы. Реклама + партнёрка + направления = масштаб.' },
+            top:    { badge:'💰 $5000+/мес', title:'$5,000+', desc:'С командой 200+ и активной рекламой — топ-уровень. Своя кампания, свой менеджер, свой клуб. Клиентская база — твой главный актив.' },
+        },
+        calcResult: function(a) {
+            var score = a[0] + a[1] + (a[2] === 0 ? 2 : a[2] === 1 ? 1 : 0) + a[3];
+            if (score >= 10) return 'top';
+            if (score >= 6) return 'high';
+            if (score >= 3) return 'medium';
+            return 'low';
+        }
+    },
+    blocks: {
+        title: 'Что мешает тебе зарабатывать?',
+        sub: '5 вопросов — увидишь что тебя останавливает и как это решить',
+        questions: [
+            { text: 'Что больше всего тормозит?', opts: ['😰 Боюсь потерять деньги', '🤷 Не знаю с чего начать', '😤 Пробовал — не работает', '⏰ Нет времени'] },
+            { text: 'Что думаешь о сетевом бизнесе?', opts: ['🚫 Это развод', '🤔 Может работать, но сложно', '✅ Верю, нужны инструменты', '🔥 Работаю, хочу больше'] },
+            { text: 'Есть криптокошелёк?', opts: ['Да', 'Нет, но готов создать', 'Нет и не хочу', 'Не знаю что это'] },
+            { text: 'Что важнее?', opts: ['💰 Быстрый доход', '🏗️ Долгосрочный актив', '🎓 Навыки и обучение', '🛡️ Безопасность'] },
+            { text: 'Если гарантировали что ничего не потеряешь — начал бы?', opts: ['✅ Да, конечно', '🤔 Зависит от деталей', '❌ Всё равно нет'] },
+        ],
+        results: {
+            fear:    { badge:'🛡️ Страх потерь', title:'Тебе нужна безопасность', desc:'Вход бесплатный. Первый месяц — полный доступ за $0. Инструменты на $1,700 бесплатно. Всё на блокчейне. Минимальный старт: $25 + $5. Эти $30 вернутся через Академию в первую неделю.' },
+            lost:    { badge:'🧭 Нужен путь', title:'Тебе нужен проводник', desc:'Академия CardGift ведёт за руку. Каждый шаг — инструкция. За каждое задание — оплата. 21 день × 1 час = $1,000 и полное владение инструментами.' },
+            notime:  { badge:'⏰ Нет времени', title:'Тебе нужна автоматика', desc:'Настройка — 20 минут. Один раз. Дальше: боты рассылают, реклама крутится, контакты приходят. Рандомизация работает даже без тебя. 1 час в день ускорит результат в 10 раз.' },
+            ready:   { badge:'🚀 Готов', title:'Тебе осталось начать', desc:'Ты уже готов. Регистрируйся, получи инструменты, запусти рекламу. 21 день — и первая $1,000. Система ждёт.' },
+        },
+        calcResult: function(a) {
+            if (a[4] === 2) return 'fear';
+            if (a[0] === 0 || a[3] === 3) return 'fear';
+            if (a[0] === 1 || a[0] === 2) return 'lost';
+            if (a[0] === 3) return 'notime';
+            return 'ready';
+        }
+    }
+};
+
+// ═══ STATE ═══
+var params = new URLSearchParams(location.search);
+var quizId = params.get('q') || 'type';
+var refId = params.get('ref') || '';
+var quiz = QUIZZES[quizId] || QUIZZES.type;
+var answers = [];
+var currentQ = 0;
+
+// ═══ INIT ═══
+document.getElementById('quiz-title').textContent = quiz.title;
+document.getElementById('quiz-sub').textContent = quiz.sub;
+document.title = quiz.title;
+renderQuestion(0);
+
+function renderQuestion(idx) {
+    if (idx >= quiz.questions.length) { showResult(); return; }
+    currentQ = idx;
+    var q = quiz.questions[idx];
+    var pct = ((idx) / quiz.questions.length * 100);
+    document.getElementById('prog').style.width = pct + '%';
+
+    var html = '<div class="q-card"><div class="q-num">ВОПРОС ' + (idx+1) + ' ИЗ ' + quiz.questions.length + '</div>';
+    html += '<div class="q-text">' + q.text + '</div><div class="opts">';
+    for (var i = 0; i < q.opts.length; i++) {
+        html += '<div class="opt" data-i="' + i + '" onclick="selectOpt(this,' + i + ')">' + q.opts[i] + '</div>';
+    }
+    html += '</div></div>';
+    document.getElementById('questions-area').innerHTML = html;
+}
+
+function selectOpt(el, idx) {
+    document.querySelectorAll('.opt').forEach(function(o){o.classList.remove('selected')});
+    el.classList.add('selected');
+    answers[currentQ] = idx;
+    setTimeout(function(){ renderQuestion(currentQ + 1); }, 400);
+}
+
+function showResult() {
+    document.getElementById('prog').style.width = '100%';
+    document.getElementById('questions-area').style.display = 'none';
+
+    var key = quiz.calcResult(answers);
+    var r = quiz.results[key] || quiz.results[Object.keys(quiz.results)[0]];
+
+    document.getElementById('res-badge').textContent = r.badge;
+    document.getElementById('res-type').textContent = r.title;
+    document.getElementById('res-desc').textContent = r.desc;
+    document.getElementById('result-area').classList.add('show');
+
+    // Share links
+    var url = 'https://gwad.ink/quiz?q=' + quizId + (refId ? '&ref=' + refId : '');
+    var text = 'Я прошёл тест "' + quiz.title + '" — мой результат: ' + r.title + '! Пройди тоже:';
+    document.getElementById('sh-tg').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
+    document.getElementById('sh-wa').href = 'https://wa.me/?text=' + encodeURIComponent(text + '\n' + url);
+    document.getElementById('sh-vb').href = 'viber://forward?text=' + encodeURIComponent(text + '\n' + url);
+
+    // Save quiz response
+    try {
+        fetch('https://cgift.club/api/viral-registration', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                referrerId: refId || null,
+                name: 'quiz_' + quizId,
+                messenger: 'quiz',
+                contact: key,
+                cardId: 'quiz_' + quizId,
+                source: 'gwad.ink',
+                utm_source: 'quiz',
+                utm_campaign: quizId
+            })
+        }).catch(function(){});
+    } catch(e){}
+}
+
+function submitContact() {
+    var name = document.getElementById('cf-name').value.trim();
+    var messenger = document.getElementById('cf-messenger').value;
+    var contact = document.getElementById('cf-contact').value.trim();
+    if (!name || name.length < 2) { alert('Укажите имя'); return; }
+    if (!contact || contact.length < 2) { alert('Укажите контакт'); return; }
+
+    var btn = document.getElementById('cf-btn');
+    btn.disabled = true; btn.textContent = '⏳...';
+
+    fetch('https://cgift.club/api/viral-registration', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+            referrerId: refId || null,
+            name: name,
+            messenger: messenger,
+            contact: contact,
+            cardId: 'quiz_' + quizId,
+            pushConsent: true,
+            source: 'gwad.ink',
+            utm_source: 'quiz',
+            utm_campaign: quizId
+        })
+    }).then(function(r){ return r.json() }).then(function(d){
+        document.getElementById('contact-form').style.display = 'none';
+        document.getElementById('after-contact').style.display = 'block';
+    }).catch(function(){
+        document.getElementById('contact-form').style.display = 'none';
+        document.getElementById('after-contact').style.display = 'block';
+    });
+}
+</script>
+</body>
+</html>
