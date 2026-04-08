@@ -30,12 +30,8 @@ module.exports = async function handler(req, res) {
     // Прямая ссылка — с OG-превью для мессенджеров
     if (type === 'ref' && gwId) {
         var id = gwId.replace(/^GW/i, '');
-        var u = {
-            cardgift: 'https://gwad.ink/register?ref=' + id,
-            diamond_club: 'https://gws.ink/invite/gems?ref=' + id,
-            metr: 'https://gwm.ink/invite/house?ref=' + id
-        };
-        var target = (u[project] || u.cardgift) + '&utm_source=gwads';
+        // ВСЕ ссылки ведут на gwad.ink/register — сбор контактов!
+        var target = 'https://gwad.ink/register?ref=' + id + '&campaign=' + (project || 'cardgift') + '&utm_source=gwads';
 
         // OG-мета для красивого превью в Telegram/WhatsApp
         var og = {
