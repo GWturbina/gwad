@@ -42,17 +42,17 @@ module.exports = async function handler(req, res) {
             cardgift: {
                 title: 'GlobalWay — Рекламная платформа',
                 desc: 'Бесплатные инструменты для бизнеса — CRM, лендинг, реклама. 9 уровней партнёрской программы. Присоединяйся!',
-                img: 'https://gwad.ink/img/og-adplatform.png',
+                img: 'https://gwad.ink/img/og-cardgift.png',
             },
             diamond_club: {
                 title: '💎 Diamond Club — Инвестиции в бриллианты',
                 desc: 'Бриллианты со скидкой до 70%. Стейкинг от 50% годовых. Бесплатный старт в Diamond Club!',
-                img: 'https://gwad.ink/img/og-adplatform.png',
+                img: 'https://gwad.ink/img/og-diamond.png',
             },
             metr: {
                 title: '🏠 Метр Квадратный — Свой дом под 0%',
                 desc: 'Заработай 35% депозит через клуб — мы добавим 65% под 0% годовых. Дом в любой стране мира.',
-                img: 'https://gwad.ink/img/og-adplatform.png',
+                img: 'https://gwad.ink/img/og-metr.png',
             }
         };
         var o = og[project] || og.cardgift;
