@@ -1,47 +1,38 @@
 {
   "rewrites": [
-    {
-      "source": "/register",
-      "destination": "/register.html"
-    },
-    {
-      "source": "/cabinet",
-      "destination": "/cabinet.html"
-    },
-    {
-      "source": "/partner",
-      "destination": "/partner.html"
-    },
-    {
-      "source": "/cabinet-leader",
-      "destination": "/cabinet-leader.html"
-    },
-    {
-      "source": "/c/:slug",
-      "destination": "/campaign.html"
-    },
-    {
-      "source": "/go/:slug",
-      "destination": "/api/go?slug=:slug"
-    },
-    {
-      "source": "/r/:id",
-      "destination": "/api/go?type=ref&project=cardgift&id=:id"
-    },
-    {
-      "source": "/d/:id",
-      "destination": "/api/go?type=ref&project=diamond_club&id=:id"
-    },
-    {
-      "source": "/m/:id",
-      "destination": "/api/go?type=ref&project=metr&id=:id"
-    },
-    {
-      "source": "/s/:code",
-      "destination": "/api/go?type=short&code=:code"
-    }
+    { "source": "/register", "destination": "/register.html" },
+    { "source": "/cabinet", "destination": "/cabinet.html" },
+    { "source": "/partner", "destination": "/partner.html" },
+    { "source": "/cabinet-leader", "destination": "/cabinet-leader.html" },
+    { "source": "/c/:slug", "destination": "/campaign.html" },
+    { "source": "/go/:slug", "destination": "/api/go?slug=:slug" },
+    { "source": "/r/:id", "destination": "/api/go?type=ref&project=cardgift&id=:id" },
+    { "source": "/d/:id", "destination": "/api/go?type=ref&project=diamond_club&id=:id" },
+    { "source": "/m/:id", "destination": "/api/go?type=ref&project=metr&id=:id" },
+    { "source": "/s/:code", "destination": "/api/go?type=short&code=:code" }
   ],
   "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; frame-src https://www.youtube.com https://player.vimeo.com; connect-src 'self' https://cgift.club https://opbnb-mainnet-rpc.bnbchain.org https://*.supabase.co; font-src 'self'"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
     {
       "source": "/api/(.*)",
       "headers": [
