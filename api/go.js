@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
             cardgift: {
                 title: 'GlobalWay — Рекламная платформа',
                 desc: 'Бесплатные инструменты для бизнеса — CRM, лендинг, реклама. 9 уровней партнёрской программы. Присоединяйся!',
-                img: 'https://gwad.ink/img/hero-banner.png',
+                img: 'https://gwad.ink/img/og-adplatform.png',
             },
             diamond_club: {
                 title: '💎 Diamond Club — Инвестиции в бриллианты',
