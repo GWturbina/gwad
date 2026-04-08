@@ -303,7 +303,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
     </div>
 
     <!-- Кабинет лидера -->
-    <a href="/cabinet-leader" class="card" style="cursor:pointer;text-decoration:none;color:inherit;display:block">
+    <a href="javascript:void(0)" onclick="openLeaderCabinet()" class="card" style="cursor:pointer;text-decoration:none;color:inherit;display:block" id="leader-cab-link">
         <div class="card-hdr" style="color:var(--gold)" data-i18n="hdrLeaderCab">🎯 Кабинет лидера — Создать кампанию</div>
         <div class="card-body"><div style="font-size:12px;color:var(--muted)" data-i18n="leaderCabDesc">Создавайте лендинги, настраивайте рекламные кампании, управляйте бюджетами и контрактами</div></div>
     </a>
@@ -449,7 +449,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
             <div class="stat"><div class="num" style="color:var(--green)" id="ct-converted">0</div><div class="lbl" data-i18n="ctConverted">Конвертировано</div></div>
         </div>
         <div class="card">
-            <div class="card-hdr"><span data-i18n="hdrContacts">📋 Мои контакты</span> <button class="btn btn-ghost btn-sm" onclick="loadMyContacts()" style="font-size:10px">🔄</button></div>
+            <div class="card-hdr"><span data-i18n="hdrContacts">📋 Мои контакты</span> <button class="btn btn-ghost btn-sm" onclick="loadMyContacts(true)" style="font-size:10px">🔄</button></div>
             <div class="card-body" style="padding:0" id="contacts-list">
                 <div style="text-align:center;padding:24px;color:var(--muted);font-size:12px" data-i18n="ctLoading">Загрузка контактов...</div>
             </div>
@@ -459,15 +459,70 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
 <!-- ═══ ЧАТ ═══ -->
 <div class="panel fade" id="p-chat">
-    <div class="card">
-        <div class="card-hdr" data-i18n="hdrChat">💬 Чат с менеджером</div>
-        <div class="card-body">
-            <div class="chat-box" id="chat-box" style="min-height:200px">
-                <div class="msg admin"><div class="bubble">Добро пожаловать! Я ваш менеджер. Если есть вопросы — пишите.</div><div class="msg-meta">Менеджер</div></div>
+    <!-- Выбор получателя -->
+    <div style="display:flex;gap:4px;margin-bottom:12px">
+        <button class="tab active" id="chat-tab-faq" onclick="showChatSub('faq')" style="flex:1;padding:8px;font-size:12px">❓ ЧАВО</button>
+        <button class="tab" id="chat-tab-sponsor" onclick="showChatSub('sponsor')" style="flex:1;padding:8px;font-size:12px">👤 Спонсору</button>
+        <button class="tab" id="chat-tab-manager" onclick="showChatSub('manager')" style="flex:1;padding:8px;font-size:12px">📋 Менеджеру</button>
+    </div>
+
+    <!-- ЧАВО -->
+    <div id="chat-sub-faq">
+        <div class="card">
+            <div class="card-hdr">❓ Часто задаваемые вопросы</div>
+            <div class="card-body" id="faq-list" style="padding:0">
+                <div style="padding:14px;border-bottom:1px solid #1e1e35;cursor:pointer" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'':'none'">
+                    <div style="font-size:13px;font-weight:600;color:#fff;display:flex;justify-content:space-between"><span>Как начать зарабатывать?</span><span style="color:var(--gold)">▼</span></div>
+                    <div class="faq-ans" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">1. Купите минимум 4 уровня доступа ($25)<br>2. Оплатите рекламу от $5<br>3. Контакты начнут приходить автоматически<br>4. Менеджер запустит рекламу за вас</div>
+                </div>
+                <div style="padding:14px;border-bottom:1px solid #1e1e35;cursor:pointer" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'':'none'">
+                    <div style="font-size:13px;font-weight:600;color:#fff;display:flex;justify-content:space-between"><span>Как работает рекламный пул?</span><span style="color:var(--gold)">▼</span></div>
+                    <div class="faq-ans" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">Вы оплачиваете от $5 → 80% идёт на рекламу, 20% на партнёрку 9 уровней. Менеджер запускает рекламу, ротация распределяет клики между всеми участниками пула пропорционально вкладу.</div>
+                </div>
+                <div style="padding:14px;border-bottom:1px solid #1e1e35;cursor:pointer" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'':'none'">
+                    <div style="font-size:13px;font-weight:600;color:#fff;display:flex;justify-content:space-between"><span>Что такое SafePal кошелёк?</span><span style="color:var(--gold)">▼</span></div>
+                    <div class="faq-ans" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">SafePal — криптокошелёк для работы с блокчейн opBNB. Скачайте приложение → создайте кошелёк → запишите seed-фразу (12 слов). Это ваш личный ключ к системе.</div>
+                </div>
+                <div style="padding:14px;border-bottom:1px solid #1e1e35;cursor:pointer" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'':'none'">
+                    <div style="font-size:13px;font-weight:600;color:#fff;display:flex;justify-content:space-between"><span>Как создать свою кампанию?</span><span style="color:var(--gold)">▼</span></div>
+                    <div class="faq-ans" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">Купите 7 уровней доступа → откройте Кабинет лидера → заполните форму (название, логотип, описание, видео) → лендинг создастся автоматически по адресу gwad.ink/c/ваш-slug</div>
+                </div>
+                <div style="padding:14px;cursor:pointer" onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'':'none'">
+                    <div style="font-size:13px;font-weight:600;color:#fff;display:flex;justify-content:space-between"><span>Где посмотреть свой доход?</span><span style="color:var(--gold)">▼</span></div>
+                    <div class="faq-ans" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7">Вкладка «Маркетинг» → Общий доход, цепочка спонсоров, история выплат. Все выплаты идут напрямую через смарт-контракт на ваш кошелёк.</div>
+                </div>
             </div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-                <input class="inp" id="chat-input" placeholder="Написать сообщение..." style="flex:1">
-                <button class="btn btn-gold" onclick="sendMsg()">📤</button>
+        </div>
+    </div>
+
+    <!-- Чат со спонсором -->
+    <div id="chat-sub-sponsor" style="display:none">
+        <div class="card">
+            <div class="card-hdr">👤 Сообщение спонсору</div>
+            <div class="card-body">
+                <div class="chat-box" id="chat-box-sponsor" style="min-height:200px">
+                    <div class="msg admin"><div class="bubble">Напишите вашему спонсору — он получит уведомление.</div><div class="msg-meta">Система</div></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <input class="inp" id="chat-input-sponsor" placeholder="Написать спонсору..." style="flex:1">
+                    <button class="btn btn-gold" onclick="sendMsg('sponsor')">📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Чат с менеджером -->
+    <div id="chat-sub-manager" style="display:none">
+        <div class="card">
+            <div class="card-hdr">📋 Сообщение менеджеру</div>
+            <div class="card-body">
+                <div class="chat-box" id="chat-box-manager" style="min-height:200px">
+                    <div class="msg admin"><div class="bubble">Добро пожаловать! Я ваш менеджер. Если есть вопросы — пишите.</div><div class="msg-meta">Менеджер</div></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <input class="inp" id="chat-input-manager" placeholder="Написать менеджеру..." style="flex:1">
+                    <button class="btn btn-gold" onclick="sendMsg('manager')">📤</button>
+                </div>
             </div>
         </div>
     </div>
@@ -797,16 +852,18 @@ function showTeamSub(sub) {
 // ═══ КОНТАКТЫ — загрузка ═══
 var _contactsLoaded = false;
 
-async function loadMyContacts() {
+async function loadMyContacts(forceRefresh) {
     if (!gwId && !GwadContract.gwIdNumeric) return;
     var listEl = document.getElementById('contacts-list');
-    if (_contactsLoaded) return;
+    if (_contactsLoaded && !forceRefresh) return;
 
     listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px">⏳ Загрузка...</div>';
 
     try {
         var id = gwId || ('GW' + GwadContract.gwIdNumeric);
-        var r = await fetch('/api/contacts?action=my_contacts&gwId=' + encodeURIComponent(id));
+        var r = await fetch('/api/contacts?action=my_contacts&gwId=' + encodeURIComponent(id), {
+            headers: { 'X-Wallet-Address': walletAddress || GwadContract.walletAddress || '' }
+        });
         var d = await r.json();
 
         if (!d.ok || !d.contacts || d.contacts.length === 0) {
@@ -998,10 +1055,23 @@ var ROLES = {
 };
 
 function selectRole(role) {
+    // ═══ ПРОВЕРКА УРОВНЯ ДОСТУПА ═══
+    var userLevel = _currentUserLevel || 0;
+    var requiredLevels = { client: 0, partner: 4, leader: 7, business: 8 };
+    var needed = requiredLevels[role] || 0;
+
+    if (userLevel < needed) {
+        // Показываем модал покупки уровней
+        closeM('modal-role');
+        openLevelsModal();
+        var statusEl = document.getElementById('levels-status');
+        if (statusEl) statusEl.innerHTML = '⚠️ Для роли <b>' + (ROLES[role]||{}).title + '</b> нужен минимум уровень ' + needed + '. Ваш текущий: ' + userLevel;
+        return;
+    }
+
     currentRole = role; localStorage.setItem('gwad-role', role);
     closeM('modal-role'); localStorage.setItem('gwad-role-selected','1');
     updateRoleDisplay();
-    // Hide team tab for clients
     document.getElementById('tab-team').style.display = (role==='client') ? 'none' : '';
 }
 function updateRoleDisplay() {
@@ -1044,13 +1114,36 @@ function openCardGift() {
     else { window.open('https://cgift.club/dashboard.html', '_blank'); }
 }
 
-function sendMsg() {
-    var inp = document.getElementById('chat-input');
+// ═══ Кабинет лидера — проверка уровня 7+ ═══
+function openLeaderCabinet() {
+    var userLevel = _currentUserLevel || 0;
+    if (userLevel < 7) {
+        openLevelsModal();
+        var statusEl = document.getElementById('levels-status');
+        if (statusEl) statusEl.innerHTML = '⚠️ Кабинет лидера доступен с <b>7 уровня</b>. Ваш текущий: ' + userLevel;
+        return;
+    }
+    window.location.href = '/cabinet-leader';
+}
+
+// ═══ ЧАТ — под-табы ═══
+function showChatSub(sub) {
+    ['faq','sponsor','manager'].forEach(function(s) {
+        var el = document.getElementById('chat-sub-' + s);
+        var tab = document.getElementById('chat-tab-' + s);
+        if (el) el.style.display = s === sub ? '' : 'none';
+        if (tab) tab.classList.toggle('active', s === sub);
+    });
+}
+
+function sendMsg(to) {
+    var inp = document.getElementById('chat-input-' + to);
     var txt = inp.value.trim(); if(!txt)return;
-    var box = document.getElementById('chat-box');
+    var box = document.getElementById('chat-box-' + to);
     box.innerHTML += '<div class="msg partner" style="margin-left:0"><div class="bubble" style="background:#1e2a4a;color:#ccc;border-bottom-left-radius:2px">' + txt.replace(/</g,'&lt;') + '</div><div class="msg-meta">Сейчас</div></div>';
     inp.value = '';
     box.scrollTop = box.scrollHeight;
+    // TODO: отправка через API когда бэкенд чата будет готов
 }
 
 // ═══ ПОДКЛЮЧЕНИЕ КОШЕЛЬКА (кнопка) ═══
