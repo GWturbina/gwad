@@ -47,12 +47,12 @@ module.exports = async function handler(req, res) {
             diamond_club: {
                 title: '💎 Diamond Club — Инвестиции в бриллианты',
                 desc: 'Бриллианты со скидкой до 70%. Стейкинг от 50% годовых. Бесплатный старт в Diamond Club!',
-                img: 'https://gws.ink/og-diamond.png',
+                img: 'https://gwad.ink/img/og-adplatform.png',
             },
             metr: {
                 title: '🏠 Метр Квадратный — Свой дом под 0%',
                 desc: 'Заработай 35% депозит через клуб — мы добавим 65% под 0% годовых. Дом в любой стране мира.',
-                img: 'https://gwm.ink/og-metr.png',
+                img: 'https://gwad.ink/img/og-adplatform.png',
             }
         };
         var o = og[project] || og.cardgift;
