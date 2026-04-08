@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
     if (type === 'ref' && gwId) {
         var id = gwId.replace(/^GW/i, '');
         var u = {
-            cardgift: 'https://cgift.club/registration.html?ref=' + id,
+            cardgift: 'https://gwad.ink/register?ref=' + id,
             diamond_club: 'https://gws.ink/invite/gems?ref=' + id,
             metr: 'https://gwm.ink/invite/house?ref=' + id
         };
@@ -58,7 +58,7 @@ module.exports = async function handler(req, res) {
         var o = og[project] || og.cardgift;
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        return res.send('<!DOCTYPE html><html><head>' +
+        return res.status(200).end('<!DOCTYPE html><html><head>' +
             '<meta charset="utf-8">' +
             '<meta property="og:title" content="' + o.title + '">' +
             '<meta property="og:description" content="' + o.desc + '">' +
@@ -70,9 +70,9 @@ module.exports = async function handler(req, res) {
             '<meta name="twitter:title" content="' + o.title + '">' +
             '<meta name="twitter:description" content="' + o.desc + '">' +
             '<meta name="twitter:image" content="' + o.img + '">' +
-            '<meta http-equiv="refresh" content="0;url=' + target + '">' +
+            '<meta http-equiv="refresh" content="1;url=' + target + '">' +
             '</head><body style="background:#0a0a1a;color:#fff;font-family:sans-serif;text-align:center;padding:40px">' +
-            '<p>Переход...</p><script>window.location.href="' + target + '";</script>' +
+            '<p>Переход...</p><script>setTimeout(function(){window.location.href="' + target + '"},500);</script>' +
             '</body></html>');
     }
 
