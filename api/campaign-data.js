@@ -1,8 +1,12 @@
 // api/campaign-data.js — Данные кампании по slug
-// GET /api/campaign-data?slug=diamond
+// ✅ FIXED: sanitization, CORS
 
 module.exports = async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    var origin = req.headers.origin || '';
+    var allowed = ['https://gwad.ink', 'https://www.gwad.ink', 'https://cgift.club'];
+    if (allowed.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     if (req.method === 'OPTIONS') return res.status(200).end();
 
     var SB = process.env.SUPABASE_URL;
@@ -10,21 +14,21 @@ module.exports = async function handler(req, res) {
     if (!SB || !SK) return res.json({ ok: false, error: 'DB not configured' });
 
     var h = { 'apikey': SK, 'Authorization': 'Bearer ' + SK, 'Content-Type': 'application/json' };
-    var slug = req.query.slug || '';
 
+    // ═══ Sanitize slug: только латиница, цифры, дефис ═══
+    var slug = String(req.query.slug || '').replace(/[^a-zA-Z0-9_\-]/g, '').slice(0, 100);
     if (!slug) return res.json({ ok: false, error: 'slug required' });
 
     try {
-        var r = await fetch(SB + '/rest/v1/adp_campaigns?slug=eq.' + slug + '&select=*', { headers: h });
+        var r = await fetch(SB + '/rest/v1/adp_campaigns?slug=eq.' + encodeURIComponent(slug) + '&select=*', { headers: h });
         var camps = r.ok ? await r.json() : [];
 
         if (camps.length === 0) return res.json({ ok: false, error: 'Campaign not found' });
 
         var c = camps[0];
 
-        // Считаем активных участников
         var now = new Date().toISOString();
-        var ar = await fetch(SB + '/rest/v1/adp_orders?campaign_id=eq.' + c.id + '&status=eq.active&end_date=gte.' + now + '&select=id', { headers: h });
+        var ar = await fetch(SB + '/rest/v1/adp_orders?campaign_id=eq.' + c.id + '&status=eq.active&end_date=gte.' + encodeURIComponent(now) + '&select=id', { headers: h });
         var active = ar.ok ? await ar.json() : [];
 
         return res.json({
@@ -49,6 +53,6 @@ module.exports = async function handler(req, res) {
             }
         });
     } catch(e) {
-        return res.json({ ok: false, error: e.message });
+        return res.json({ ok: false, error: 'Server error' });
     }
 };
