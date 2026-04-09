@@ -992,18 +992,32 @@ async function loadMyContacts(forceRefresh) {
             var stLabel = statusLabels[c.status] || c.status;
             var stColor = statusColors[c.status] || 'var(--muted)';
             var date = c.created_at ? new Date(c.created_at).toLocaleDateString() : '—';
+            var noteText = (c.notes || '').replace(/</g,'&lt;');
+            var cId = c.id;
+            var cName = (c.name || 'Без имени').replace(/</g,'&lt;');
+            var cContact = (c.contact || '').replace(/</g,'&lt;');
 
-            html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1e1e35;font-size:12px">';
+            html += '<div style="padding:12px 14px;border-bottom:1px solid #1e1e35;font-size:12px">';
+            // Строка 1: иконка, имя, статус, контакт
+            html += '<div style="display:flex;align-items:center;gap:10px">';
             html += '<span style="font-size:18px">' + icon + '</span>';
             html += '<div style="flex:1;min-width:0">';
-            html += '<div style="font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (c.name || 'Без имени').replace(/</g,'&lt;') + '</div>';
+            html += '<div style="font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + cName + '</div>';
             html += '<div style="font-size:10px;color:var(--muted)">' + (c.messenger || '—') + ' · ' + date + '</div>';
             html += '</div>';
             html += '<div style="text-align:right">';
             html += '<div style="font-size:10px;font-weight:600;color:' + stColor + '">' + stLabel + '</div>';
-            if (c.contact) {
-                html += '<div style="font-size:9px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + c.contact.replace(/</g,'&lt;') + '</div>';
+            if (cContact) html += '<div style="font-size:9px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + cContact + '</div>';
+            html += '</div>';
+            html += '</div>';
+            // Строка 2: заметка + кнопки
+            html += '<div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding-left:28px">';
+            if (noteText) {
+                html += '<div style="flex:1;font-size:10px;color:#8b8b8b;font-style:italic;line-height:1.4;background:rgba(255,255,255,0.02);padding:4px 8px;border-radius:6px;border-left:2px solid var(--gold)">📝 ' + noteText + '</div>';
+            } else {
+                html += '<div style="flex:1"></div>';
             }
+            html += '<button onclick="openContactEdit(\'' + cId + '\',\'' + cName.replace(/'/g,'\\\'') + '\',\'' + (c.status||'new') + '\',\'' + noteText.replace(/'/g,'\\\'') + '\')" style="padding:4px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:10px;cursor:pointer;white-space:nowrap">✏️</button>';
             html += '</div>';
             html += '</div>';
         }
@@ -1012,6 +1026,71 @@ async function loadMyContacts(forceRefresh) {
         _contactsLoaded = true;
     } catch(e) {
         listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--red);font-size:12px">❌ Ошибка: ' + (e.message || '').slice(0, 60) + '</div>';
+    }
+}
+
+// ═══ МИНИ-CRM: Редактирование контакта ═══
+function openContactEdit(contactId, name, status, notes) {
+    var m = document.createElement('div');
+    m.id = 'contact-edit-modal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.85)';
+    m.innerHTML =
+        '<div style="max-width:400px;width:100%;background:#1a1a35;border:1px solid var(--border);border-radius:20px;padding:24px;animation:fadeUp .3s ease">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+            '<div style="font-size:16px;font-weight:700;color:var(--gold)">✏️ ' + name + '</div>' +
+            '<button onclick="document.getElementById(\'contact-edit-modal\').remove()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#888;font-size:14px;cursor:pointer">✕</button>' +
+        '</div>' +
+        '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Статус:</label>' +
+        '<select id="ce-status" class="inp" style="margin-bottom:12px">' +
+            '<option value="new"' + (status==='new'?' selected':'') + '>🆕 Новый</option>' +
+            '<option value="active"' + (status==='active'?' selected':'') + '>✅ Активен</option>' +
+            '<option value="converted"' + (status==='converted'?' selected':'') + '>💰 Конвертирован</option>' +
+            '<option value="archived"' + (status==='archived'?' selected':'') + '>📦 Архив</option>' +
+        '</select>' +
+        '<label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">📝 Заметка:</label>' +
+        '<textarea id="ce-notes" class="inp" style="min-height:80px;resize:vertical" placeholder="Записать что-то о контакте...">' + notes + '</textarea>' +
+        '<div style="display:flex;gap:8px;margin-top:14px">' +
+            '<button onclick="saveContactEdit(\'' + contactId + '\')" class="btn btn-gold" style="flex:1;padding:12px">💾 Сохранить</button>' +
+            '<button onclick="document.getElementById(\'contact-edit-modal\').remove()" class="btn btn-ghost" style="flex:1;padding:12px">Отмена</button>' +
+        '</div>' +
+        '<div id="ce-status-msg" style="margin-top:8px;text-align:center;font-size:11px;color:var(--muted);min-height:16px"></div>' +
+        '</div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function(e) { if (e.target === m) m.remove(); });
+}
+
+async function saveContactEdit(contactId) {
+    var statusEl = document.getElementById('ce-status-msg');
+    var newStatus = document.getElementById('ce-status').value;
+    var newNotes = document.getElementById('ce-notes').value;
+    var w = walletAddress || GwadContract.walletAddress || '';
+    var id = gwId || ('GW' + GwadContract.gwIdNumeric);
+
+    statusEl.textContent = '⏳ Сохранение...';
+
+    try {
+        // Сохраняем заметку
+        await fetch('/api/contacts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': w },
+            body: JSON.stringify({ action: 'save_note', gwId: id, contact_id: contactId, notes: newNotes })
+        });
+
+        // Сохраняем статус
+        await fetch('/api/contacts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': w },
+            body: JSON.stringify({ action: 'update_status', gwId: id, contact_id: contactId, status: newStatus })
+        });
+
+        statusEl.innerHTML = '<span style="color:var(--green)">✅ Сохранено!</span>';
+        setTimeout(function() {
+            document.getElementById('contact-edit-modal').remove();
+            _contactsLoaded = false;
+            loadMyContacts(true);
+        }, 600);
+    } catch(e) {
+        statusEl.innerHTML = '<span style="color:var(--red)">❌ Ошибка</span>';
     }
 }
 
