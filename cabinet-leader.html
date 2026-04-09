@@ -108,11 +108,12 @@ select.inp{appearance:auto}
 <body>
 
 <div class="topbar">
-    <h1>🎯 Кабинет лидера<span>Управление кампаниями</span></h1>
+    <h1 data-t="topTitle">🎯 Кабинет лидера<span data-t="topSub">Управление кампаниями</span></h1>
     <div class="topbar-right">
         <a href="/partner" style="color:var(--gold);font-size:12px;text-decoration:none">← Кабинет</a>
         <span style="color:#333">│</span>
         <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+        <button class="lang-btn" onclick="setLang('ua')">UA</button>
         <button class="lang-btn" onclick="setLang('en')">EN</button>
         <span style="color:#333">│</span>
         <span id="wallet-tag" style="font-size:11px;color:var(--muted)"></span>
@@ -120,12 +121,12 @@ select.inp{appearance:auto}
 </div>
 
 <div class="tabs">
-    <button class="tab active" onclick="showTab('stats')">📊 Статистика</button>
-    <button class="tab" onclick="showTab('campaigns')">📋 Мои кампании</button>
-    <button class="tab" onclick="showTab('create')">➕ Создать</button>
-    <button class="tab" onclick="showTab('contacts')">👥 Контакты</button>
-    <button class="tab" onclick="showTab('faq')">❓ ЧАВО</button>
-    <button class="tab" onclick="showTab('ai')">🤖 AI Создатель</button>
+    <button class="tab active" onclick="showTab('stats')" data-t="tabStats">📊 Статистика</button>
+    <button class="tab" onclick="showTab('campaigns')" data-t="tabCampaigns">📋 Мои кампании</button>
+    <button class="tab" onclick="showTab('create')" data-t="tabCreate">➕ Создать</button>
+    <button class="tab" onclick="showTab('contacts')" data-t="tabContacts">👥 Контакты</button>
+    <button class="tab" onclick="showTab('faq')" data-t="tabFaq">❓ ЧАВО</button>
+    <button class="tab" onclick="showTab('ai')" data-t="tabAi">🤖 AI Создатель</button>
 </div>
 
 <div class="wrap">
@@ -144,11 +145,11 @@ select.inp{appearance:auto}
 <!-- ═══ СТАТИСТИКА ═══ -->
 <div class="panel active fade" id="p-stats">
     <div class="stats">
-        <div class="stat"><div class="num" style="color:var(--gold)" id="st-campaigns">0</div><div class="lbl">Кампаний</div></div>
-        <div class="stat"><div class="num" style="color:var(--blue)" id="st-clicks">0</div><div class="lbl">Кликов</div></div>
-        <div class="stat"><div class="num" style="color:var(--green)" id="st-regs">0</div><div class="lbl">Регистраций</div></div>
-        <div class="stat"><div class="num" style="color:var(--purple)" id="st-contacts">0</div><div class="lbl">Контактов</div></div>
-        <div class="stat"><div class="num" style="color:var(--orange)" id="st-pool">$0</div><div class="lbl">В рекламе</div></div>
+        <div class="stat"><div class="num" style="color:var(--gold)" id="st-campaigns">0</div><div class="lbl" data-t="stCampaigns">Кампаний</div></div>
+        <div class="stat"><div class="num" style="color:var(--blue)" id="st-clicks">0</div><div class="lbl" data-t="stClicks">Кликов</div></div>
+        <div class="stat"><div class="num" style="color:var(--green)" id="st-regs">0</div><div class="lbl" data-t="stRegs">Регистраций</div></div>
+        <div class="stat"><div class="num" style="color:var(--purple)" id="st-contacts">0</div><div class="lbl" data-t="stContacts">Контактов</div></div>
+        <div class="stat"><div class="num" style="color:var(--orange)" id="st-pool">$0</div><div class="lbl" data-t="stPool">В рекламе</div></div>
     </div>
 
     <!-- Кампании быстрый обзор -->
@@ -520,7 +521,93 @@ function demoTemplate(key) {
 function setLang(l) {
     document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
     document.querySelector('.lang-btn[onclick*="\''+l+'\'"]').classList.add('active');
+    document.querySelectorAll('[data-t]').forEach(function(el) {
+        var key = el.getAttribute('data-t');
+        if (T[l] && T[l][key]) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = T[l][key];
+            else el.innerHTML = T[l][key];
+        }
+    });
+    localStorage.setItem('gwad-lang', l);
+    curLang = l;
+    // Переводим help если открыт
+    if (HELP_T[l]) {
+        Object.keys(HELP).forEach(function(sec) {
+            if (HELP_T[l][sec]) HELP[sec] = HELP_T[l][sec];
+        });
+    }
 }
+
+var curLang = localStorage.getItem('gwad-lang') || 'ru';
+
+var T = {
+ru: {
+    topTitle:'🎯 Кабинет лидера', topSub:'Управление кампаниями', topBack:'← Кабинет',
+    tabStats:'📊 Статистика', tabCampaigns:'📋 Мои кампании', tabCreate:'➕ Создать', tabContacts:'👥 Контакты', tabFaq:'❓ ЧАВО', tabAi:'🤖 AI Создатель',
+    stCampaigns:'Кампаний', stClicks:'Кликов', stRegs:'Регистраций', stContacts:'Контактов', stPool:'В рекламе',
+    hdrCampaigns:'📈 Кампании', hdrLastContacts:'👥 Последние контакты',
+    hdrMyCampaigns:'📋 Мои кампании', noCampaigns:'У вас нет кампаний.',
+    placementFree:'Путь (бесплатно, сразу)', placementSub:'Поддомен (бесплатно)', placementDomain:'Свой домен',
+    hdrCreate:'➕ Создать кампанию', tipCreate:'💡 После создания появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу.',
+    lblName:'Название *', lblSlug:'Slug (для URL) *', lblDesc:'Описание', lblVideo:'Видео (YouTube/Vimeo)', lblImage:'Главная картинка', lblLogo:'URL логотипа', lblColor:'Цвет темы', lblFeatures:'Фичи (каждая строка = карточка)', lblCta:'Текст кнопки CTA', lblTg:'Telegram', lblWa:'WhatsApp', lblBudget:'Budget Wallet (80%)', lblManager:'Manager Wallet (9%)', lblWallets:'💰 Кошельки для контракта',
+    btnCreate:'🚀 Создать кампанию',
+    hdrContacts:'👥 Все контакты кампаний', lcTotal:'Всего', lcNew:'Новых', lcConverted:'Конвертировано',
+    hdrFaq:'❓ ЧАВО — Вопросы и ответы', btnAddFaq:'+ Добавить', lblFaqQ:'Вопрос *', lblFaqA:'Ответ *', lblFaqCamp:'Для кампании', btnSaveFaq:'💾 Сохранить', btnCancel:'Отмена', faqAll:'🌐 Все кампании',
+    hdrAi:'🤖 AI Создатель кампаний', tipAi:'💡 Опишите свой бизнес — AI создаст полную кампанию за 30 секунд: лендинг, 7 дней push-рассылки, 7 дней Telegram, вирусный опрос и 4 статьи для блога.',
+    lblAiDesc:'Опишите ваш бизнес / продукт / услугу *', aiHint:'Чем подробнее опишете — тем точнее результат. Укажите: что продаёте, кому, преимущества, цены.',
+    lblAiLang:'Язык:', btnGenerate:'🤖 Сгенерировать кампанию',
+    aiDone:'✅ Кампания сгенерирована', aiName:'Название', aiDesc:'Описание лендинга', aiFeatures:'Карточки (фичи)', aiPush:'Push-рассылка (7 дней)', aiTg:'Telegram-рассылка (7 дней)', aiSurvey:'Вирусный опрос',
+    btnUse:'✅ Использовать → Создать', btnModerate:'📤 На модерацию', btnRegenerate:'Сгенерировать заново',
+    hdrSelectTpl:'📋 Выберите шаблон', tplHint:'Выберите готовый шаблон — форма заполнится автоматически. Или создайте свой с нуля.',
+    tplCardgift:'Рекламная платформа. Нейтральный.', tplDiamond:'Бриллианты, стейкинг, DCT', tplMetr:'Строительство, дом под 0%', tplCustom:'Создать с нуля',
+    btnDemo:'👁 Демо', helpOk:'✅ Понятно'
+},
+ua: {
+    topTitle:'🎯 Кабінет лідера', topSub:'Управління кампаніями', topBack:'← Кабінет',
+    tabStats:'📊 Статистика', tabCampaigns:'📋 Мої кампанії', tabCreate:'➕ Створити', tabContacts:'👥 Контакти', tabFaq:'❓ FAQ', tabAi:'🤖 AI Створювач',
+    stCampaigns:'Кампаній', stClicks:'Кліків', stRegs:'Реєстрацій', stContacts:'Контактів', stPool:'В рекламі',
+    hdrCampaigns:'📈 Кампанії', hdrLastContacts:'👥 Останні контакти',
+    hdrMyCampaigns:'📋 Мої кампанії', noCampaigns:'У вас немає кампаній.',
+    placementFree:'Шлях (безкоштовно, відразу)', placementSub:'Піддомен (безкоштовно)', placementDomain:'Свій домен',
+    hdrCreate:'➕ Створити кампанію', tipCreate:'💡 Після створення з\'явиться лендінг gwad.ink/c/ваш-slug. Партнери зможуть оплачувати рекламу.',
+    lblName:'Назва *', lblSlug:'Slug (для URL) *', lblDesc:'Опис', lblVideo:'Відео (YouTube/Vimeo)', lblImage:'Головне зображення', lblLogo:'URL логотипу', lblColor:'Колір теми', lblFeatures:'Фічі (кожен рядок = картка)', lblCta:'Текст кнопки CTA', lblTg:'Telegram', lblWa:'WhatsApp', lblBudget:'Budget Wallet (80%)', lblManager:'Manager Wallet (9%)', lblWallets:'💰 Гаманці для контракту',
+    btnCreate:'🚀 Створити кампанію',
+    hdrContacts:'👥 Всі контакти кампаній', lcTotal:'Всього', lcNew:'Нових', lcConverted:'Конвертовано',
+    hdrFaq:'❓ FAQ — Питання та відповіді', btnAddFaq:'+ Додати', lblFaqQ:'Питання *', lblFaqA:'Відповідь *', lblFaqCamp:'Для кампанії', btnSaveFaq:'💾 Зберегти', btnCancel:'Скасувати', faqAll:'🌐 Всі кампанії',
+    hdrAi:'🤖 AI Створювач кампаній', tipAi:'💡 Опишіть свій бізнес — AI створить повну кампанію за 30 секунд: лендінг, 7 днів push-розсилки, 7 днів Telegram, вірусне опитування і 4 статті для блогу.',
+    lblAiDesc:'Опишіть ваш бізнес / продукт / послугу *', aiHint:'Чим детальніше опишете — тим точніший результат. Вкажіть: що продаєте, кому, переваги, ціни.',
+    lblAiLang:'Мова:', btnGenerate:'🤖 Згенерувати кампанію',
+    aiDone:'✅ Кампанію згенеровано', aiName:'Назва', aiDesc:'Опис лендінгу', aiFeatures:'Картки (фічі)', aiPush:'Push-розсилка (7 днів)', aiTg:'Telegram-розсилка (7 днів)', aiSurvey:'Вірусне опитування',
+    btnUse:'✅ Використати → Створити', btnModerate:'📤 На модерацію', btnRegenerate:'Згенерувати заново',
+    hdrSelectTpl:'📋 Виберіть шаблон', tplHint:'Виберіть готовий шаблон — форма заповниться автоматично. Або створіть свій з нуля.',
+    tplCardgift:'Рекламна платформа. Нейтральний.', tplDiamond:'Діаманти, стейкінг, DCT', tplMetr:'Будівництво, дім під 0%', tplCustom:'Створити з нуля',
+    btnDemo:'👁 Демо', helpOk:'✅ Зрозуміло'
+},
+en: {
+    topTitle:'🎯 Leader Cabinet', topSub:'Campaign Management', topBack:'← Dashboard',
+    tabStats:'📊 Statistics', tabCampaigns:'📋 My Campaigns', tabCreate:'➕ Create', tabContacts:'👥 Contacts', tabFaq:'❓ FAQ', tabAi:'🤖 AI Creator',
+    stCampaigns:'Campaigns', stClicks:'Clicks', stRegs:'Registrations', stContacts:'Contacts', stPool:'In ads',
+    hdrCampaigns:'📈 Campaigns', hdrLastContacts:'👥 Recent contacts',
+    hdrMyCampaigns:'📋 My Campaigns', noCampaigns:'No campaigns yet.',
+    placementFree:'Path (free, instant)', placementSub:'Subdomain (free)', placementDomain:'Custom domain',
+    hdrCreate:'➕ Create Campaign', tipCreate:'💡 After creation a landing page will appear at gwad.ink/c/your-slug. Partners can pay for ads.',
+    lblName:'Name *', lblSlug:'Slug (for URL) *', lblDesc:'Description', lblVideo:'Video (YouTube/Vimeo)', lblImage:'Hero image', lblLogo:'Logo URL', lblColor:'Theme color', lblFeatures:'Features (each line = card)', lblCta:'CTA button text', lblTg:'Telegram', lblWa:'WhatsApp', lblBudget:'Budget Wallet (80%)', lblManager:'Manager Wallet (9%)', lblWallets:'💰 Contract wallets',
+    btnCreate:'🚀 Create Campaign',
+    hdrContacts:'👥 All campaign contacts', lcTotal:'Total', lcNew:'New', lcConverted:'Converted',
+    hdrFaq:'❓ FAQ — Questions & Answers', btnAddFaq:'+ Add', lblFaqQ:'Question *', lblFaqA:'Answer *', lblFaqCamp:'For campaign', btnSaveFaq:'💾 Save', btnCancel:'Cancel', faqAll:'🌐 All campaigns',
+    hdrAi:'🤖 AI Campaign Creator', tipAi:'💡 Describe your business — AI will create a full campaign in 30 seconds: landing page, 7-day push, 7-day Telegram, viral survey and 4 blog posts.',
+    lblAiDesc:'Describe your business / product / service *', aiHint:'The more detail you provide — the better the result. Specify: what you sell, to whom, advantages, prices.',
+    lblAiLang:'Language:', btnGenerate:'🤖 Generate Campaign',
+    aiDone:'✅ Campaign generated', aiName:'Name', aiDesc:'Landing description', aiFeatures:'Feature cards', aiPush:'Push sequence (7 days)', aiTg:'Telegram sequence (7 days)', aiSurvey:'Viral survey',
+    btnUse:'✅ Use → Create', btnModerate:'📤 Send for review', btnRegenerate:'Generate again',
+    hdrSelectTpl:'📋 Choose a template', tplHint:'Choose a template — the form will fill automatically. Or create from scratch.',
+    tplCardgift:'Ad platform. Neutral.', tplDiamond:'Diamonds, staking, DCT', tplMetr:'Construction, home at 0%', tplCustom:'Create from scratch',
+    btnDemo:'👁 Demo', helpOk:'✅ Got it'
+}
+};
+
+// Auto-detect language on load
+(function(){ var s=localStorage.getItem('gwad-lang'); if(s&&T[s]) setLang(s); })();
 
 // ═══ INIT ═══
 (async function() {
@@ -895,6 +982,7 @@ async function sendToModeration() {
 }
 
 // ═══ HELP SYSTEM — подсказки по разделам ═══
+var HELP_T = {}; // TODO: переводы подсказок на UA/EN
 var HELP = {
     stats: {
         title: '📊 Статистика',
@@ -941,13 +1029,17 @@ var HELP = {
         ]
     },
     ai: {
-        title: '🤖 AI Создатель',
+        title: '🤖 AI Создатель — Инструкция',
         items: [
-            {icon:'🤖', q:'Что делает AI Создатель?', a:'Вы описываете свой бизнес в свободной форме — AI за 30 секунд создаёт полную кампанию: лендинг (описание + фичи), 7 дней push-рассылки, 7 дней Telegram, вирусный опрос и 4 статьи для блога.'},
-            {icon:'📝', q:'Как правильно описать бизнес?', a:'Укажите: что продаёте/предлагаете, кому (целевая аудитория), главные преимущества, цены, чем отличаетесь от других. Чем подробнее — тем точнее результат.'},
-            {icon:'✅', q:'Что делать с результатом?', a:'Посмотрите превью → если всё нравится → нажмите «Использовать» (форма создания заполнится) → создайте кампанию. Или отправьте «На модерацию» администратору.'},
-            {icon:'🔄', q:'Не нравится результат?', a:'Нажмите «Сгенерировать заново» — AI создаст другой вариант. Можно дополнить описание и попробовать снова.'},
-            {icon:'🌐', q:'На каком языке?', a:'Выберите язык перед генерацией: русский, украинский или английский. AI создаст весь контент на выбранном языке.'},
+            {icon:'🤖', q:'Что делает AI Создатель?', a:'Вы описываете свой бизнес простыми словами — AI за 30 секунд создаёт ВСЁ что нужно для запуска:<br><br>✅ <b>Лендинг</b> — название, описание, карточки с преимуществами, кнопка<br>✅ <b>Push-рассылку</b> — 7 дней автоматических уведомлений для каждого нового контакта<br>✅ <b>Telegram-серию</b> — 7 дней сообщений через бот<br>✅ <b>Вирусный опрос</b> — 5 вопросов + результаты для привлечения аудитории<br>✅ <b>4 статьи для блога</b> — темы + промпты для генерации'},
+            {icon:'📝', q:'Шаг 1: Как правильно описать бизнес?', a:'Напишите в текстовое поле всё что знаете о своём бизнесе. Чем подробнее — тем лучше результат.<br><br><b>Обязательно укажите:</b><br>• Что продаёте / какую услугу оказываете<br>• Кому (целевая аудитория: пол, возраст, интересы)<br>• Главные преимущества (3-5 штук)<br>• Цены (от и до)<br><br><b>Хорошо бы добавить:</b><br>• Чем отличаетесь от конкурентов<br>• Какой результат получает клиент<br>• Есть ли сертификаты, награды<br>• География (весь мир, страна, город)<br><br><b>Пример хорошего описания:</b><br><i>\"У меня интернет-магазин натуральных БАДов. Аудитория — женщины 30-55 которые заботятся о здоровье. Без ГМО, сертификат ISO. Цены $15-80. Доставка по всему миру. Хочу привлечь партнёров для сетевых продаж. Главное — натуральный состав и результат через 2 недели.\"</i>'},
+            {icon:'🌐', q:'Шаг 2: Выберите язык', a:'Выберите язык из выпадающего списка <b>ДО</b> нажатия кнопки:<br><br>🇷🇺 <b>Русский</b> — для РФ, Казахстан, Кыргызстан<br>🇺🇦 <b>Українська</b> — для Украины<br>🇬🇧 <b>English</b> — для международной аудитории<br><br>AI создаст ВСЕ тексты (лендинг, push, telegram, опрос, статьи) на выбранном языке.'},
+            {icon:'⚡', q:'Шаг 3: Нажмите «Сгенерировать»', a:'Нажмите жёлтую кнопку «🤖 Сгенерировать кампанию».<br><br>⏳ Подождите 30-60 секунд — AI обрабатывает запрос.<br><br>Когда будет готово — ниже появится блок с результатом. Прокрутите вниз чтобы увидеть всё.'},
+            {icon:'👀', q:'Шаг 4: Посмотрите результат', a:'AI покажет вам:<br><br>📌 <b>Название</b> — для лендинга и кампании<br>📝 <b>Описание</b> — 2-3 абзаца для лендинга<br>🃏 <b>Карточки</b> — список преимуществ в формате emoji|текст<br>🔔 <b>Push-рассылка</b> — 7 сообщений (день 0 — день 6), заголовок + текст<br>📱 <b>Telegram</b> — 7 развёрнутых сообщений с ссылками<br>📋 <b>Опрос</b> — название + 5 вопросов по 4 варианта<br><br>Прочитайте внимательно — это то что увидят ваши клиенты!'},
+            {icon:'✅', q:'Шаг 5: Что делать дальше?', a:'У вас <b>3 варианта</b>:<br><br>1️⃣ <b>«Использовать → Создать»</b><br>Нажмите — вкладка «Создать» откроется с заполненной формой. Проверьте, отредактируйте если нужно, нажмите «Создать кампанию». Лендинг появится сразу.<br><br>2️⃣ <b>«На модерацию»</b><br>Нажмите — кампания сохранится как черновик. Администратор получит уведомление, проверит тексты, добавит push/telegram серию в систему и активирует. Это надёжнее если не уверены.<br><br>3️⃣ <b>«Сгенерировать заново»</b><br>Не понравился результат? Нажмите и AI создаст другой вариант. Можно дополнить описание и попробовать снова.'},
+            {icon:'🔄', q:'Не нравится результат — что делать?', a:'AI каждый раз генерирует новый вариант. Если не нравится:<br><br>1. <b>Дополните описание</b> — добавьте больше деталей<br>2. Нажмите <b>«Сгенерировать заново»</b><br>3. Попробуйте <b>другой язык</b> — иногда английский даёт лучшие тексты<br>4. Попробуйте <b>изменить тон</b> — добавьте в описание: \"тон серьёзный\" или \"тон дружелюбный\"'},
+            {icon:'💰', q:'Сколько стоит генерация?', a:'Генерация использует AI API. Стоимость для администратора ~$0.01-0.03 за одну генерацию. Для лидера — бесплатно (входит в уровень 7+).'},
+            {icon:'📤', q:'Что значит «На модерацию»?', a:'Ваша кампания сохраняется как черновик. Администратор (владелец клуба):<br><br>1. Получает уведомление<br>2. Проверяет тексты на корректность<br>3. Добавляет push и telegram серию в систему рассылок<br>4. Настраивает Telegram бот для этой кампании<br>5. Активирует кампанию<br><br>После этого лендинг заработает и контакты начнут приходить.'},
         ]
     }
 };
