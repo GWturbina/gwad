@@ -125,6 +125,7 @@ select.inp{appearance:auto}
     <button class="tab" onclick="showTab('create')">➕ Создать</button>
     <button class="tab" onclick="showTab('contacts')">👥 Контакты</button>
     <button class="tab" onclick="showTab('faq')">❓ ЧАВО</button>
+    <button class="tab" onclick="showTab('ai')">🤖 AI Создатель</button>
 </div>
 
 <div class="wrap">
@@ -349,6 +350,80 @@ select.inp{appearance:auto}
         </div>
     </div>
     <div class="tip">💡 Глобальные ЧАВО видны во всех кампаниях. Приватные — только в выбранной кампании. Партнёры видят их в разделе «Чат → ЧАВО» в своём кабинете.</div>
+</div>
+
+<!-- ═══ AI СОЗДАТЕЛЬ ═══ -->
+<div class="panel fade" id="p-ai">
+    <div class="card">
+        <div class="card-hdr">🤖 AI Создатель кампаний</div>
+        <div class="card-body">
+            <div class="tip" style="margin-bottom:16px">💡 Опишите свой бизнес — AI создаст полную кампанию за 30 секунд: лендинг, 7 дней push-рассылки, 7 дней Telegram, вирусный опрос и 4 статьи для блога.</div>
+
+            <label>Опишите ваш бизнес / продукт / услугу *</label>
+            <textarea class="inp" id="ai-desc" style="min-height:140px;resize:vertical" placeholder="Например: У меня интернет-магазин натуральных БАДов. Целевая аудитория — женщины 30-55 лет, которые заботятся о здоровье. Хочу привлечь партнёров для сетевых продаж. Продукт без ГМО, сертифицированный. Цены от $15 до $80. Главное преимущество — натуральный состав и доставка по всему миру."></textarea>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px">Чем подробнее опишете — тем точнее результат. Укажите: что продаёте, кому, преимущества, цены.</div>
+
+            <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+                <label style="margin:0;font-size:12px;color:var(--muted)">Язык:</label>
+                <select class="inp" id="ai-lang" style="width:auto;padding:8px 12px">
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="ua">🇺🇦 Українська</option>
+                    <option value="en">🇬🇧 English</option>
+                </select>
+            </div>
+
+            <button class="btn btn-gold btn-block" onclick="generateAICampaign()" id="ai-btn" style="margin-top:16px;padding:14px;font-size:15px">🤖 Сгенерировать кампанию</button>
+            <div id="ai-status" style="margin-top:10px;font-size:12px;text-align:center;color:var(--muted);min-height:20px"></div>
+        </div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТ AI -->
+    <div id="ai-result" style="display:none">
+        <div class="card" style="border-color:rgba(16,185,129,0.3)">
+            <div class="card-hdr" style="color:var(--green)">✅ Кампания сгенерирована</div>
+            <div class="card-body">
+                <div style="display:grid;gap:12px">
+                    <!-- Название -->
+                    <div>
+                        <label>Название</label>
+                        <div id="ai-r-name" style="font-size:16px;font-weight:700;color:#fff;padding:8px 0"></div>
+                    </div>
+                    <!-- Описание -->
+                    <div>
+                        <label>Описание лендинга</label>
+                        <div id="ai-r-desc" style="font-size:12px;color:#ccc;line-height:1.7;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);max-height:150px;overflow-y:auto"></div>
+                    </div>
+                    <!-- Фичи -->
+                    <div>
+                        <label>Карточки (фичи)</label>
+                        <div id="ai-r-features" style="font-size:12px;color:#ccc;line-height:2;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"></div>
+                    </div>
+                    <!-- Push серия -->
+                    <div>
+                        <label>Push-рассылка (7 дней)</label>
+                        <div id="ai-r-push" style="font-size:11px;color:var(--muted);line-height:1.8;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);max-height:200px;overflow-y:auto"></div>
+                    </div>
+                    <!-- Telegram серия -->
+                    <div>
+                        <label>Telegram-рассылка (7 дней)</label>
+                        <div id="ai-r-tg" style="font-size:11px;color:var(--muted);line-height:1.8;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border);max-height:200px;overflow-y:auto"></div>
+                    </div>
+                    <!-- Опрос -->
+                    <div>
+                        <label>Вирусный опрос</label>
+                        <div id="ai-r-survey" style="font-size:11px;color:var(--muted);line-height:1.8;padding:10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Действия -->
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+            <button class="btn btn-gold" onclick="useAICampaign()" style="flex:1;padding:14px;font-size:14px">✅ Использовать → Создать</button>
+            <button class="btn btn-ghost" onclick="sendToModeration()" style="flex:1;padding:14px;font-size:12px">📤 На модерацию</button>
+        </div>
+        <button class="btn btn-ghost btn-block" onclick="document.getElementById('ai-result').style.display='none'" style="font-size:11px">Сгенерировать заново</button>
+    </div>
 </div>
 
 </div><!-- main -->
@@ -701,6 +776,124 @@ function deleteFaq(idx) {
 
 loadFaqList();
 
+// ═══ AI CAMPAIGN GENERATOR ═══
+var aiCampaignData = null;
+
+async function generateAICampaign() {
+    var desc = document.getElementById('ai-desc').value.trim();
+    var lang = document.getElementById('ai-lang').value;
+    var btn = document.getElementById('ai-btn');
+    var statusEl = document.getElementById('ai-status');
+
+    if (!desc || desc.length < 20) { statusEl.innerHTML='<span style="color:var(--red)">Опишите бизнес подробнее (минимум 20 символов)</span>'; return; }
+
+    btn.disabled = true;
+    btn.textContent = '🤖 Генерация...';
+    statusEl.textContent = '⏳ AI обрабатывает ваш запрос... (30-60 сек)';
+    document.getElementById('ai-result').style.display = 'none';
+
+    try {
+        var r = await fetch('/api/ai-generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': walletAddress },
+            body: JSON.stringify({ description: desc, lang: lang })
+        });
+        var d = await r.json();
+
+        btn.disabled = false;
+        btn.textContent = '🤖 Сгенерировать кампанию';
+
+        if (!d.ok || !d.campaign) {
+            statusEl.innerHTML = '<span style="color:var(--red)">❌ ' + (d.error || 'Ошибка генерации') + '</span>';
+            return;
+        }
+
+        aiCampaignData = d.campaign;
+        displayAICampaign(d.campaign);
+        statusEl.innerHTML = '<span style="color:var(--green)">✅ Готово! Посмотрите результат ниже.</span>';
+
+    } catch(e) {
+        btn.disabled = false;
+        btn.textContent = '🤖 Сгенерировать кампанию';
+        statusEl.innerHTML = '<span style="color:var(--red)">❌ Ошибка: ' + e.message + '</span>';
+    }
+}
+
+function displayAICampaign(c) {
+    document.getElementById('ai-r-name').textContent = c.name || '—';
+    document.getElementById('ai-r-desc').textContent = c.description || '—';
+
+    // Фичи
+    var featHtml = (c.features || '').split('\n').map(function(line) {
+        return '<div>' + line.replace(/</g,'&lt;') + '</div>';
+    }).join('');
+    document.getElementById('ai-r-features').innerHTML = featHtml;
+
+    // Push
+    var pushHtml = (c.push_sequence || []).map(function(p) {
+        return '<div style="margin-bottom:6px"><b style="color:var(--gold)">День ' + p.day + ':</b> ' + (p.title||'').replace(/</g,'&lt;') + '<br><span style="color:#888">' + (p.body||'').replace(/</g,'&lt;') + '</span></div>';
+    }).join('');
+    document.getElementById('ai-r-push').innerHTML = pushHtml || '—';
+
+    // Telegram
+    var tgHtml = (c.telegram_sequence || []).map(function(t) {
+        return '<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #1e1e35"><b style="color:var(--blue)">День ' + t.day + ':</b><br>' + (t.text||'').replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>';
+    }).join('');
+    document.getElementById('ai-r-tg').innerHTML = tgHtml || '—';
+
+    // Опрос
+    var surveyHtml = '';
+    if (c.survey) {
+        surveyHtml = '<div style="font-weight:600;color:#fff;margin-bottom:6px">' + (c.survey.title||'') + '</div>';
+        (c.survey.questions || []).forEach(function(q, i) {
+            surveyHtml += '<div style="margin-bottom:4px"><b>' + (i+1) + '.</b> ' + q.text + '</div>';
+            surveyHtml += '<div style="padding-left:16px;margin-bottom:8px">' + (q.options||[]).join(' · ') + '</div>';
+        });
+    }
+    document.getElementById('ai-r-survey').innerHTML = surveyHtml || '—';
+
+    document.getElementById('ai-result').style.display = '';
+    document.getElementById('ai-result').scrollIntoView({ behavior:'smooth' });
+}
+
+function useAICampaign() {
+    if (!aiCampaignData) return;
+    // Переключаемся на вкладку "Создать" и заполняем форму
+    showTab('create');
+    var c = aiCampaignData;
+    document.getElementById('f-name').value = c.name || '';
+    document.getElementById('f-slug').value = (c.slug || '').toLowerCase().replace(/[^a-z0-9-]/g,'');
+    document.getElementById('slug-preview').textContent = document.getElementById('f-slug').value || '...';
+    document.getElementById('f-desc').value = c.description || '';
+    document.getElementById('f-features').value = c.features || '';
+    document.getElementById('f-cta').value = c.cta_text || 'Начать зарабатывать';
+    if (c.primary_color) {
+        selectedColor = c.primary_color;
+        document.querySelectorAll('.color-dot').forEach(function(d) {
+            d.classList.toggle('active', d.dataset.c === c.primary_color);
+        });
+    }
+    document.getElementById('tpl-selected').textContent = '✅ AI: ' + (c.name || '');
+    document.querySelector('#p-create .card:last-of-type').scrollIntoView({ behavior:'smooth' });
+}
+
+async function sendToModeration() {
+    if (!aiCampaignData) return;
+    var SB = '/api/faq'; // Используем как временное хранилище
+    // Сохраняем в localStorage как черновик
+    var drafts = JSON.parse(localStorage.getItem('gwad-ai-drafts-' + walletAddress) || '[]');
+    drafts.push({
+        campaign: aiCampaignData,
+        wallet: walletAddress,
+        gwId: myGwId,
+        status: 'pending_moderation',
+        created_at: new Date().toISOString()
+    });
+    localStorage.setItem('gwad-ai-drafts-' + walletAddress, JSON.stringify(drafts));
+    alert('📤 Отправлено на модерацию! Администратор получит уведомление и свяжется с вами.');
+    // TODO: отправить в Supabase adp_campaign_drafts или через Telegram бот администратору
+}
+
 // ═══ HELP SYSTEM — подсказки по разделам ═══
 var HELP = {
     stats: {
@@ -746,6 +939,16 @@ var HELP = {
             {icon:'🌐', q:'Глобальные vs Приватные', a:'Глобальные (все кампании) — видны во всех кампаниях. Приватные (конкретная кампания) — видны только в выбранной. Выбирается при создании.'},
             {icon:'➕', q:'Как добавить?', a:'Нажмите «+ Добавить» → заполните вопрос и ответ → выберите кампанию (или «Все») → Сохранить.'},
         ]
+    },
+    ai: {
+        title: '🤖 AI Создатель',
+        items: [
+            {icon:'🤖', q:'Что делает AI Создатель?', a:'Вы описываете свой бизнес в свободной форме — AI за 30 секунд создаёт полную кампанию: лендинг (описание + фичи), 7 дней push-рассылки, 7 дней Telegram, вирусный опрос и 4 статьи для блога.'},
+            {icon:'📝', q:'Как правильно описать бизнес?', a:'Укажите: что продаёте/предлагаете, кому (целевая аудитория), главные преимущества, цены, чем отличаетесь от других. Чем подробнее — тем точнее результат.'},
+            {icon:'✅', q:'Что делать с результатом?', a:'Посмотрите превью → если всё нравится → нажмите «Использовать» (форма создания заполнится) → создайте кампанию. Или отправьте «На модерацию» администратору.'},
+            {icon:'🔄', q:'Не нравится результат?', a:'Нажмите «Сгенерировать заново» — AI создаст другой вариант. Можно дополнить описание и попробовать снова.'},
+            {icon:'🌐', q:'На каком языке?', a:'Выберите язык перед генерацией: русский, украинский или английский. AI создаст весь контент на выбранном языке.'},
+        ]
     }
 };
 
@@ -776,6 +979,7 @@ function getCurrentTab() {
     if (text.includes('создат')) return 'create';
     if (text.includes('контакт')) return 'contacts';
     if (text.includes('чаво')) return 'faq';
+    if (text.includes('ai') || text.includes('создатель')) return 'ai';
     return 'stats';
 }
 </script>
