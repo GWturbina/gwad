@@ -357,8 +357,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
         <div class="card-hdr" data-i18n="hdrBalance">💰 Баланс</div>
         <div class="card-body">
             <div class="balance-grid">
-                <div class="bal"><div class="bal-val" style="color:var(--gold)" id="bal-usdt">$0.00</div><div class="bal-lbl" data-i18n="balUsdt">USDT (маркетинг)</div><div class="bal-sub" data-i18n="balUsdtSub">Доход от рекламной программы</div></div>
-                <div class="bal"><div class="bal-val" style="color:var(--green)" id="bal-acad">$0.00</div><div class="bal-lbl" data-i18n="balAcad">Академия CardGift</div><div class="bal-sub" data-i18n="balAcadSub">За обучение + рост команды</div></div>
+                <div class="bal"><div class="bal-val" style="color:var(--green)" id="bal-usdt">$0.00</div><div class="bal-lbl">USDT на кошельке</div><div class="bal-sub">Доход от рекламы + партнёрка</div></div>
+                <div class="bal"><div class="bal-val" style="color:var(--orange)" id="bal-acad">0.000 BNB</div><div class="bal-lbl">BNB на кошельке</div><div class="bal-sub">Доход GlobalWay (12 уровней)</div></div>
             </div>
         </div>
     </div>
@@ -1362,13 +1362,14 @@ async function doRegisterGW() {
     errorEl.style.display = 'none';
 
     // Получаем sponsor ID
+    var CLUB_SPONSORS = [1514866, 7649513];
     var refFromUrl = getRefIdFromURL();
     var sponsorId = refFromUrl || parseInt(document.getElementById('reg-sponsor-input').value) || 0;
 
+    // Если нет спонсора — рандомизация между клубными аккаунтами
     if (!sponsorId || sponsorId <= 0) {
-        errorEl.textContent = '❌ Введите ID спонсора';
-        errorEl.style.display = '';
-        return;
+        sponsorId = CLUB_SPONSORS[Math.floor(Math.random() * CLUB_SPONSORS.length)];
+        console.log('🎲 No sponsor → random club account: GW' + sponsorId);
     }
 
     btn.disabled = true;
@@ -1642,10 +1643,11 @@ async function initWalletUI() {
                 document.getElementById('reg-sponsor-fixed-id').textContent = 'ID: #' + refId;
                 document.getElementById('reg-sponsor-input-wrap').style.display = 'none';
             } else {
-                // Ручной ввод
-                document.getElementById('reg-sponsor-label').textContent = 'ID того, кто вас пригласил:';
+                // Нет спонсора — автоназначение
+                document.getElementById('reg-sponsor-label').textContent = 'ID пригласителя (или оставьте пустым — назначим автоматически):';
                 document.getElementById('reg-sponsor-fixed').style.display = 'none';
                 document.getElementById('reg-sponsor-input-wrap').style.display = '';
+                document.getElementById('reg-sponsor-input').placeholder = 'Оставьте пустым → клуб назначит';
             }
 
             // Показываем модал с задержкой
@@ -1665,6 +1667,8 @@ async function initWalletUI() {
         // Баланс на дашборде
         var balEl = document.getElementById('bal-usdt');
         if (balEl) balEl.textContent = '$' + usdtBal.toFixed(2);
+        var bnbEl = document.getElementById('bal-acad');
+        if (bnbEl) bnbEl.textContent = bnbBal.toFixed(4) + ' BNB';
     } catch(e) {
         console.warn('initWalletUI error:', e);
     }
