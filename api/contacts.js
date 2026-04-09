@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
     try {
         // ═══ Мои контакты ═══
         if (action === 'my_contacts') {
-            var q = 'select=id,name,messenger,contact,status,source,push_consent,is_converted,created_at,updated_at';
+            var q = 'select=id,name,messenger,contact,status,source,push_consent,created_at,utm_source';
             q += '&or=(owner_gw_id.eq.' + encodeURIComponent(fullId) + ',owner_gw_id.eq.' + encodeURIComponent(cleanId) + ')';
             q += '&status=neq.archived&order=created_at.desc&limit=100';
 
@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
             for (var i = 0; i < contacts.length; i++) {
                 if (contacts[i].status === 'new') stats.new++;
                 else if (contacts[i].status === 'active') stats.active++;
-                if (contacts[i].is_converted) stats.converted++;
+                if (contacts[i].status === 'converted') stats.converted++;
             }
             return res.json({ ok: true, contacts: contacts, stats: stats });
         }
