@@ -74,6 +74,25 @@ select.inp{appearance:auto}
 .faq-a{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
 
 .tip{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;background:rgba(255,215,0,0.05);padding:8px 12px;border-radius:8px;border-left:3px solid var(--gold)}
+
+/* Help system */
+.help-float{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:var(--gold);border:none;color:#000;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(255,215,0,0.4);z-index:200;transition:.3s;display:flex;align-items:center;justify-content:center}
+.help-float:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(255,215,0,0.6)}
+.help-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:none;align-items:flex-end;justify-content:center;padding:0}
+.help-overlay.show{display:flex}
+.help-panel{width:100%;max-width:520px;max-height:85vh;background:#1a1a35;border-radius:20px 20px 0 0;overflow-y:auto;animation:helpUp .3s ease}
+@keyframes helpUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.help-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;background:#1a1a35;z-index:1}
+.help-head-title{font-size:16px;font-weight:700;color:var(--gold)}
+.help-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#888;font-size:16px;cursor:pointer}
+.help-item{border-bottom:1px solid rgba(255,255,255,0.05)}
+.help-q{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s}
+.help-q:hover{background:rgba(255,215,0,0.03)}
+.help-q-text{font-size:13px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.help-q-arrow{color:var(--gold);font-size:12px;transition:transform .3s}
+.help-item.open .help-q-arrow{transform:rotate(180deg)}
+.help-a{display:none;padding:0 20px 16px;font-size:12px;color:var(--muted);line-height:1.8}
+.help-item.open .help-a{display:block}
 .empty{text-align:center;padding:40px;color:var(--muted)}
 .empty div{font-size:40px;margin-bottom:10px}
 .loading{text-align:center;padding:40px;color:var(--muted)}
@@ -592,9 +611,10 @@ async function createCampaign() {
 
 // ═══ КОНТАКТЫ ═══
 async function loadLeaderContacts() {
-    var el = document.getElementById('leader-contacts-list') || document.getElementById('stats-contacts-preview');
-    if (!el) return;
-    if (!myGwId) { el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Подключите кошелёк</div>'; return; }
+    var el1 = document.getElementById('leader-contacts-list');
+    var el2 = document.getElementById('stats-contacts-preview');
+    if (!el1 && !el2) return;
+    if (!myGwId) { if(el1)el1.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Подключите кошелёк</div>'; return; }
 
     try {
         var r = await fetch('/api/contacts?action=my_contacts&gwId='+encodeURIComponent(myGwId), {
@@ -602,7 +622,9 @@ async function loadLeaderContacts() {
         });
         var d = await r.json();
         if (!d.ok || !d.contacts || !d.contacts.length) {
-            el.innerHTML='<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Нет контактов</div>';
+            var emptyHtml = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Нет контактов. Поделитесь ссылкой — контакты появятся здесь.</div>';
+            if(el1)el1.innerHTML=emptyHtml;
+            if(el2)el2.innerHTML=emptyHtml;
             return;
         }
         document.getElementById('st-contacts').textContent = d.stats.total;
@@ -621,9 +643,12 @@ async function loadLeaderContacts() {
             html += '<td style="font-size:10px;color:var(--muted)">'+(c.created_at?new Date(c.created_at).toLocaleDateString():'—')+'</td></tr>';
         });
         html += '</tbody></table>';
-        el.innerHTML = html;
+        if(el1)el1.innerHTML=html;
+        if(el2)el2.innerHTML=html;
     } catch(e) {
-        el.innerHTML='<div style="padding:20px;text-align:center;color:var(--red);font-size:12px">Ошибка загрузки</div>';
+        var errHtml='<div style="padding:20px;text-align:center;color:var(--red);font-size:12px">Ошибка загрузки</div>';
+        if(el1)el1.innerHTML=errHtml;
+        if(el2)el2.innerHTML=errHtml;
     }
 }
 
@@ -675,6 +700,102 @@ function deleteFaq(idx) {
 }
 
 loadFaqList();
+
+// ═══ HELP SYSTEM — подсказки по разделам ═══
+var HELP = {
+    stats: {
+        title: '📊 Статистика',
+        items: [
+            {icon:'📊', q:'Что показывает статистика?', a:'Общее количество ваших кампаний, кликов по ссылкам, регистраций новых людей, собранных контактов и сумму вложенную в рекламу. Данные обновляются в реальном времени.'},
+            {icon:'📈', q:'Откуда берутся данные?', a:'Кампании — из Supabase (ваши созданные кампании). Клики и регистрации — из рекламного пула. Контакты — все кто оставил свои данные по вашим ссылкам.'},
+            {icon:'👥', q:'Последние контакты', a:'Показывает последних 50 контактов которые пришли через ваши кампании. Можно обновить кнопкой 🔄.'},
+        ]
+    },
+    campaigns: {
+        title: '📋 Мои кампании',
+        items: [
+            {icon:'📋', q:'Что такое кампания?', a:'Кампания — это ваш лендинг (посадочная страница) по адресу gwad.ink/c/ваш-slug. На нём показываются слайды с информацией, статистика и кнопка CTA для регистрации.'},
+            {icon:'🌐', q:'Варианты размещения', a:'Путь (gwad.ink/c/slug) — бесплатно, сразу. Поддомен (slug.gwad.ink) — через администратора. Свой домен (my-site.com) — купить и привязать.'},
+            {icon:'📢', q:'Как работает реклама?', a:'Партнёры оплачивают рекламу от $5 → менеджер запускает → ротация распределяет клики между всеми участниками пула → контакты приходят в кабинет.'},
+        ]
+    },
+    create: {
+        title: '➕ Создать кампанию',
+        items: [
+            {icon:'📋', q:'Шаблоны — что это?', a:'4 готовых шаблона: CardGift (нейтральный), Diamond Club (бриллианты), Метр² (строительство), Свой (с нуля). При выборе шаблона форма заполняется автоматически — потом можно отредактировать.'},
+            {icon:'👁', q:'Как посмотреть демо?', a:'Нажмите кнопку «👁 Демо» на любом шаблоне — откроется предпросмотр лендинга. Так вы увидите как будет выглядеть страница до создания.'},
+            {icon:'📝', q:'Slug — что это?', a:'Slug — это часть URL вашей кампании. Например: gwad.ink/c/eco-bady. Только латиница, цифры и дефис. Выбирайте короткий и понятный.'},
+            {icon:'🎨', q:'Фичи — формат', a:'Каждая строка = одна карточка на лендинге. Формат: emoji|текст. Например: 💎|Бриллианты со скидкой 70%. Можно добавить сколько угодно строк.'},
+            {icon:'💰', q:'Кошельки для контракта', a:'Budget Wallet — куда пойдёт 80% рекламного бюджета. Manager Wallet — куда пойдёт 9% менеджеру. Обычно оба = ваш кошелёк.'},
+            {icon:'⛽', q:'Стоимость создания', a:'Создание кампании записывается в смарт-контракт. Нужен газ ~0.001 BNB. Это единственная плата.'},
+        ]
+    },
+    contacts: {
+        title: '👥 Контакты',
+        items: [
+            {icon:'👥', q:'Откуда берутся контакты?', a:'Из CardGift — все кто оставил свои данные (имя + мессенджер) по вашим реферальным ссылкам или через кампании. Контакты хранятся в единой базе Supabase.'},
+            {icon:'📊', q:'Статусы контактов', a:'🆕 Новый — только зарегистрировался. ✅ Активен — начал взаимодействовать. 💰 Конвертирован — стал клиентом/партнёром. 📦 Архив — неактивен.'},
+            {icon:'🔄', q:'Контакты не появляются?', a:'Проверьте что env SUPABASE_URL и SUPABASE_SERVICE_KEY в Vercel совпадают с CardGift. Контакты должны быть привязаны к вашему GW ID.'},
+            {icon:'📈', q:'Цепочка спонсоров', a:'Каждый контакт автоматически поднимается вверх по спонсорской цепочке GlobalWay (до 9 уровней). Если контакт уже есть у спонсора — пропускается.'},
+        ]
+    },
+    faq: {
+        title: '❓ ЧАВО',
+        items: [
+            {icon:'❓', q:'Зачем нужно ЧАВО?', a:'Чтобы партнёры находили ответы сами, без звонков и сообщений вам. Вопросы/ответы показываются в разделе «Чат → ЧАВО» в кабинете партнёра.'},
+            {icon:'🌐', q:'Глобальные vs Приватные', a:'Глобальные (все кампании) — видны во всех кампаниях. Приватные (конкретная кампания) — видны только в выбранной. Выбирается при создании.'},
+            {icon:'➕', q:'Как добавить?', a:'Нажмите «+ Добавить» → заполните вопрос и ответ → выберите кампанию (или «Все») → Сохранить.'},
+        ]
+    }
+};
+
+var currentHelpSection = 'stats';
+
+function openHelp(section) {
+    currentHelpSection = section || getCurrentTab();
+    var data = HELP[currentHelpSection] || HELP.stats;
+    var html = '';
+    data.items.forEach(function(item, i) {
+        html += '<div class="help-item" onclick="this.classList.toggle(\'open\')">' +
+            '<div class="help-q"><div class="help-q-text"><span>' + item.icon + '</span> ' + item.q + '</div><span class="help-q-arrow">▼</span></div>' +
+            '<div class="help-a">' + item.a + '</div></div>';
+    });
+    document.getElementById('help-title').textContent = data.title;
+    document.getElementById('help-items').innerHTML = html;
+    document.getElementById('help-overlay').classList.add('show');
+}
+
+function closeHelp() { document.getElementById('help-overlay').classList.remove('show'); }
+
+function getCurrentTab() {
+    var active = document.querySelector('.tab.active');
+    if (!active) return 'stats';
+    var text = active.textContent.toLowerCase();
+    if (text.includes('статист')) return 'stats';
+    if (text.includes('кампан')) return 'campaigns';
+    if (text.includes('создат')) return 'create';
+    if (text.includes('контакт')) return 'contacts';
+    if (text.includes('чаво')) return 'faq';
+    return 'stats';
+}
 </script>
+
+<!-- Help floating button -->
+<button class="help-float" onclick="openHelp()">?</button>
+
+<!-- Help overlay -->
+<div id="help-overlay" class="help-overlay" onclick="if(event.target===this)closeHelp()">
+    <div class="help-panel">
+        <div class="help-head">
+            <div class="help-head-title" id="help-title">📊 Статистика</div>
+            <button class="help-close" onclick="closeHelp()">✕</button>
+        </div>
+        <div id="help-items"></div>
+        <div style="padding:16px 20px">
+            <button onclick="closeHelp()" style="width:100%;padding:12px;background:var(--gold);border:none;border-radius:12px;font-size:14px;font-weight:700;color:#000;cursor:pointer">✅ Понятно</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
