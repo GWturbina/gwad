@@ -12,6 +12,12 @@
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
 :root{--accent:#FFD700}
 
+/* Lang switcher */
+.lang-sw{position:fixed;top:12px;right:12px;z-index:100;display:flex;gap:4px;background:rgba(10,10,26,0.9);border:1px solid #2a2a4a;border-radius:10px;padding:4px}
+.lang-btn{padding:5px 10px;border:none;border-radius:7px;background:transparent;color:#888;font-size:11px;font-weight:600;cursor:pointer;transition:.2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:var(--accent);color:#000}
+
 /* Loading */
 .ld{position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a1a;display:flex;align-items:center;justify-content:center;z-index:200;transition:opacity .3s}
 .ld.off{opacity:0;pointer-events:none}
@@ -110,11 +116,57 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;ov
 </style>
 </head>
 <body>
+<div class="lang-sw">
+    <button class="lang-btn active" onclick="setCLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setCLang('ua')">UA</button>
+    <button class="lang-btn" onclick="setCLang('en')">EN</button>
+</div>
 <div class="ld" id="ld"><div class="sp"></div></div>
 <div id="app"></div>
-<div class="nf" id="nf"><h2>Кампания не найдена</h2><p style="color:#888">Проверьте ссылку или <a href="/">вернитесь на главную</a></p></div>
+<div class="nf" id="nf"><h2 data-ct="notFound">Кампания не найдена</h2><p style="color:#888"><span data-ct="notFoundSub">Проверьте ссылку или</span> <a href="/" data-ct="goBack">вернитесь на главную</a></p></div>
 
 <script>
+// ═══ МУЛЬТИЯЗЫЧНОСТЬ ═══
+var cLang = localStorage.getItem('gwad-lang') || 'ru';
+var CT = {
+    ru: { participants:'участников', clicks:'кликов', registrations:'регистраций', join:'Присоединиться',
+          ctaNote:'Реклама от $5 · Блокчейн opBNB · SafePal', notFound:'Кампания не найдена', notFoundSub:'Проверьте ссылку или', goBack:'вернитесь на главную',
+          slide1:'Реклама от $5', slide1t:'Оплатил — контакты приходят в ваш кабинет',
+          slide2:'Ваши контакты — только ВАШИ', slide2t:'Никто не получит доступ к вашей базе',
+          slide3:'Блокчейн защита', slide3t:'Все выплаты прозрачны',
+          slide4:'Автоматика 24/7', slide4t:'Боты и рассылки работают за вас' },
+    ua: { participants:'учасників', clicks:'кліків', registrations:'реєстрацій', join:'Приєднатися',
+          ctaNote:'Реклама від $5 · Блокчейн opBNB · SafePal', notFound:'Кампанію не знайдено', notFoundSub:'Перевірте посилання або', goBack:'поверніться на головну',
+          slide1:'Реклама від $5', slide1t:'Оплатив — контакти приходять в кабінет',
+          slide2:'Ваші контакти — тільки ВАШІ', slide2t:'Ніхто не отримає доступ до бази',
+          slide3:'Блокчейн захист', slide3t:'Всі виплати прозорі',
+          slide4:'Автоматика 24/7', slide4t:'Боти і розсилки працюють за вас' },
+    en: { participants:'participants', clicks:'clicks', registrations:'registrations', join:'Join now',
+          ctaNote:'Ads from $5 · Blockchain opBNB · SafePal', notFound:'Campaign not found', notFoundSub:'Check the link or', goBack:'go to main page',
+          slide1:'Ads from $5', slide1t:'Pay once — contacts come to your dashboard',
+          slide2:'Your contacts — only YOURS', slide2t:'Nobody gets access to your database',
+          slide3:'Blockchain protection', slide3t:'All payments are transparent',
+          slide4:'24/7 Automation', slide4t:'Bots and mailings work for you' },
+};
+
+function setCLang(lang) {
+    cLang = lang;
+    localStorage.setItem('gwad-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+    document.querySelector('.lang-btn[onclick*="\''+lang+'\'"]').classList.add('active');
+    document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+    // Обновляем статические элементы
+    document.querySelectorAll('[data-ct]').forEach(function(el) {
+        var key = el.getAttribute('data-ct');
+        if (CT[lang] && CT[lang][key]) el.textContent = CT[lang][key];
+    });
+}
+
+// Инициализация языка
+(function(){ var s=localStorage.getItem('gwad-lang'); if(s&&CT[s]){cLang=s} else{var n=(navigator.language||'').toLowerCase();if(n.startsWith('uk'))cLang='ua';else if(n.startsWith('en'))cLang='en';else cLang='ru'} document.querySelector('.lang-btn[onclick*="\''+cLang+'\'"]').classList.add('active'); document.querySelectorAll('.lang-btn').forEach(function(b){if(!b.classList.contains('active'))b.classList.remove('active')}); setCLang(cLang); })();
+
+function t(key) { return (CT[cLang] && CT[cLang][key]) || (CT.ru[key]) || key; }
+
 (async function(){
     var slug = window.location.pathname.replace('/c/','').replace(/\/$/,'');
     if (!slug) slug = new URLSearchParams(location.search).get('slug')||'';
@@ -147,10 +199,10 @@ function buildSlides(c){
         });
     }
     if(slides.length===0){
-        slides.push({emoji:'📢',title:'Реклама от $5',text:'Оплатил — контакты приходят в ваш кабинет',img:''});
-        slides.push({emoji:'🔐',title:'Ваши контакты — только ВАШИ',text:'Никто не получит доступ к вашей базе',img:''});
-        slides.push({emoji:'🛡️',title:'Блокчейн защита',text:'Все выплаты прозрачны',img:''});
-        slides.push({emoji:'🚀',title:'Автоматика 24/7',text:'Боты и рассылки работают за вас',img:''});
+        slides.push({emoji:'📢',title:t('slide1'),text:t('slide1t'),img:''});
+        slides.push({emoji:'🔐',title:t('slide2'),text:t('slide2t'),img:''});
+        slides.push({emoji:'🛡️',title:t('slide3'),text:t('slide3t'),img:''});
+        slides.push({emoji:'🚀',title:t('slide4'),text:t('slide4t'),img:''});
     }
     return slides;
 }
@@ -191,11 +243,11 @@ function build(c){
 
     // Bottom
     var btm='<div class="btm"><div class="stats">'+
-        '<div class="st"><div class="st-n">'+(c.active_participants||0)+'</div><div class="st-l">участников</div></div>'+
-        '<div class="st"><div class="st-n">'+(c.total_clicks||0)+'</div><div class="st-l">кликов</div></div>'+
-        '<div class="st"><div class="st-n">'+(c.total_registrations||0)+'</div><div class="st-l">регистраций</div></div></div>'+
-        '<a href="'+ctaUrl+'" class="cta" style="background:linear-gradient(135deg,'+color+','+darken(color)+')">'+esc(c.cta_text||'Присоединиться')+'</a>'+
-        '<div class="cta-note">Реклама от $5 · Блокчейн opBNB · SafePal</div>';
+        '<div class="st"><div class="st-n">'+(c.active_participants||0)+'</div><div class="st-l" data-ct="participants">'+t('participants')+'</div></div>'+
+        '<div class="st"><div class="st-n">'+(c.total_clicks||0)+'</div><div class="st-l" data-ct="clicks">'+t('clicks')+'</div></div>'+
+        '<div class="st"><div class="st-n">'+(c.total_registrations||0)+'</div><div class="st-l" data-ct="registrations">'+t('registrations')+'</div></div></div>'+
+        '<a href="'+ctaUrl+'" class="cta" style="background:linear-gradient(135deg,'+color+','+darken(color)+')">'+esc(c.cta_text||t('join'))+'</a>'+
+        '<div class="cta-note" data-ct="ctaNote">'+t('ctaNote')+'</div>';
     if(c.contact_telegram||c.contact_whatsapp){
         btm+='<div class="cons">';
         if(c.contact_telegram) btm+='<a href="https://t.me/'+esc(c.contact_telegram.replace('@',''))+'" class="con" target="_blank">📱 Telegram</a>';
