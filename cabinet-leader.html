@@ -180,8 +180,59 @@ select.inp{appearance:auto}
 
 <!-- ═══ СОЗДАТЬ КАМПАНИЮ ═══ -->
 <div class="panel fade" id="p-create">
+    <!-- ШАБЛОНЫ -->
     <div class="card">
-        <div class="card-hdr">➕ Создать кампанию</div>
+        <div class="card-hdr">📋 Выберите шаблон</div>
+        <div class="card-body">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Выберите готовый шаблон — форма заполнится автоматически. Или создайте свой с нуля.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="templates-grid">
+
+                <div class="tpl-card" onclick="selectTemplate('cardgift')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:.3s;background:var(--card)" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-size:28px;text-align:center;margin-bottom:6px">🚀</div>
+                    <div style="font-size:13px;font-weight:700;color:#FFD700;text-align:center">CardGift</div>
+                    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">Рекламная платформа. Нейтральный.</div>
+                    <div style="margin-top:8px;text-align:center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();demoTemplate('cardgift')" style="font-size:9px">👁 Демо</button></div>
+                </div>
+
+                <div class="tpl-card" onclick="selectTemplate('diamond')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:.3s;background:var(--card)" onmouseover="this.style.borderColor='#a855f7'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-size:28px;text-align:center;margin-bottom:6px">💎</div>
+                    <div style="font-size:13px;font-weight:700;color:#a855f7;text-align:center">Diamond Club</div>
+                    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">Бриллианты, стейкинг, DCT</div>
+                    <div style="margin-top:8px;text-align:center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();demoTemplate('diamond')" style="font-size:9px">👁 Демо</button></div>
+                </div>
+
+                <div class="tpl-card" onclick="selectTemplate('metr')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:.3s;background:var(--card)" onmouseover="this.style.borderColor='#f59e0b'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-size:28px;text-align:center;margin-bottom:6px">🏠</div>
+                    <div style="font-size:13px;font-weight:700;color:#f59e0b;text-align:center">Метр Квадратный</div>
+                    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">Строительство, дом под 0%</div>
+                    <div style="margin-top:8px;text-align:center"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();demoTemplate('metr')" style="font-size:9px">👁 Демо</button></div>
+                </div>
+
+                <div class="tpl-card" onclick="selectTemplate('custom')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:.3s;background:var(--card)" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+                    <div style="font-size:28px;text-align:center;margin-bottom:6px">🎯</div>
+                    <div style="font-size:13px;font-weight:700;color:var(--green);text-align:center">Свой шаблон</div>
+                    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px">Создать с нуля</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ДЕМО МОДАЛ -->
+    <div id="demo-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);padding:16px;overflow-y:auto">
+        <div style="max-width:520px;margin:0 auto">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div style="font-size:16px;font-weight:700;color:var(--gold)" id="demo-title">Демо</div>
+                <button onclick="document.getElementById('demo-modal').style.display='none'" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:16px;cursor:pointer">✕</button>
+            </div>
+            <iframe id="demo-iframe" style="width:100%;height:70vh;border:2px solid var(--border);border-radius:16px;background:#0a0a1a" src=""></iframe>
+            <button onclick="document.getElementById('demo-modal').style.display='none'" class="btn btn-gold btn-block" style="margin-top:12px;padding:12px">Закрыть демо</button>
+        </div>
+    </div>
+
+    <!-- ФОРМА СОЗДАНИЯ -->
+    <div class="card">
+        <div class="card-hdr">➕ Создать кампанию <span id="tpl-selected" style="font-size:11px;color:var(--green);font-weight:400;margin-left:8px"></span></div>
         <div class="card-body">
             <div class="tip" style="margin-bottom:14px">💡 После создания появится лендинг gwad.ink/c/ваш-slug. Партнёры смогут оплачивать рекламу.</div>
 
@@ -311,6 +362,65 @@ function pickColor(el) {
     document.querySelectorAll('.color-dot').forEach(function(d){d.classList.remove('active')});
     el.classList.add('active');
     selectedColor = el.dataset.c;
+}
+
+// ═══ ШАБЛОНЫ ═══
+var TEMPLATES = {
+    cardgift: {
+        name: 'CardGift AdPlatform',
+        slug: 'my-cardgift',
+        desc: 'Готовая рекламная система + CRM + лендинг + боты. Инструменты на $1,700 бесплатно. Блокчейн — ваши контакты навсегда.',
+        color: '#FFD700',
+        features: '🚀|Готовая рекламная система — от $5\n💻|CRM + личный кабинет\n🎨|Свой лендинг за 20 минут\n🤖|Боты + рассылки на автопилоте\n📋|Вирусные опросники\n🎓|Академия — учит и платит\n🔐|Блокчейн — ваши контакты навсегда',
+        cta: 'Получить бесплатный доступ',
+        demoUrl: '/c/cardgift'
+    },
+    diamond: {
+        name: 'Diamond Club',
+        slug: 'my-diamond',
+        desc: 'Бриллианты по клубной цене — скидка до 70%. Стейкинг от 50% годовых. Реальный актив в сейфе.',
+        color: '#a855f7',
+        features: '💎|Бриллианты со скидкой до 70%\n📈|Стейкинг от 50% годовых\n🔒|Камни хранятся в сертифицированном хранилище\n🤖|Система сама подберёт камень\n💰|Вход от $25 — доля в бриллианте\n🔄|Продажа/обмен — в один клик',
+        cta: 'Войти в Diamond Club',
+        demoUrl: '/c/diamond'
+    },
+    metr: {
+        name: 'Метр Квадратный',
+        slug: 'my-metr',
+        desc: 'Коллективное строительство автономных поселков. Дом под 0% годовых. Программа 35/65.',
+        color: '#f59e0b',
+        features: '🏠|Дом под 0% годовых\n📐|Программа 35/65 — накопи 35%, клуб добавит 65%\n🏗️|Строительство дешевле на 40%\n💰|3 бизнеса работают на тебя\n🤖|Система рассчитает путь к дому\n🌍|Дом в любой стране мира',
+        cta: 'Узнать про Метр²',
+        demoUrl: '/c/metr'
+    },
+    custom: { name: '', slug: '', desc: '', color: '#FFD700', features: '', cta: 'Начать зарабатывать', demoUrl: '' }
+};
+
+function selectTemplate(key) {
+    var tpl = TEMPLATES[key];
+    if (!tpl) return;
+    document.getElementById('f-name').value = tpl.name;
+    document.getElementById('f-slug').value = tpl.slug;
+    document.getElementById('slug-preview').textContent = tpl.slug || '...';
+    document.getElementById('f-desc').value = tpl.desc;
+    document.getElementById('f-features').value = tpl.features;
+    document.getElementById('f-cta').value = tpl.cta;
+    // Цвет
+    selectedColor = tpl.color;
+    document.querySelectorAll('.color-dot').forEach(function(d) {
+        d.classList.toggle('active', d.dataset.c === tpl.color);
+    });
+    document.getElementById('tpl-selected').textContent = key !== 'custom' ? '✅ Шаблон: ' + tpl.name : '';
+    // Scroll к форме
+    document.querySelector('#p-create .card:last-of-type').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function demoTemplate(key) {
+    var tpl = TEMPLATES[key];
+    if (!tpl || !tpl.demoUrl) { alert('Демо скоро появится'); return; }
+    document.getElementById('demo-title').textContent = '👁 Демо: ' + tpl.name;
+    document.getElementById('demo-iframe').src = tpl.demoUrl;
+    document.getElementById('demo-modal').style.display = '';
 }
 
 function setLang(l) {
