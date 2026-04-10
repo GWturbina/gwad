@@ -892,7 +892,7 @@ async function generateAICampaign() {
         btn.textContent = '🤖 Сгенерировать кампанию';
 
         if (!d.ok || !d.campaign) {
-            statusEl.innerHTML = '<span style="color:var(--red)">❌ ' + (d.error || 'Ошибка генерации') + '</span>';
+            statusEl.textContent = '❌ ' + (d.error || 'Ошибка генерации');
             return;
         }
 
@@ -903,7 +903,7 @@ async function generateAICampaign() {
     } catch(e) {
         btn.disabled = false;
         btn.textContent = '🤖 Сгенерировать кампанию';
-        statusEl.innerHTML = '<span style="color:var(--red)">❌ Ошибка: ' + e.message + '</span>';
+        statusEl.textContent = '❌ Ошибка: ' + (e.message || '');
     }
 }
 
@@ -983,7 +983,6 @@ async function sendToModeration() {
 }
 
 // ═══ HELP SYSTEM — подсказки по разделам ═══
-var HELP_T = {}; // TODO: переводы подсказок на UA/EN
 var HELP = {
     stats: {
         title: '📊 Статистика',
