@@ -684,14 +684,166 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;mi
 
 <!-- ═══ GUIDE MODAL ═══ -->
 <div class="modal-bg" id="modal-guide">
-<div class="modal">
-<h2 data-i18n="guideTitle">📖 Руководство</h2>
-<div class="guide-item"><div class="guide-title" data-i18n="g1t">📊 Дашборд</div><div class="guide-text" data-i18n="g1d">Статистика, баланс, кампании. Переключайте вкладки для разных разделов.</div></div>
-<div class="guide-item"><div class="guide-title" data-i18n="g2t">📢 Рекламный пул</div><div class="guide-text" data-i18n="g2d">Ваши ссылки, оплата рекламы, заказы. Оплатите от $5 — контакты начнут приходить.</div></div>
-<div class="guide-item"><div class="guide-title" data-i18n="g3t">👥 Команда</div><div class="guide-text" data-i18n="g3d">Партнёры по GlobalWay (9 уровней). ID, спонсор, уровень доступа, кошелёк.</div></div>
-<div class="guide-item"><div class="guide-title" data-i18n="g4t">💬 Чат</div><div class="guide-text" data-i18n="g4d">Связь с менеджером. Задавайте вопросы — поможем настроить всё.</div></div>
-<div class="guide-item"><div class="guide-title" data-i18n="g5t">🤖 Telegram бот</div><div class="guide-text" data-i18n="g5d">Ежедневное обучение. Первый месяц — выход на доход от нескольких тысяч $.</div></div>
-<div class="guide-item"><div class="guide-title" data-i18n="g6t">🎁 CardGift</div><div class="guide-text" data-i18n="g6d">Центральная платформа — генератор, CRM, блог, AI Studio, опросы, академия.</div></div>
+<div class="modal" style="max-width:520px;max-height:85vh;overflow-y:auto">
+<h2 data-i18n="guideTitle">📖 Подробное руководство</h2>
+<div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">Нажмите на любой раздел чтобы раскрыть подробную инструкцию.</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g1t">📊 Дашборд</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Что здесь:</b><br>
+• <b style="color:var(--gold)">Статистика</b> — вложено в рекламу, активных участников, кликов, регистраций, конверсия, в команде<br>
+• <b style="color:var(--gold)">Баланс</b> — USDT (доход от рекламы) и BNB (доход GlobalWay) — реальные суммы с кошелька<br>
+• <b style="color:var(--gold)">Telegram бот</b> — ссылка на @CardGiftBot для обучения<br>
+• <b style="color:var(--gold)">Мой выбор</b> — текущая роль (Клиент/Партнёр/Приватный/Предприниматель). Кнопка «Изменить»<br>
+• <b style="color:var(--gold)">Кампании</b> — статистика по Diamond Club и Метр²<br>
+• <b style="color:var(--gold)">CardGift</b> — переход в центральную платформу<br>
+• <b style="color:var(--gold)">Кабинет лидера</b> — создание кампаний (уровень 7+)<br><br>
+<b style="color:#10b981">💡 Совет:</b> Проверяйте дашборд каждый день — видите сколько контактов пришло и сколько заработали.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g2t">📢 Рекламный пул</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">3 блока:</b><br><br>
+<b style="color:var(--gold)">🔗 Мои ссылки</b><br>
+У вас 3 реферальные ссылки:<br>
+• <b>/r/ID</b> — CardGift (рекламная площадка)<br>
+• <b>/d/ID</b> — Diamond Club (бриллианты)<br>
+• <b>/m/ID</b> — Метр Квадратный (строительство)<br>
+Нажмите «Копировать» → отправьте в Telegram/WhatsApp/Viber.<br>
+Каждый кто перейдёт → оставит контакт → попадёт в ваш кабинет.<br><br>
+<b style="color:var(--gold)">💳 Оплата рекламы</b><br>
+1. Введите сумму (минимум $5)<br>
+2. Выберите кампанию<br>
+3. Нажмите «Оплатить» → подтвердите в SafePal<br>
+4. 80% → рекламный бюджет, 20% → партнёрка 9 уровней<br>
+5. Менеджер запустит рекламу → контакты придут в кабинет<br><br>
+<b style="color:var(--gold)">📋 Мои заказы</b><br>
+Список всех оплаченных заказов со статусом и датой.<br><br>
+<b style="color:#10b981">💡 Совет:</b> $5 = ~50-100 кликов → 10-20 контактов. Чем больше вложите — тем больше контактов получите.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title">💰 Маркетинг</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Партнёрская программа 9 уровней:</b><br>
+Ур.1 — 20% | Ур.2 — 15% | Ур.3 — 10% | Ур.4 — 9% | Ур.5 — 8%<br>
+Ур.6 — 6% | Ур.7 — 5% | Ур.8 — 4% | Ур.9 — 3%<br>
+<b>Итого: 80% от рекламного бюджета.</b><br><br>
+<b style="color:var(--gold)">Что показывает:</b><br>
+• Общий доход / За месяц / Рефералов<br>
+• Цепочка спонсоров (данные из блокчейна)<br>
+• История доходов (от кого, уровень, сумма, TX)<br>
+• Калькулятор распределения<br><br>
+<b style="color:#10b981">💡 Совет:</b> Выплаты мгновенные — в момент когда реферал оплачивает рекламу. Проверяйте на opBNB Explorer.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g3t">👥 Команда</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Две подвкладки:</b><br><br>
+<b style="color:var(--gold)">👥 Партнёры</b><br>
+9 линий из GlobalWay блокчейна. Нажмите на линию → раскроется список: GW ID, уровень, кошелёк, статус.<br><br>
+<b style="color:var(--gold)">📋 Контакты (мини-CRM)</b><br>
+Все люди которые пришли по вашим ссылкам:<br>
+• Имя, мессенджер, дата, статус, контакт<br>
+• Кнопка ✏️ → редактирование (статус + заметка)<br>
+• Статусы: 🆕 Новый → ✅ Активен → 💰 Конвертирован → 📦 Архив<br><br>
+<b style="color:#10b981">💡 Совет:</b> Пишите заметки о каждом контакте. Например: «Созвон пятница 14:00» или «Интересует Diamond Club».
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g4t">💬 Чат</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:var(--gold)">❓ ЧАВО</b> — 5 базовых вопросов и ответов<br>
+<b style="color:var(--gold)">👤 Спонсору</b> — написать вашему спонсору<br>
+<b style="color:var(--gold)">📋 Менеджеру</b> — задать вопрос менеджеру платформы<br><br>
+<b style="color:#10b981">💡 Совет:</b> Если что-то не работает или непонятно — напишите менеджеру. Ответят в течение часа.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title">⚙️ Настройки</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:var(--gold)">Профиль:</b> GW ID, кошелёк, роль, уровень (только чтение)<br>
+<b style="color:var(--gold)">Видимость кампаний:</b> Чекбоксы — какие кампании видят ваши партнёры (Diamond Club, Метр², CardGift)<br><br>
+<b style="color:#10b981">💡 Совет:</b> Если хотите чтобы ваша команда видела только Diamond Club — снимите галочки с остальных.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g5t">🤖 Telegram бот и Push</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Как работает автоматика:</b><br><br>
+1. Человек переходит по вашей ссылке → оставляет контакт<br>
+2. Система запускает <b>7-дневную серию</b> автоматически:<br>
+   • <b style="color:var(--gold)">Push-уведомления</b> — приходят в браузер (если разрешил)<br>
+   • <b style="color:var(--gold)">Telegram</b> — приходят в бот (если написал /start)<br>
+3. Каждый день — новое сообщение о системе<br>
+4. Через 7 дней — человек готов принять решение<br><br>
+<b style="color:#fff">Что делать:</b><br>
+• Поделитесь ссылкой → человек регистрируется → всё остальное автоматически<br>
+• Вам не нужно писать ему каждый день — бот и пуш делают это за вас<br><br>
+<b style="color:#10b981">💡 Совет:</b> Чем больше людей перейдёт по ссылке — тем больше получат автоматические сообщения — тем больше станут партнёрами.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title">💰 Как начать зарабатывать</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">5 шагов:</b><br><br>
+<b style="color:var(--gold)">Шаг 1:</b> Купите 4 уровня (~$25 в BNB)<br>
+→ Кнопка «Купить уровень» в верхнем блоке<br><br>
+<b style="color:var(--gold)">Шаг 2:</b> Оплатите рекламу от $5<br>
+→ Вкладка «Рекламный пул» → введите сумму → оплатите<br><br>
+<b style="color:var(--gold)">Шаг 3:</b> Поделитесь ссылками<br>
+→ Скопируйте ссылки из «Рекламный пул» → отправьте друзьям<br><br>
+<b style="color:var(--gold)">Шаг 4:</b> Проходите Академию<br>
+→ @CardGiftBot → 21 день × 1 час = $1,000<br><br>
+<b style="color:var(--gold)">Шаг 5:</b> Контакты приходят автоматически<br>
+→ Push + Telegram серия работает 7 дней для каждого<br><br>
+<b style="color:#10b981">Итого:</b> $25 (уровни) + $5 (реклама) = $30 вход. Возврат через Академию в первую неделю.
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title">💰 Кошелёк SafePal</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Как установить:</b><br>
+1. Скачайте SafePal: <a href="https://apps.apple.com/app/safepal-wallet/id1548297139" target="_blank" style="color:var(--gold)">iOS</a> / <a href="https://play.google.com/store/apps/details?id=io.safepal.wallet" target="_blank" style="color:var(--gold)">Android</a><br>
+2. Создайте кошелёк → <b style="color:var(--red)">запишите 12 слов!</b><br>
+3. Пополните BNB (~0.01 для газа)<br>
+4. Пополните USDT для рекламы<br>
+5. Откройте сайт через SafePal → вкладка Dapp → gwad.ink<br><br>
+<b style="color:#fff">Важно:</b><br>
+• <b>BNB</b> нужен для покупки уровней и газа<br>
+• <b>USDT</b> нужен для оплаты рекламы<br>
+• Кнопки не работают? → Откройте сайт <b>ВНУТРИ SafePal Dapp</b><br>
+• Seed-фразу (12 слов) <b style="color:var(--red)">НИКОМУ не показывайте!</b>
+</div>
+</div>
+
+<div class="guide-item" style="cursor:pointer;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);margin-bottom:8px;border:1px solid var(--border)" onclick="this.querySelector('.gd').style.display=this.querySelector('.gd').style.display==='block'?'none':'block'">
+<div class="guide-title" data-i18n="g6t">🎁 CardGift</div>
+<div class="gd" style="display:none;margin-top:10px;font-size:11px;color:var(--muted);line-height:1.8">
+<b style="color:#fff">Центральная платформа включает:</b><br>
+• 💻 CRM — управление контактами и воронкой<br>
+• 🎨 Генератор — открытки, визитки, лендинги<br>
+• 🤖 AI Studio — тексты, картинки, голос<br>
+• 📋 Опросы — вирусные, с подсчётом результатов<br>
+• 📧 Рассылки — массовые сообщения контактам<br>
+• 📝 Блог — свой блог с постами<br>
+• 🎓 Академия — 21-дневная программа<br>
+• 🎬 GlobalStudio — создание видео<br><br>
+<b style="color:#10b981">💡 Совет:</b> CardGift — это ваш главный рабочий инструмент. Откройте через SafePal Dapp → cgift.club
+</div>
+</div>
+
 <button class="modal-close" onclick="closeM('modal-guide')" data-i18n="guideClose">Закрыть</button>
 </div>
 </div>
@@ -1720,6 +1872,5 @@ async function initWalletUI() {
     }
 })();
 </script>
-    <script src="js/ai-assistant-widget.js"></script>
 </body>
 </html>
