@@ -11,7 +11,7 @@ function sbHeaders() {
 
 function setCors(req, res) {
     var origin = req.headers.origin || '';
-    if (['gwad.ink','cgift.club'].some(function(d){return origin.includes(d)}) || origin.includes('vercel.app')) {
+    var allowed=['https://gwad.ink','https://www.gwad.ink','https://cgift.club','https://www.cgift.club'];if(allowed.indexOf(origin)!==-1||origin.endsWith('.vercel.app')) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
