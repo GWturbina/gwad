@@ -2,9 +2,21 @@
 // Принимает описание бизнеса → Claude создаёт полную кампанию
 // Требует: ANTHROPIC_API_KEY в env
 
+// Rate limit: 3 запроса в минуту на кошелёк
+var rateMap = new Map();
+function checkRate(key) {
+    var now = Date.now();
+    var entry = rateMap.get(key);
+    if (!entry || now > entry.reset) { entry = { count: 0, reset: now + 60000 }; }
+    entry.count++;
+    rateMap.set(key, entry);
+    if (rateMap.size > 1000) { rateMap.clear(); } // GC
+    return entry.count <= 3;
+}
+
 module.exports = async function handler(req, res) {
     var origin = req.headers.origin || '';
-    if (['gwad.ink','cgift.club'].some(function(d){return origin.includes(d)}) || origin.includes('vercel.app')) {
+    var allowed=['https://gwad.ink','https://www.gwad.ink','https://cgift.club','https://www.cgift.club'];if(allowed.indexOf(origin)!==-1||origin.endsWith('.vercel.app')) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -15,6 +27,10 @@ module.exports = async function handler(req, res) {
     var wallet = (req.headers['x-wallet-address'] || '').toLowerCase().trim();
     if (!wallet || wallet.length !== 42) {
         return res.status(401).json({ ok: false, error: 'Wallet required' });
+    }
+
+    if (!checkRate(wallet)) {
+        return res.status(429).json({ ok: false, error: 'Слишком частые запросы. Подождите минуту.' });
     }
 
     var API_KEY = process.env.ANTHROPIC_API_KEY;
