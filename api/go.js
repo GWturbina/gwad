@@ -31,7 +31,15 @@ module.exports = async function handler(req, res) {
         try {
             var r = await fetch(SB + '/rest/v1/adp_short_urls?code=eq.' + encodeURIComponent(code) + '&select=target_url', { headers: h });
             var urls = r.ok ? await r.json() : [];
-            if (urls.length > 0 && urls[0].target_url) return res.redirect(302, urls[0].target_url);
+            if (urls.length > 0 && urls[0].target_url) {
+                var safeUrl = urls[0].target_url;
+                if (safeUrl.startsWith('https://gwad.ink') || safeUrl.startsWith('https://cgift.club') || 
+                    safeUrl.startsWith('https://gws.ink') || safeUrl.startsWith('https://gwm.ink') || 
+                    safeUrl.startsWith('https://t.me/')) {
+                    return res.redirect(302, safeUrl);
+                }
+                return res.redirect(302, 'https://gwad.ink');
+            }
         } catch(e) {}
         return res.redirect(302, 'https://cgift.club');
     }
@@ -76,7 +84,7 @@ module.exports = async function handler(req, res) {
             '<meta name="twitter:image" content="' + escHtml(o.img) + '">' +
             '<meta http-equiv="refresh" content="1;url=' + escHtml(target) + '">' +
             '</head><body style="background:#0a0a1a;color:#fff;font-family:sans-serif;text-align:center;padding:40px">' +
-            '<p>Переход...</p><script>setTimeout(function(){window.location.href="' + target.replace(/"/g, '\\"') + '"},500);</script>' +
+            '<p>Переход...</p>' +
             '</body></html>');
     }
 
