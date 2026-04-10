@@ -14,13 +14,10 @@
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;overflow-x:hidden}
 .wrap{max-width:620px;margin:0 auto;padding:0 20px}
 .gold-bar{height:4px;background:linear-gradient(90deg,#FFD700,#FFA000,#FFD700)}
-
-/* Lang switcher */
 .lang-sw{position:fixed;top:12px;right:12px;z-index:100;display:flex;gap:4px;background:rgba(10,10,26,0.9);border:1px solid #2a2a4a;border-radius:10px;padding:4px}
 .lang-btn{padding:6px 12px;border:none;border-radius:7px;background:transparent;color:#888;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
 .lang-btn:hover{color:#fff}
 .lang-btn.active{background:#FFD700;color:#000}
-
 .hero{padding:44px 0 28px;text-align:center}
 .hero-tag{display:inline-block;padding:5px 16px;border-radius:20px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);font-size:12px;color:#10b981;font-weight:600;margin-bottom:14px}
 .hero-title{font-size:34px;font-weight:800;color:#fff;line-height:1.2}
@@ -80,7 +77,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;ov
 </head>
 <body>
 
-<!-- LANGUAGE SWITCHER -->
 <div class="lang-sw">
     <button class="lang-btn active" onclick="setLang('ru')">RU</button>
     <button class="lang-btn" onclick="setLang('ua')">UA</button>
@@ -98,13 +94,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;ov
     <img src="/img/hero-banner.png" class="hero-banner" onerror="this.style.display='none'">
     <div class="hero-motto" data-i18n="heroMotto">Лень — двигатель прогресса. Настрой за 20 минут.</div>
 </div>
-
-<!-- VIDEO -->
-<!--
-<div class="video-block fade d1">
-    <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" allowfullscreen></iframe>
-</div>
--->
 
 <div class="sec fade d1">
     <div class="tag" data-i18n="newEra">Новая эра</div>
@@ -196,97 +185,97 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0;ov
 <script>
 var T = {
 ru: {
-    heroTag:'✅ ВСЁ ТОЛЬКО НАЧИНАЕТСЯ', heroSub:'Не продавай дорого — продавай много.<br>Нет клиентов? Система приведёт тысячи.', heroMotto:'Лень — двигатель прогресса. Настрой за 20 минут.',
-    newEra:'Новая эра', notLikeBefore:'Это <em>уже не так</em> как раньше',
-    old1:'Компании закрывались — команда исчезала', new1:'Блокчейн. Твоя команда — навсегда',
-    old2:'Реклама стоила $150 и ты сам разбирался', new2:'$5 — менеджер запустит за тебя',
-    old3:'Нужно было продать на $5000 чтобы заработать', new3:'Система приводит клиентов автоматически',
-    old4:'Обучение стоило денег и ничего не давало', new4:'Академия бесплатная и ещё платит тебе',
-    old5:'Контакты принадлежали компании', new5:'Твои контакты — только ТВОИ. Навсегда',
-    freeTag:'В подарок', toolsTitle:'Инструменты на <em>$1,700</em> — бесплатно',
-    f1t:'Личный кабинет с CRM', f1d:'Контакты, аналитика, история — всё в одном месте. Твоя база клиентов — навсегда.',
-    f2t:'Свой лендинг за 5 минут', f2d:'Логотип, цвета, тексты — твой бренд. Маникюр, спорт, блог, консалтинг — любой бизнес.',
-    f3t:'Боты + рассылки на автопилоте', f3d:'Telegram-бот + пуш-уведомления + 7-дневная воронка. Работает пока ты отдыхаешь.',
-    f4t:'Реклама от $5', f4d:'Менеджер запускает за тебя. Контакты — прямо в кабинет. 80% на рекламу, 20% партнёрка.',
-    f5t:'Вирусные опросы', f5d:'Клиенты приводят клиентов. Сарафанное радио на автопилоте.',
-    f6t:'Академия — учит и платит', f6d:'Бесплатное обучение. За каждое достижение — оплата. Учишься = зарабатываешь.',
-    n1:'Вход бесплатный<br>Первый месяц — полный доступ', n2:'Инструментов в подарок<br>Кабинет, лендинг, CRM, боты', n3:'Минут на настройку<br>Академия проведёт за руку', n4:'Система работает сама<br>Контакты приходят автоматически',
-    forAll:'Для каждого', allMarkets:'Объединяет <em>все рынки</em>',
-    w1:'Сетевой бизнес', w2:'Услуги и мастера', w3:'Блогеры', w4:'Спорт и фитнес', w5:'Реклама и продвижение', w6:'Любой бизнес',
-    noProduct:'Нет товара? Нет услуги? <b style="color:#fff">Не проблема.</b><br>Работай в рекламе — продвигай готовые направления и получай <span class="green">постоянный доход</span>.',
-    simpleTag:'Просто', stepsTitle:'<em>3 шага</em> — и система работает',
-    s1t:'Регистрация', s1d:'Бесплатно. Без карты. Без рисков. 2 минуты.', s2t:'Настройка', s2d:'20 минут. Академия проведёт за руку. И заплатит.', s3t:'Результат', s3d:'Система работает 24/7. Контакты приходят сами.',
-    safeTitle:'🛡️ Блокчейн — никто не заберёт', safeText:'Выплаты напрямую — с кошелька на кошелёк. Контакты — только твои. Нет «компании» которая может закрыться. <span class="green">Твоя команда и доход — навсегда</span>.',
-    missionTitle:'🚀 Миссия', missionText:'Дать каждому человеку инструменты для успеха.<br>Собрать базу платёжеспособных клиентов.<br>Открыть возможность <b style="color:#fff">состояться в жизни</b>.', missionAccent:'<b style="color:#FFD700">Самый востребованный актив на земле — платёжеспособная клиентская команда. И она будет твоя.</b>',
-    q1q:'Точно бесплатно?', q1a:'Да. Первый месяц — полный доступ ко всем инструментам на $1,700. Без оплаты. Потом решаешь сам. Но то что получишь — останется навсегда.',
-    q2q:'Я совсем не разбираюсь в интернете', q2a:'Академия проведёт за руку. Каждый шаг — инструкция. За каждое достижение ещё и платят. Не умеешь сам? Попроси помочь — понадобится 20 минут.',
-    q3q:'А если у меня нет бизнеса?', q3a:'Работай в рекламе — продвигай готовые направления и получай постоянный доход. Или создай своё направление за 5 минут.',
-    q4q:'Чем это отличается от того что было раньше?', q4a:'Блокчейн. Твои контакты — только твои. Выплаты напрямую. Нет «компании» которая может закрыться. Система работает автоматически — 24/7.',
-    q5q:'Что нужно сделать прямо сейчас?', q5a:'Нажми кнопку ниже. Зарегистрируйся. Получи доступ. Настрой за 20 минут. Дальше система работает за тебя.',
-    ctaBtn:'🚀 ПОЛУЧИТЬ БЕСПЛАТНЫЙ ДОСТУП', ctaNote:'Бесплатно · Без риска · 20 минут настройки<br><b style="color:#FFD700">Всё только начинается. И ты — в самом начале.</b>',
-    pageTitle:'Всё только начинается',exitTitle:'Не спешите закрывать!',exitText:'Вы были в шаге от системы которая может изменить ваш доход. Посмотрите — это займёт 2 минуты.',exitYes:'\\u{1F680} Хорошо, посмотрю',exitInfo:'\\u{1F4E9} Получить информацию',exitNo:'Всё равно закрыть'
+    heroTag:"\u2705 ВСЁ ТОЛЬКО НАЧИНАЕТСЯ", heroSub:"Не продавай дорого \u2014 продавай много.<br>Нет клиентов? Система приведёт тысячи.", heroMotto:"Лень \u2014 двигатель прогресса. Настрой за 20 минут.",
+    newEra:"Новая эра", notLikeBefore:'Это <em>уже не так</em> как раньше',
+    old1:"Компании закрывались \u2014 команда исчезала", new1:"Блокчейн. Твоя команда \u2014 навсегда",
+    old2:"Реклама стоила $150 и ты сам разбирался", new2:"$5 \u2014 менеджер запустит за тебя",
+    old3:"Нужно было продать на $5000 чтобы заработать", new3:"Система приводит клиентов автоматически",
+    old4:"Обучение стоило денег и ничего не давало", new4:"Академия бесплатная и ещё платит тебе",
+    old5:"Контакты принадлежали компании", new5:"Твои контакты \u2014 только ТВОИ. Навсегда",
+    freeTag:"В подарок", toolsTitle:'Инструменты на <em>$1,700</em> \u2014 бесплатно',
+    f1t:"Личный кабинет с CRM", f1d:"Контакты, аналитика, история \u2014 всё в одном месте. Твоя база клиентов \u2014 навсегда.",
+    f2t:"Свой лендинг за 5 минут", f2d:"Логотип, цвета, тексты \u2014 твой бренд. Маникюр, спорт, блог, консалтинг \u2014 любой бизнес.",
+    f3t:"Боты + рассылки на автопилоте", f3d:"Telegram-бот + пуш-уведомления + 7-дневная воронка. Работает пока ты отдыхаешь.",
+    f4t:"Реклама от $5", f4d:"Менеджер запускает за тебя. Контакты \u2014 прямо в кабинет. 80% на рекламу, 20% партнёрка.",
+    f5t:"Вирусные опросы", f5d:"Клиенты приводят клиентов. Сарафанное радио на автопилоте.",
+    f6t:"Академия \u2014 учит и платит", f6d:"Бесплатное обучение. За каждое достижение \u2014 оплата. Учишься = зарабатываешь.",
+    n1:"Вход бесплатный<br>Первый месяц \u2014 полный доступ", n2:"Инструментов в подарок<br>Кабинет, лендинг, CRM, боты", n3:"Минут на настройку<br>Академия проведёт за руку", n4:"Система работает сама<br>Контакты приходят автоматически",
+    forAll:"Для каждого", allMarkets:'Объединяет <em>все рынки</em>',
+    w1:"Сетевой бизнес", w2:"Услуги и мастера", w3:"Блогеры", w4:"Спорт и фитнес", w5:"Реклама и продвижение", w6:"Любой бизнес",
+    noProduct:'Нет товара? Нет услуги? <b style="color:#fff">Не проблема.</b><br>Работай в рекламе \u2014 продвигай готовые направления и получай <span class="green">постоянный доход</span>.',
+    simpleTag:"Просто", stepsTitle:'<em>3 шага</em> \u2014 и система работает',
+    s1t:"Регистрация", s1d:"Бесплатно. Без карты. Без рисков. 2 минуты.", s2t:"Настройка", s2d:"20 минут. Академия проведёт за руку. И заплатит.", s3t:"Результат", s3d:"Система работает 24/7. Контакты приходят сами.",
+    safeTitle:"\uD83D\uDEE1\uFE0F Блокчейн \u2014 никто не заберёт", safeText:'Выплаты напрямую \u2014 с кошелька на кошелёк. Контакты \u2014 только твои. Нет \u00ABкомпании\u00BB которая может закрыться. <span class="green">Твоя команда и доход \u2014 навсегда</span>.',
+    missionTitle:"\uD83D\uDE80 Миссия", missionText:'Дать каждому человеку инструменты для успеха.<br>Собрать базу платёжеспособных клиентов.<br>Открыть возможность <b style="color:#fff">состояться в жизни</b>.', missionAccent:'<b style="color:#FFD700">Самый востребованный актив на земле \u2014 платёжеспособная клиентская команда. И она будет твоя.</b>',
+    q1q:"Точно бесплатно?", q1a:"Да. Первый месяц \u2014 полный доступ ко всем инструментам на $1,700. Без оплаты. Потом решаешь сам. Но то что получишь \u2014 останется навсегда.",
+    q2q:"Я совсем не разбираюсь в интернете", q2a:"Академия проведёт за руку. Каждый шаг \u2014 инструкция. За каждое достижение ещё и платят. Не умеешь сам? Попроси помочь \u2014 понадобится 20 минут.",
+    q3q:"А если у меня нет бизнеса?", q3a:"Работай в рекламе \u2014 продвигай готовые направления и получай постоянный доход. Или создай своё направление за 5 минут.",
+    q4q:"Чем это отличается от того что было раньше?", q4a:"Блокчейн. Твои контакты \u2014 только твои. Выплаты напрямую. Нет \u00ABкомпании\u00BB которая может закрыться. Система работает автоматически \u2014 24/7.",
+    q5q:"Что нужно сделать прямо сейчас?", q5a:"Нажми кнопку ниже. Зарегистрируйся. Получи доступ. Настрой за 20 минут. Дальше система работает за тебя.",
+    ctaBtn:"\uD83D\uDE80 ПОЛУЧИТЬ БЕСПЛАТНЫЙ ДОСТУП", ctaNote:'Бесплатно \u00B7 Без риска \u00B7 20 минут настройки<br><b style="color:#FFD700">Всё только начинается. И ты \u2014 в самом начале.</b>',
+    pageTitle:"Всё только начинается",exitTitle:"Не спешите закрывать!",exitText:"Вы были в шаге от системы которая может изменить ваш доход. Посмотрите \u2014 это займёт 2 минуты.",exitYes:"\uD83D\uDE80 Хорошо, посмотрю",exitInfo:"\uD83D\uDCE9 Получить информацию",exitNo:"Всё равно закрыть"
 },
 ua: {
-    heroTag:'✅ ВСЕ ТІЛЬКИ ПОЧИНАЄТЬСЯ', heroSub:'Не продавай дорого — продавай багато.<br>Немає клієнтів? Система приведе тисячі.', heroMotto:'Лінь — двигун прогресу. Налаштуй за 20 хвилин.',
-    newEra:'Нова ера', notLikeBefore:'Це <em>вже не так</em> як раніше',
-    old1:'Компанії закривались — команда зникала', new1:'Блокчейн. Твоя команда — назавжди',
-    old2:'Реклама коштувала $150 і ти сам розбирався', new2:'$5 — менеджер запустить за тебе',
-    old3:'Треба було продати на $5000 щоб заробити', new3:'Система приводить клієнтів автоматично',
-    old4:'Навчання коштувало грошей і нічого не давало', new4:'Академія безкоштовна і ще платить тобі',
-    old5:'Контакти належали компанії', new5:'Твої контакти — тільки ТВОЇ. Назавжди',
-    freeTag:'В подарунок', toolsTitle:'Інструменти на <em>$1,700</em> — безкоштовно',
-    f1t:'Особистий кабінет з CRM', f1d:'Контакти, аналітика, історія — все в одному місці. Твоя база клієнтів — назавжди.',
-    f2t:'Свій лендінг за 5 хвилин', f2d:'Логотип, кольори, тексти — твій бренд. Манікюр, спорт, блог, консалтинг — будь-який бізнес.',
-    f3t:'Боти + розсилки на автопілоті', f3d:'Telegram-бот + пуш-повідомлення + 7-денна воронка. Працює поки ти відпочиваєш.',
-    f4t:'Реклама від $5', f4d:'Менеджер запускає за тебе. Контакти — прямо в кабінет. 80% на рекламу, 20% партнерка.',
-    f5t:'Вірусні опитування', f5d:'Клієнти приводять клієнтів. Сарафанне радіо на автопілоті.',
-    f6t:'Академія — навчає і платить', f6d:'Безкоштовне навчання. За кожне досягнення — оплата. Вчишся = заробляєш.',
-    n1:'Вхід безкоштовний<br>Перший місяць — повний доступ', n2:'Інструментів в подарунок<br>Кабінет, лендінг, CRM, боти', n3:'Хвилин на налаштування<br>Академія проведе за руку', n4:'Система працює сама<br>Контакти приходять автоматично',
-    forAll:'Для кожного', allMarkets:'Об\'єднує <em>всі ринки</em>',
-    w1:'Мережевий бізнес', w2:'Послуги і майстри', w3:'Блогери', w4:'Спорт і фітнес', w5:'Реклама і просування', w6:'Будь-який бізнес',
-    noProduct:'Немає товару? Немає послуги? <b style="color:#fff">Не проблема.</b><br>Працюй в рекламі — просувай готові напрямки і отримуй <span class="green">постійний дохід</span>.',
-    simpleTag:'Просто', stepsTitle:'<em>3 кроки</em> — і система працює',
-    s1t:'Реєстрація', s1d:'Безкоштовно. Без картки. Без ризиків. 2 хвилини.', s2t:'Налаштування', s2d:'20 хвилин. Академія проведе за руку. І заплатить.', s3t:'Результат', s3d:'Система працює 24/7. Контакти приходять самі.',
-    safeTitle:'🛡️ Блокчейн — ніхто не забере', safeText:'Виплати напряму — з гаманця на гаманець. Контакти — тільки твої. Немає «компанії» яка може закритися. <span class="green">Твоя команда і дохід — назавжди</span>.',
-    missionTitle:'🚀 Місія', missionText:'Дати кожній людині інструменти для успіху.<br>Зібрати базу платоспроможних клієнтів.<br>Відкрити можливість <b style="color:#fff">відбутися в житті</b>.', missionAccent:'<b style="color:#FFD700">Найзатребуваніший актив на землі — платоспроможна клієнтська команда. І вона буде твоя.</b>',
-    q1q:'Точно безкоштовно?', q1a:'Так. Перший місяць — повний доступ до всіх інструментів на $1,700. Без оплати. Потім вирішуєш сам. Але те що отримаєш — залишиться назавжди.',
-    q2q:'Я зовсім не розбираюсь в інтернеті', q2a:'Академія проведе за руку. Кожен крок — інструкція. За кожне досягнення ще й платять. Не вмієш сам? Попроси допомогти — знадобиться 20 хвилин.',
-    q3q:'А якщо в мене немає бізнесу?', q3a:'Працюй в рекламі — просувай готові напрямки і отримуй постійний дохід. Або створи свій напрямок за 5 хвилин.',
-    q4q:'Чим це відрізняється від того що було раніше?', q4a:'Блокчейн. Твої контакти — тільки твої. Виплати напряму. Немає «компанії» яка може закритися. Система працює автоматично — 24/7.',
-    q5q:'Що треба зробити прямо зараз?', q5a:'Натисни кнопку нижче. Зареєструйся. Отримай доступ. Налаштуй за 20 хвилин. Далі система працює за тебе.',
-    ctaBtn:'🚀 ОТРИМАТИ БЕЗКОШТОВНИЙ ДОСТУП', ctaNote:'Безкоштовно · Без ризику · 20 хвилин налаштування<br><b style="color:#FFD700">Все тільки починається. І ти — на самому початку.</b>',
-    pageTitle:'Все тільки починається',exitTitle:'Не поспішайте закривати!',exitText:'Ви були в кроці від системи яка може змінити ваш дохід. Подивіться — це займе 2 хвилини.',exitYes:'\\u{1F680} Добре, подивлюсь',exitInfo:'\\u{1F4E9} Отримати інформацію',exitNo:'Все одно закрити'
+    heroTag:"\u2705 ВСЕ ТІЛЬКИ ПОЧИНАЄТЬСЯ", heroSub:"Не продавай дорого \u2014 продавай багато.<br>Немає клієнтів? Система приведе тисячі.", heroMotto:"Лінь \u2014 двигун прогресу. Налаштуй за 20 хвилин.",
+    newEra:"Нова ера", notLikeBefore:'Це <em>вже не так</em> як раніше',
+    old1:"Компанії закривались \u2014 команда зникала", new1:"Блокчейн. Твоя команда \u2014 назавжди",
+    old2:"Реклама коштувала $150 і ти сам розбирався", new2:"$5 \u2014 менеджер запустить за тебе",
+    old3:"Треба було продати на $5000 щоб заробити", new3:"Система приводить клієнтів автоматично",
+    old4:"Навчання коштувало грошей і нічого не давало", new4:"Академія безкоштовна і ще платить тобі",
+    old5:"Контакти належали компанії", new5:"Твої контакти \u2014 тільки ТВОЇ. Назавжди",
+    freeTag:"В подарунок", toolsTitle:'Інструменти на <em>$1,700</em> \u2014 безкоштовно',
+    f1t:"Особистий кабінет з CRM", f1d:"Контакти, аналітика, історія \u2014 все в одному місці. Твоя база клієнтів \u2014 назавжди.",
+    f2t:"Свій лендінг за 5 хвилин", f2d:"Логотип, кольори, тексти \u2014 твій бренд. Манікюр, спорт, блог, консалтинг \u2014 будь-який бізнес.",
+    f3t:"Боти + розсилки на автопілоті", f3d:"Telegram-бот + пуш-повідомлення + 7-денна воронка. Працює поки ти відпочиваєш.",
+    f4t:"Реклама від $5", f4d:"Менеджер запускає за тебе. Контакти \u2014 прямо в кабінет. 80% на рекламу, 20% партнерка.",
+    f5t:"Вірусні опитування", f5d:"Клієнти приводять клієнтів. Сарафанне радіо на автопілоті.",
+    f6t:"Академія \u2014 навчає і платить", f6d:"Безкоштовне навчання. За кожне досягнення \u2014 оплата. Вчишся = заробляєш.",
+    n1:"Вхід безкоштовний<br>Перший місяць \u2014 повний доступ", n2:"Інструментів в подарунок<br>Кабінет, лендінг, CRM, боти", n3:"Хвилин на налаштування<br>Академія проведе за руку", n4:"Система працює сама<br>Контакти приходять автоматично",
+    forAll:"Для кожного", allMarkets:'Об\u0027єднує <em>всі ринки</em>',
+    w1:"Мережевий бізнес", w2:"Послуги і майстри", w3:"Блогери", w4:"Спорт і фітнес", w5:"Реклама і просування", w6:"Будь-який бізнес",
+    noProduct:'Немає товару? Немає послуги? <b style="color:#fff">Не проблема.</b><br>Працюй в рекламі \u2014 просувай готові напрямки і отримуй <span class="green">постійний дохід</span>.',
+    simpleTag:"Просто", stepsTitle:'<em>3 кроки</em> \u2014 і система працює',
+    s1t:"Реєстрація", s1d:"Безкоштовно. Без картки. Без ризиків. 2 хвилини.", s2t:"Налаштування", s2d:"20 хвилин. Академія проведе за руку. І заплатить.", s3t:"Результат", s3d:"Система працює 24/7. Контакти приходять самі.",
+    safeTitle:"\uD83D\uDEE1\uFE0F Блокчейн \u2014 ніхто не забере", safeText:'Виплати напряму \u2014 з гаманця на гаманець. Контакти \u2014 тільки твої. Немає \u00ABкомпанії\u00BB яка може закритися. <span class="green">Твоя команда і дохід \u2014 назавжди</span>.',
+    missionTitle:"\uD83D\uDE80 Місія", missionText:'Дати кожній людині інструменти для успіху.<br>Зібрати базу платоспроможних клієнтів.<br>Відкрити можливість <b style="color:#fff">відбутися в житті</b>.', missionAccent:'<b style="color:#FFD700">Найзатребуваніший актив на землі \u2014 платоспроможна клієнтська команда. І вона буде твоя.</b>',
+    q1q:"Точно безкоштовно?", q1a:"Так. Перший місяць \u2014 повний доступ до всіх інструментів на $1,700. Без оплати. Потім вирішуєш сам. Але те що отримаєш \u2014 залишиться назавжди.",
+    q2q:"Я зовсім не розбираюсь в інтернеті", q2a:"Академія проведе за руку. Кожен крок \u2014 інструкція. За кожне досягнення ще й платять. Не вмієш сам? Попроси допомогти \u2014 знадобиться 20 хвилин.",
+    q3q:"А якщо в мене немає бізнесу?", q3a:"Працюй в рекламі \u2014 просувай готові напрямки і отримуй постійний дохід. Або створи свій напрямок за 5 хвилин.",
+    q4q:"Чим це відрізняється від того що було раніше?", q4a:"Блокчейн. Твої контакти \u2014 тільки твої. Виплати напряму. Немає \u00ABкомпанії\u00BB яка може закритися. Система працює автоматично \u2014 24/7.",
+    q5q:"Що треба зробити прямо зараз?", q5a:"Натисни кнопку нижче. Зареєструйся. Отримай доступ. Налаштуй за 20 хвилин. Далі система працює за тебе.",
+    ctaBtn:"\uD83D\uDE80 ОТРИМАТИ БЕЗКОШТОВНИЙ ДОСТУП", ctaNote:'Безкоштовно \u00B7 Без ризику \u00B7 20 хвилин налаштування<br><b style="color:#FFD700">Все тільки починається. І ти \u2014 на самому початку.</b>',
+    pageTitle:"Все тільки починається",exitTitle:"Не поспішайте закривати!",exitText:"Ви були в кроці від системи яка може змінити ваш дохід. Подивіться \u2014 це займе 2 хвилини.",exitYes:"\uD83D\uDE80 Добре, подивлюсь",exitInfo:"\uD83D\uDCE9 Отримати інформацію",exitNo:"Все одно закрити"
 },
 en: {
-    heroTag:'✅ IT\'S JUST THE BEGINNING', heroSub:'Don\'t sell expensive — sell a lot.<br>No clients? The system will bring thousands.', heroMotto:'Laziness drives progress. Set up in 20 minutes.',
-    newEra:'New era', notLikeBefore:'It\'s <em>not like before</em> anymore',
-    old1:'Companies closed — your team disappeared', new1:'Blockchain. Your team — forever',
-    old2:'Ads cost $150 and you figured it out yourself', new2:'$5 — a manager launches for you',
-    old3:'Had to sell $5000 to earn anything', new3:'System brings clients automatically',
-    old4:'Education cost money and gave nothing', new4:'Academy is free and even pays you',
-    old5:'Contacts belonged to the company', new5:'Your contacts — only YOURS. Forever',
-    freeTag:'Free gift', toolsTitle:'Tools worth <em>$1,700</em> — free',
-    f1t:'Personal dashboard with CRM', f1d:'Contacts, analytics, history — all in one place. Your client base — forever.',
-    f2t:'Your own landing page in 5 min', f2d:'Logo, colors, text — your brand. Nails, sports, blog, consulting — any business.',
-    f3t:'Bots + mailings on autopilot', f3d:'Telegram bot + push notifications + 7-day funnel. Works while you rest.',
-    f4t:'Advertising from $5', f4d:'Manager launches for you. Contacts — straight to your dashboard. 80% ads, 20% referrals.',
-    f5t:'Viral surveys', f5d:'Clients bring clients. Word-of-mouth on autopilot.',
-    f6t:'Academy — teaches and pays', f6d:'Free education. Payment for every achievement. Learn = earn.',
-    n1:'Free entry<br>First month — full access', n2:'Tools as a gift<br>Dashboard, landing, CRM, bots', n3:'Minutes to set up<br>Academy guides you step by step', n4:'System works 24/7<br>Contacts come automatically',
-    forAll:'For everyone', allMarkets:'Unites <em>all markets</em>',
-    w1:'Network business', w2:'Services & masters', w3:'Bloggers', w4:'Sports & fitness', w5:'Ads & promotion', w6:'Any business',
-    noProduct:'No product? No service? <b style="color:#fff">No problem.</b><br>Work in advertising — promote ready-made offers and earn <span class="green">steady income</span>.',
-    simpleTag:'Simple', stepsTitle:'<em>3 steps</em> — and the system works',
-    s1t:'Register', s1d:'Free. No card. No risks. 2 minutes.', s2t:'Set up', s2d:'20 minutes. Academy guides you. And pays you.', s3t:'Results', s3d:'System works 24/7. Contacts come by themselves.',
-    safeTitle:'🛡️ Blockchain — nobody takes it away', safeText:'Payments directly — wallet to wallet. Contacts — only yours. No "company" that can shut down. <span class="green">Your team and income — forever</span>.',
-    missionTitle:'🚀 Mission', missionText:'Give every person tools for success.<br>Build a base of solvent clients.<br>Open the opportunity to <b style="color:#fff">succeed in life</b>.', missionAccent:'<b style="color:#FFD700">The most valuable asset on earth — a solvent client team. And it will be yours.</b>',
-    q1q:'Really free?', q1a:'Yes. First month — full access to all $1,700 worth of tools. No payment. Then you decide. But what you get — stays forever.',
-    q2q:'I don\'t understand the internet at all', q2a:'Academy guides you step by step. Every step — instructions. They even pay for achievements. Can\'t do it yourself? Ask for help — takes 20 minutes.',
-    q3q:'What if I have no business?', q3a:'Work in advertising — promote ready-made offers and earn steady income. Or create your own in 5 minutes.',
-    q4q:'How is this different from before?', q4a:'Blockchain. Your contacts — only yours. Direct payments. No "company" that can shut down. System works automatically — 24/7.',
-    q5q:'What should I do right now?', q5a:'Press the button below. Register. Get access. Set up in 20 minutes. The system works for you from there.',
-    ctaBtn:'🚀 GET FREE ACCESS', ctaNote:'Free · No risk · 20 min setup<br><b style="color:#FFD700">It\'s just the beginning. And you\'re at the start.</b>',
-    pageTitle:'It\\'s just the beginning',exitTitle:'Don\\'t leave yet!',exitText:'You were one step away from a system that can change your income. Take 2 minutes.',exitYes:'\\u{1F680} OK, I\\'ll look',exitInfo:'\\u{1F4E9} Get more info',exitNo:'Close anyway'
+    heroTag:"\u2705 IT IS JUST THE BEGINNING", heroSub:"Do not sell expensive \u2014 sell a lot.<br>No clients? The system will bring thousands.", heroMotto:"Laziness drives progress. Set up in 20 minutes.",
+    newEra:"New era", notLikeBefore:'It is <em>not like before</em> anymore',
+    old1:"Companies closed \u2014 your team disappeared", new1:"Blockchain. Your team \u2014 forever",
+    old2:"Ads cost $150 and you figured it out yourself", new2:"$5 \u2014 a manager launches for you",
+    old3:"Had to sell $5000 to earn anything", new3:"System brings clients automatically",
+    old4:"Education cost money and gave nothing", new4:"Academy is free and even pays you",
+    old5:"Contacts belonged to the company", new5:"Your contacts \u2014 only YOURS. Forever",
+    freeTag:"Free gift", toolsTitle:'Tools worth <em>$1,700</em> \u2014 free',
+    f1t:"Personal dashboard with CRM", f1d:"Contacts, analytics, history \u2014 all in one place. Your client base \u2014 forever.",
+    f2t:"Your own landing page in 5 min", f2d:"Logo, colors, text \u2014 your brand. Nails, sports, blog, consulting \u2014 any business.",
+    f3t:"Bots + mailings on autopilot", f3d:"Telegram bot + push notifications + 7-day funnel. Works while you rest.",
+    f4t:"Advertising from $5", f4d:"Manager launches for you. Contacts \u2014 straight to your dashboard. 80% ads, 20% referrals.",
+    f5t:"Viral surveys", f5d:"Clients bring clients. Word-of-mouth on autopilot.",
+    f6t:"Academy \u2014 teaches and pays", f6d:"Free education. Payment for every achievement. Learn = earn.",
+    n1:"Free entry<br>First month \u2014 full access", n2:"Tools as a gift<br>Dashboard, landing, CRM, bots", n3:"Minutes to set up<br>Academy guides you step by step", n4:"System works 24/7<br>Contacts come automatically",
+    forAll:"For everyone", allMarkets:'Unites <em>all markets</em>',
+    w1:"Network business", w2:"Services and masters", w3:"Bloggers", w4:"Sports and fitness", w5:"Ads and promotion", w6:"Any business",
+    noProduct:'No product? No service? <b style="color:#fff">No problem.</b><br>Work in advertising \u2014 promote ready-made offers and earn <span class="green">steady income</span>.',
+    simpleTag:"Simple", stepsTitle:'<em>3 steps</em> \u2014 and the system works',
+    s1t:"Register", s1d:"Free. No card. No risks. 2 minutes.", s2t:"Set up", s2d:"20 minutes. Academy guides you. And pays you.", s3t:"Results", s3d:"System works 24/7. Contacts come by themselves.",
+    safeTitle:"\uD83D\uDEE1\uFE0F Blockchain \u2014 nobody takes it away", safeText:'Payments directly \u2014 wallet to wallet. Contacts \u2014 only yours. No company that can shut down. <span class="green">Your team and income \u2014 forever</span>.',
+    missionTitle:"\uD83D\uDE80 Mission", missionText:'Give every person tools for success.<br>Build a base of solvent clients.<br>Open the opportunity to <b style="color:#fff">succeed in life</b>.', missionAccent:'<b style="color:#FFD700">The most valuable asset on earth \u2014 a solvent client team. And it will be yours.</b>',
+    q1q:"Really free?", q1a:"Yes. First month \u2014 full access to all $1,700 worth of tools. No payment. Then you decide. But what you get \u2014 stays forever.",
+    q2q:"I do not understand the internet at all", q2a:"Academy guides you step by step. Every step \u2014 instructions. They even pay for achievements. Cannot do it yourself? Ask for help \u2014 takes 20 minutes.",
+    q3q:"What if I have no business?", q3a:"Work in advertising \u2014 promote ready-made offers and earn steady income. Or create your own in 5 minutes.",
+    q4q:"How is this different from before?", q4a:"Blockchain. Your contacts \u2014 only yours. Direct payments. No company that can shut down. System works automatically \u2014 24/7.",
+    q5q:"What should I do right now?", q5a:"Press the button below. Register. Get access. Set up in 20 minutes. The system works for you from there.",
+    ctaBtn:"\uD83D\uDE80 GET FREE ACCESS", ctaNote:'Free \u00B7 No risk \u00B7 20 min setup<br><b style="color:#FFD700">It is just the beginning. And you are at the start.</b>',
+    pageTitle:"It is just the beginning",exitTitle:"Do not leave yet!",exitText:"You were one step away from a system that can change your income. Take 2 minutes.",exitYes:"\uD83D\uDE80 OK, I will look",exitInfo:"\uD83D\uDCE9 Get more info",exitNo:"Close anyway"
 }
 };
 
@@ -302,7 +291,6 @@ function setLang(lang) {
     localStorage.setItem('gwad-lang', lang);
 }
 
-// Auto-detect language
 (function(){
     var saved = localStorage.getItem('gwad-lang');
     if (saved && T[saved]) { setLang(saved); return; }
@@ -313,7 +301,6 @@ function setLang(lang) {
 })();
 </script>
 
-<!-- EXIT-INTENT POPUP -->
 <style>
 .exit-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center;padding:16px}
 .exit-bg.show{display:flex}
