@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GWAD Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#e0e0e0}
+.top{background:#141428;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a2a4a}
+.top h1{font-size:16px;color:#FFD700}
+.top-info{font-size:11px;color:#888}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.card{background:#141428;border-radius:14px;padding:16px;text-align:center;border:1px solid #2a2a4a}
+.card-n{font-size:28px;font-weight:800;color:#FFD700}
+.card-l{font-size:10px;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:10px;border:1px solid #2a2a4a;background:transparent;color:#888;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+.tab:hover{color:#fff;border-color:#555}
+.tab.active{background:#FFD700;color:#000;border-color:#FFD700}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;padding:10px 12px;font-size:10px;color:#FFD700;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a2a4a}
+.tbl td{padding:10px 12px;font-size:12px;border-bottom:1px solid #1a1a35;color:#ccc}
+.tbl tr:hover td{background:rgba(255,215,0,0.03)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-pending{background:rgba(239,159,39,0.15);color:#EF9F27}
+.badge-active{background:rgba(16,185,129,0.15);color:#10B981}
+.badge-completed{background:rgba(99,130,255,0.15);color:#6382FF}
+.badge-cancelled{background:rgba(239,68,68,0.15);color:#EF4444}
+.empty{text-align:center;padding:40px;color:#555}
+.btn{padding:6px 14px;border-radius:8px;border:1px solid #2a2a4a;background:#141428;color:#ccc;font-size:11px;cursor:pointer;transition:.2s}
+.btn:hover{border-color:#FFD700;color:#FFD700}
+.btn-gold{background:#FFD700;color:#000;border-color:#FFD700}
+.btn-gold:hover{background:#FFA000}
+.err{text-align:center;padding:80px 20px}
+.err h2{color:#EF4444;margin-bottom:10px}
+.err p{color:#888;font-size:14px}
+.refresh{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#FFD700;border:none;color:#000;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(255,215,0,0.3)}
+.refresh:hover{background:#FFA000}
+</style>
+</head>
+<body>
+<div class="top">
+    <h1>GWAD Admin Panel</h1>
+    <div class="top-info" id="wallet-info">Подключение...</div>
+</div>
+<div class="wrap" id="main" style="display:none">
+    <div class="cards" id="dash-cards"></div>
+    <div class="tabs">
+        <button class="tab active" onclick="loadOrders('')">Все</button>
+        <button class="tab" onclick="loadOrders('pending')">Новые</button>
+        <button class="tab" onclick="loadOrders('active')">Активные</button>
+        <button class="tab" onclick="loadOrders('completed')">Завершённые</button>
+    </div>
+    <div id="orders-list"></div>
+</div>
+<div class="err" id="err" style="display:none">
+    <h2>Доступ запрещён</h2>
+    <p>Эта страница доступна только администраторам.<br>Подключи кошелёк-администратора через SafePal.</p>
+</div>
+<button class="refresh" onclick="init()" title="Обновить">↻</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script>
+var API = 'https://cgift.club/api/ad-platform';
+var wallet = '';
+
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            wallet = accounts[0].toLowerCase();
+            document.getElementById('wallet-info').textContent = wallet.slice(0,6) + '...' + wallet.slice(-4);
+            return true;
+        } catch(e) {}
+    }
+    // Пробуем SafePal
+    if (window.safepalProvider) {
+        try {
+            var accounts = await window.safepalProvider.request({ method: 'eth_requestAccounts' });
+            wallet = accounts[0].toLowerCase();
+            document.getElementById('wallet-info').textContent = wallet.slice(0,6) + '...' + wallet.slice(-4);
+            return true;
+        } catch(e) {}
+    }
+    // Fallback — берём из localStorage
+    var saved = localStorage.getItem('gwad-wallet') || localStorage.getItem('walletAddress');
+    if (saved) {
+        wallet = saved.toLowerCase();
+        document.getElementById('wallet-info').textContent = wallet.slice(0,6) + '...' + wallet.slice(-4);
+        return true;
+    }
+    return false;
+}
+
+async function apiCall(action, params) {
+    var url = API + '?action=' + action;
+    if (params) url += '&' + params;
+    var r = await fetch(url, { headers: { 'X-Wallet-Address': wallet } });
+    return r.json();
+}
+
+async function apiPost(action, body) {
+    var r = await fetch(API + '?action=' + action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Wallet-Address': wallet },
+        body: JSON.stringify(body)
+    });
+    return r.json();
+}
+
+async function init() {
+    var connected = await connectWallet();
+    if (!connected) {
+        document.getElementById('err').style.display = 'block';
+        return;
+    }
+
+    // Загрузить дашборд
+    var d = await apiCall('dashboard');
+    if (!d.ok) {
+        document.getElementById('err').style.display = 'block';
+        document.getElementById('wallet-info').textContent = 'Нет доступа: ' + wallet.slice(0,10) + '...';
+        return;
+    }
+
+    document.getElementById('main').style.display = 'block';
+
+    document.getElementById('dash-cards').innerHTML =
+        card(d.pending_orders || 0, 'Новые заказы', '#EF9F27') +
+        card(d.active_orders || 0, 'Активные', '#10B981') +
+        card('$' + (d.total_revenue || 0).toFixed(2), 'Доход', '#FFD700') +
+        card(d.total_clicks || 0, 'Кликов', '#6382FF') +
+        card(d.total_registrations || 0, 'Регистраций', '#10B981') +
+        card(d.unread_messages || 0, 'Сообщения', '#EF4444');
+
+    loadOrders('');
+}
+
+function card(n, l, c) {
+    return '<div class="card"><div class="card-n" style="color:'+c+'">'+n+'</div><div class="card-l">'+l+'</div></div>';
+}
+
+async function loadOrders(status) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active') });
+    event.target.classList.add('active');
+
+    var params = status ? 'status=' + status : '';
+    var d = await apiCall('all_orders', params);
+
+    if (!d.ok || !d.orders || d.orders.length === 0) {
+        document.getElementById('orders-list').innerHTML = '<div class="empty">Нет заказов</div>';
+        return;
+    }
+
+    var html = '<table class="tbl"><thead><tr>';
+    html += '<th>GW ID</th><th>Кампания</th><th>Сумма</th><th>Статус</th><th>Клики</th><th>Рег.</th><th>Дата</th><th>Действия</th>';
+    html += '</tr></thead><tbody>';
+
+    d.orders.forEach(function(o) {
+        var badgeClass = 'badge-' + (o.status || 'pending');
+        var date = o.created_at ? new Date(o.created_at).toLocaleDateString('ru') : '-';
+        html += '<tr>';
+        html += '<td><b>GW' + (o.gw_id || '-') + '</b></td>';
+        html += '<td>' + (o.campaign_slug || o.campaign_id || '-') + '</td>';
+        html += '<td style="color:#FFD700;font-weight:700">$' + (parseFloat(o.amount_usdt) || 0).toFixed(2) + '</td>';
+        html += '<td><span class="badge ' + badgeClass + '">' + (o.status || '-') + '</span>';
+        if (o._unread) html += ' <span style="color:#EF4444;font-size:10px">(' + o._unread + ' msg)</span>';
+        html += '</td>';
+        html += '<td>' + (o.clicks_total || 0) + '</td>';
+        html += '<td>' + (o.registrations_total || 0) + '</td>';
+        html += '<td style="font-size:10px;color:#888">' + date + '</td>';
+        html += '<td>';
+        if (o.status === 'pending') {
+            html += '<button class="btn btn-gold" onclick="activateOrder(\'' + o.id + '\')">Запустить</button> ';
+        }
+        if (o.status === 'active') {
+            html += '<button class="btn" onclick="completeOrder(\'' + o.id + '\')">Завершить</button>';
+        }
+        html += '</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('orders-list').innerHTML = html;
+}
+
+async function activateOrder(orderId) {
+    if (!confirm('Запустить рекламу для заказа?')) return;
+    var r = await apiPost('update_order', { order_id: orderId, status: 'active', days_total: 30 });
+    if (r.ok) { alert('Заказ активирован!'); init(); }
+    else alert('Ошибка: ' + (r.error || 'unknown'));
+}
+
+async function completeOrder(orderId) {
+    if (!confirm('Завершить заказ?')) return;
+    var r = await apiPost('update_order', { order_id: orderId, status: 'completed' });
+    if (r.ok) { alert('Заказ завершён!'); init(); }
+    else alert('Ошибка: ' + (r.error || 'unknown'));
+}
+
+// Auto-connect
+setTimeout(init, 500);
+</script>
+</body>
+</html>
