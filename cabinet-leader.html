@@ -612,7 +612,7 @@ en: {
 
 // ═══ INIT ═══
 (async function() {
-    await new Promise(function(r){setTimeout(r,500)});
+    await new Promise(function(r){setTimeout(r,1500)});
 
     var ok = await GwadContract.silentConnect();
     if (!ok) {
