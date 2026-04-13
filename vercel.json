@@ -11,6 +11,7 @@
     { "source": "/d/:id", "destination": "/api/go?type=ref&project=diamond_club&id=:id" },
     { "source": "/m/:id", "destination": "/api/go?type=ref&project=metr&id=:id" },
     { "source": "/s/:code", "destination": "/api/go?type=short&code=:code" }
+    { "source": "/admin", "destination": "/admin.html" }
   ],
   "headers": [
     {
