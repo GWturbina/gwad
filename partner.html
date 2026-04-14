@@ -1557,7 +1557,8 @@ function saveVisibility() {
         metr: document.getElementById('vis-metr').checked,
         cardgift: document.getElementById('vis-cardgift').checked
     };
-    localStorage.setItem('gwad-visibility', JSON.stringify(vis));
+    var wKey = 'gwad-visibility-' + (GwadContract.walletAddress || 'default');
+localStorage.setItem(wKey, JSON.stringify(vis));
     updateVisibilityTags();
     updateLinksWithVisibility();
 }
