@@ -1558,14 +1558,15 @@ function saveVisibility() {
         cardgift: document.getElementById('vis-cardgift').checked
     };
     var wKey = 'gwad-visibility-' + (GwadContract.walletAddress || 'default');
-localStorage.setItem(wKey, JSON.stringify(vis));
+    localStorage.setItem(wKey, JSON.stringify(vis));
     updateVisibilityTags();
     updateLinksWithVisibility();
 }
 
 function loadVisibility() {
     try {
-        var stored = JSON.parse(localStorage.getItem('gwad-visibility'));
+        var wKey = 'gwad-visibility-' + (GwadContract.walletAddress || 'default');
+        var stored = JSON.parse(localStorage.getItem(wKey));
         if (stored) {
             document.getElementById('vis-diamond').checked = stored.diamond !== false;
             document.getElementById('vis-metr').checked = stored.metr !== false;
