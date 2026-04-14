@@ -50,18 +50,18 @@ module.exports = async function handler(req, res) {
 
         var og = {
             cardgift: {
-                title: 'GlobalWay — Рекламная платформа',
-                desc: 'Бесплатные инструменты для бизнеса — CRM, лендинг, реклама. 9 уровней партнёрской программы.',
+                title: 'Бизнес без продаж — Система дохода от $1,000/мес',
+                desc: 'Инструменты на $1,700 бесплатно. CRM, лендинг, боты, рассылки. Реклама от $5. Контакты навсегда на блокчейне. Присоединяйся!',
                 img: 'https://gwad.ink/img/og-cardgift.png',
             },
             diamond_club: {
-                title: '💎 Diamond Club — Инвестиции в бриллианты',
-                desc: 'Бриллианты со скидкой до 70%. Стейкинг от 50% годовых.',
+                title: 'Diamond Club — Бриллианты до -70% от рынка',
+                desc: 'Натуральные бриллианты с сертификатом напрямую от производителя. Стейкинг от 50% годовых. Закажи — продай — заработай.',
                 img: 'https://gwad.ink/img/og-diamond.png',
             },
             metr: {
-                title: '🏠 Метр Квадратный — Свой дом под 0%',
-                desc: 'Заработай 35% депозит через клуб — мы добавим 65% под 0% годовых.',
+                title: 'Метр Квадратный — Свой дом за 2 месяца',
+                desc: 'Заработай 35% от стоимости дома. Клуб добавит 65% под 0% годовых. Автономное поселение клубного типа.',
                 img: 'https://gwad.ink/img/og-metr.png',
             }
         };
@@ -70,11 +70,14 @@ module.exports = async function handler(req, res) {
 
         // ═══ FIXED: все значения экранируются через escHtml ═══
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache');
         return res.status(200).end('<!DOCTYPE html><html><head>' +
             '<meta charset="utf-8">' +
             '<meta property="og:title" content="' + escHtml(o.title) + '">' +
             '<meta property="og:description" content="' + escHtml(o.desc) + '">' +
             '<meta property="og:image" content="' + escHtml(o.img) + '">' +
+            '<meta property="og:image:width" content="1200">' +
+            '<meta property="og:image:height" content="630">' +
             '<meta property="og:url" content="https://gwad.ink/' + escHtml(prefix) + '/' + escHtml(gwId) + '">' +
             '<meta property="og:type" content="website">' +
             '<meta property="og:site_name" content="GlobalWay AdPlatform">' +
@@ -82,9 +85,11 @@ module.exports = async function handler(req, res) {
             '<meta name="twitter:title" content="' + escHtml(o.title) + '">' +
             '<meta name="twitter:description" content="' + escHtml(o.desc) + '">' +
             '<meta name="twitter:image" content="' + escHtml(o.img) + '">' +
-            '<meta http-equiv="refresh" content="1;url=' + escHtml(target) + '">' +
+            '<title>' + escHtml(o.title) + '</title>' +
             '</head><body style="background:#0a0a1a;color:#fff;font-family:sans-serif;text-align:center;padding:40px">' +
             '<p>Переход...</p>' +
+            '<script>window.location.href="' + escHtml(target) + '";</script>' +
+            '<noscript><a href="' + escHtml(target) + '">Перейти</a></noscript>' +
             '</body></html>');
     }
 
